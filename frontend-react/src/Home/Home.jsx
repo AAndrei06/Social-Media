@@ -20,6 +20,8 @@ function Home(){
 
 	const [show, setShow] = useState(false);
 	const [open, setOpen] = useState(false);
+	const [likeOpen, setLikeOpen] = useState(false);
+
 	function handleShow(){
 		setShow(show => !show);
 	}
@@ -28,7 +30,7 @@ return(
 <>
 <main className = {styles.mainArea}>
 	<NavBar/>
-		<LikeSide/>
+		<LikeSide set = {setLikeOpen} open = {likeOpen}/>
 		<CommentsSection set = {setShow} open = {show}/>
 		{open &&
 		<PostForm setOpen = {setOpen}/>
@@ -53,7 +55,8 @@ return(
 										<div className = {styles.centerSide}>
 											<h3 className = {styles.H3}>Povești</h3>
 											<div className = {styles.storyDiv}>
-												<Story/>
+
+												<Story create/>
 												<Story/>
 												<Story/>
 												<Story/>
@@ -69,8 +72,8 @@ return(
 											</div>
 											<div className = {styles.postSection}>
 												<div>
-													<Post set = {handleShow} show = {handleShow}/>
-														<Post set = {handleShow} show = {handleShow}/>
+													<Post set = {handleShow} show = {handleShow} like = {likeOpen} setLike = {setLikeOpen}/>
+														<Post set = {handleShow} show = {handleShow} like = {likeOpen} setLike = {setLikeOpen}/>
 														</div>
 														<br/>
 														<br/>

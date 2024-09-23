@@ -5,11 +5,14 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default function FriendItem(props){
 
+	const name = props.lf ? styles.toLeft : "";
+	const name2 = props.lf ? styles.contLf : "";
+
 	return(
 		<>
 			<div className = {styles.item+' '+styles.deactivate}>
-				<div className = {styles.container}>
-					<div className = {styles.image}>
+				<div className = {styles.container+" "+name2}>
+					<div className = {styles.image+" "+name}>
 						<img src = {props.img}/>
 					</div>
 					<div className = {styles.text}>

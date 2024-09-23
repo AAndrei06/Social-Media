@@ -85,7 +85,7 @@ export default function Post(props){
 				<div className = {styles.options}>
 					<div className = {styles.option}>
 						<img src = {heartB}/>
-						<p>334543</p>
+						<p styles = {{cursor: 'pointer'}} onClick = {() => props.setLike(o => !o)}>334543</p>
 					</div>
 					<div onClick = {() => props.set(o => !o)} className = {styles.option}>
 						<img src = {comment}/>

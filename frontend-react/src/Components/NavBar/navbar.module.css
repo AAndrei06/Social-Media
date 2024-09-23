@@ -233,12 +233,14 @@
 	width: 40px;
 	height: 40px;
 	background-color: #f3f5f7;
-	border: 1px solid gray;
+	//border: 1px solid gray;
 	border-radius: 50%;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
 	cursor: pointer;
+	color: white;
+	background-color: #3c52ff;
 }
 
 
