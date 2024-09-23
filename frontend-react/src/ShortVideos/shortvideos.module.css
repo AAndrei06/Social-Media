@@ -1,0 +1,23 @@
+.main{
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.mainDiv{
+	width: 500px;
+	height: calc(100vh - 60px);
+	position: relative;
+	top: 60px;
+	align-content: center;
+
+}
+
+
+@media all and (max-width: 500px){
+	.mainDiv{
+		width: 100%;
+	}
+}

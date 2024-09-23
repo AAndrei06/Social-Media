@@ -1,0 +1,187 @@
+
+
+.formContainer{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.alignNames{
+	display: flex;
+	flex-direction: column;
+}
+
+
+.labelInput{
+	font-weight: 400;
+	font-size: 14px;
+	padding: 0px;
+	margin: 0px;
+	margin-left: 1px;
+	margin-top: 2px;
+}
+
+.inputInput{
+	font-size: 15px;
+	padding: 1px;
+	border-radius: 7px;
+	outline: none;
+	border: var(--input-border);
+	margin: 0px;
+	height: 35px;
+	padding-left: 5px;
+}
+
+.alignNames > input{
+	width: 160px;
+}
+
+.nameLayout{
+	display: flex;
+	flex-direction: row;
+	gap:10px;
+	width: 335;
+}
+
+.inputAlign{
+	display: flex;
+	flex-direction: column;
+	width: 347px;
+}
+
+.inputAlignRadio > div{
+	height: 15px;
+}
+
+.inputAlignRadio > div > label{
+	font-size: 12px;
+	margin-right: 10px;
+	position: relative;
+	bottom: 4px;
+}
+
+.inputAlignRadio > div > input{
+	position: relative;
+	bottom: 3px;
+	height: 13px;
+
+}
+
+.inputAlignRadio{
+	margin-top: 0px;
+}
+
+.line{
+	width: 347px;
+	height: 2px;
+	background-color: #e5e5ea;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.or{
+	background-color: white;
+	position: relative;
+	width: 50px;
+	bottom: 12px;
+	align-self: center;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	color: #e5e5ea;
+}
+
+.socialNetBox{
+	width: 347px;
+	height: 38px;
+	justify-content: space-around;
+	border: var(--input-border);
+	border-radius: 7px;
+	margin-top: 10px;
+}
+
+.socialNetBox > div{
+	display: flex;
+	flex-direction: row;
+	margin-top: 5px;
+}
+
+.socialNetBox > div > p{
+	font-size: 14px;
+	position: relative;
+	bottom: 10px;
+}
+
+.terms{
+	display: flex;
+	flex-direction: row;
+	margin-top: 4px;
+}
+
+.terms > input{
+	position: relative;
+	bottom: 6px;
+}
+
+.btnSubmit > button{
+	background-color: #864cff;
+	color: white;
+	width: 347px;
+	height: 38px;
+	font-size: 18px;
+	font-weight: 500;
+	border: none;
+	border-radius: 7px;
+	cursor: pointer;
+}
+
+.loginBug{
+	margin-top: 15px;
+}
+
+
+/* Error classes */
+
+.error{
+	border:1px solid #E3242B;
+}
+
+.errorMessage{
+	padding: 0px;
+	margin: 0px;
+	font-size: 12px;
+	margin-left: 5px;
+	opacity: 0;
+	color: #E3242B;
+}
+
+.logoImg{
+	margin: 30px;
+}
+
+.logoImg > img{
+	width: 150px;
+}
+
+.formLayout{
+	position: relative;
+	bottom: 100px;
+}
+
+@media all and (max-width: 800px){
+
+	.logoImg{
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
+
+
+	.formLayout{
+		position: relative;
+		top: 0px;
+	}
+}

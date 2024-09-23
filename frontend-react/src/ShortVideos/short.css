@@ -1,0 +1,34 @@
+/*
+#app {
+  height: 100%;
+}
+html,
+body {
+  position: relative;
+  height: 100%;
+  overflow-y: hidden;
+}
+*/
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.swiper-slide {
+  text-align: center;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+
+  object-fit: cover;
+}

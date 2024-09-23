@@ -1,0 +1,365 @@
+:root{
+	--search-width: 800px;
+	--pad-l: 50px;
+	--pad-r: 10px;
+	--border-width-search: 2px;
+	--nav-margin-top: calc((60px - 42px)/2);
+}
+
+.notifications{
+	width: 300px;
+	background-color: white;
+	position: fixed;
+	right: 0px;
+	margin-top: 60px;
+	max-height: 80vh;
+	overflow-y: hidden;
+	box-shadow: 0px 0px 5px gray;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	scrollbar-gutter: stable;
+}
+
+.notifications:hover{
+	overflow-y: scroll;
+}
+
+.menuSlide{
+	height: 100vh;
+	width: 300px;
+	background-color: white;
+	position: fixed;
+	right: -300px;
+	z-index: 301;
+	transition: 0.3s;
+	margin-top: 60px;
+}
+
+.menuSlide > h3{
+	padding: 0px;
+	margin: 10px;
+}
+
+.searchSection{
+	width: 100%;
+	background-color: #f0f0f0;
+	z-index: 400;
+	position: fixed;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0px 5px 5px lightgray;
+}
+
+.inputSearch{
+	width: 100%;
+	position: relative;
+}
+
+.inputSearch > input{
+	margin-top: 7px;
+	margin-left: 20px;
+	width: calc(100% - 80px);
+	height: 32px;
+	outline: 0;
+	font-size: 20px;
+	border-radius: 4px;
+	border: 1px solid lightgray;
+	padding-left: 40px;
+}
+
+
+.glassIconSearch{
+	font-size: 20px;
+	position: absolute;
+	opacity: 0.9;
+	left: 30px;
+	top: 15px;
+}
+
+
+.xMark{
+	font-size: 30px;
+	background-color: white;
+	width: 50px;
+	height: 50px;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 50%;
+	cursor: pointer;
+	border: 3px solid lightgray;
+}
+
+
+.resultsSearch{
+	width: calc(100% - 40px);
+	margin-left: 20px;
+	border: 1px solid lightgray;
+	border-radius: 4px;
+	margin-top: 8px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	max-height: 300px;
+}
+
+
+.result{
+	width: 100%;
+	background-color: white;
+	height: 50px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	cursor: pointer;
+}
+
+.result:hover{
+	background-color: #f2f4f7;
+}
+
+.infoLayout{
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	left: 5px;
+	top: 5px;
+	gap: 10px;
+}
+
+.infoLayout > img{
+	width: 40px;
+	height: 40px;
+	object-fit: cover;
+	border-radius: 3px;
+}
+
+.textInfo{
+	display: flex;
+	flex-direction: column;
+}
+
+.textInfo > p{
+	margin: 0px;
+	padding: 0px;
+}
+
+.textInfo > p:nth-child(2){
+	position: relative;
+	bottom: 5px;
+	font-size: 15px;
+}
+
+.textInfo > p:nth-child(1){
+	position: relative;
+	bottom: 2px;
+}
+
+
+.navBar{
+	width: 100%;
+	height: 60px;
+	background-color: white;
+	display: flex;
+	flex-direction: row;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	box-shadow: 0px 5px 5px lightgray;
+	position: fixed;
+	z-index: 1;
+}
+
+.logoImg{
+	height: 60px;
+	position: absolute;
+	left: 20px;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+
+}
+
+.logoImg > p{
+	font-size: 20px;
+	font-weight: bold;
+	position: relative;
+	bottom: 5px;
+	margin-top: 20px;
+}
+
+.logoImg > img{
+	height: 56px;
+	margin: 2px;
+	cursor: pointer;
+}
+
+.navOperations{
+	display: flex;
+	flex-direction: row;
+}
+
+/* Search Bar */
+
+.searchBar{
+	height: 100%;
+	position: relative;
+}
+
+
+.magIcon{
+	position: absolute;
+	font-size: 30px;	
+	top: 16px;
+	left: 10px;
+	opacity: .7;
+}	
+
+
+/**/
+
+/* Navigation Icons */
+
+.navIcons{
+	margin-top: var(--nav-margin-top);
+	display: flex;
+	flex-direction: row;
+	gap: 30px;
+	position: absolute;
+	right: 30px;
+}
+
+
+.optionIcon{
+	width: 40px;
+	height: 40px;
+	background-color: #f3f5f7;
+	border: 1px solid gray;
+	border-radius: 50%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	cursor: pointer;
+}
+
+
+.optionIcon > img{
+	width: 40px;
+	border-radius: 50%;
+}
+
+
+.iconInside{
+	font-size: 20px;
+	margin-top: 10px;
+
+}
+
+.iconSearch{
+	position: absolute;
+	left: 90px;
+	margin: 9px;
+	display: none;
+}
+
+
+
+/* Media  */
+
+
+
+@media all and (max-width: 1390px){
+	:root{
+		--search-width: 500px;
+	}
+
+}
+
+@media all and (max-width: 1100px){
+	.searchBar{
+		display: none;
+	}
+
+	.iconSearch{
+		display: block;
+	}
+
+	.iconSearch > svg{
+		margin-left: 10px;
+	}
+
+
+	.navIcons{
+		margin-top: var(--nav-margin-top);
+		display: flex;
+		flex-direction: row;
+		gap: 15px;
+		position: absolute;
+		right: 20px;
+	}
+
+
+}
+
+@media all and (max-width: 900px){
+	.logoImg{
+		left: 10px;
+	}
+	:root{
+		--search-width: 20px;
+	}
+}
+
+@media all and (max-width: 600px){
+	.logoImg > p{
+		display: none;
+	}
+
+}
+
+@media all and (max-width: 400px){
+
+	.navIcons{
+		right: 10px;
+	}
+
+	.optionIcon{
+		width: 30px;
+		height: 30px;
+	}
+
+	.iconInside{
+		font-size: 15px;
+		margin-top: 7px;
+	}
+
+	.iconSearch > svg{
+		margin-left: 7px;
+	}
+
+	.optionIcon > img{
+		width: 30px;
+		border-radius: 50%;
+	}
+
+	:root{
+		--nav-margin-top: calc((60px - 32px)/2);
+	}
+
+	.iconSearch{
+		margin: 0px;
+		left: 80px;
+		margin-top: calc((60px - 32px)/2);
+	}
+
+	.logoImg{
+		left: -8px;
+	}
+
+
+	.logoImg > img{
+		height: 40px;
+		margin: 10px;
+	}
+
+
+}

@@ -1,0 +1,13 @@
+.editDiv{
+	width: 100%;
+	position: relative;
+	height: 250px;
+}
+
+.wrapperClassName{
+	background-color: white;
+}
+
+.editorClassName{
+	height: 250px;
+}

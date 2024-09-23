@@ -1,0 +1,456 @@
+:root{
+	--div-component-border: 3px solid #f5f5f8;
+}
+
+
+
+.mainDiv{
+	width: 76%;
+	height: 100vh;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	top: 70px;
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+
+.leftDiv{
+	width: 70%;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.rightDiv{
+	width: 30%;
+	height: 100%;
+	right: 0px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.upDiv{
+	width: 100%;
+	position: relative;
+	border-radius: 15px;
+	border: var(--div-component-border);
+}
+
+.backImage{
+	width: 100%;
+	height: 250px;
+	position: relative;
+}
+
+.backImage > img{
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	border-top-right-radius: 15px;
+	border-top-left-radius: 15px;
+}
+
+
+.profileImage{
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	border: 5px solid white;
+	position: relative;
+	bottom: 100px;
+	left: 70px;
+	display: flex;
+	flex-direction: row;
+}
+
+.profileImage > img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+
+}
+
+.profileText{
+	padding: 0px;
+	margin: 0px;
+	margin-left: 100px;
+	height: 140px;
+}
+
+.profileText > h2,p{
+	padding: 0px;
+	margin: 0px;
+}
+
+.profileText > p{
+	font-weight: 500;
+}
+
+.profileInfo{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+
+.edit{
+	height: 30px;
+	position: absolute;
+	right: 15px;
+	margin-top: 10px;
+}
+
+
+/* Follow Btn */
+
+.pick{
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+}
+
+.shortsCont{
+	display: grid;
+    grid-template-columns: repeat(2, 430px); /* 4 columns, each 240px wide */
+    grid-auto-rows: 700px; /* Each row height is 340px */
+    gap: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.pickContainer{
+	margin: 0px;
+	padding: 0px;
+	display: flex;
+	flex-direction: row;
+	gap: 30px;
+}
+
+.pick > h3{
+	padding: 0px;
+	margin: 0px;
+}
+
+.follow{
+	height: 30px;
+	position: absolute;
+	right: 15px;
+	margin-top: 10px;
+}
+
+.follow > button{
+	border-radius: 5px;
+	outline: 0;
+	border: none;
+	padding: 5px;
+	font-weight: 500;
+	background-color: #3c52ff;
+	color: white;
+}
+
+.addPhoto{
+	width: 180px;
+	height: 30px;
+	background-color: white;
+	position: absolute;
+	border: 1px solid gray;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	cursor: pointer;
+}
+
+.addPhoto > h5{
+	margin-top: 5px;
+}
+
+.iconChange{
+	font-size: 22px;
+	margin: 4px;
+}
+
+.addPhotoBack{
+	top: 10px;
+	left: 10px;
+	display: none;
+}
+
+.addPhotoProfile{
+	bottom: 10px;
+	left: 9px;
+	display: none;
+}
+
+.profileImage:hover .addPhotoProfile{
+	display: flex;
+}
+
+.backImage:hover .addPhotoBack{
+	display: flex;
+}
+
+
+.edit > button{
+	border-radius: 5px;
+	outline: 0;
+	border: none;
+	padding: 5px;
+	font-weight: 500;
+	background-color: #3c52ff;
+	color: white;
+}
+
+.icon{
+	font-size: 16px;
+}
+
+.downDiv{
+	width: 100%;
+	position: relative;
+	border-radius: 15px;
+	border: var(--div-component-border);
+}
+
+.downDiv > h3{
+	padding: 0px;
+	margin-left: 15px;
+	width: 100px;
+}
+
+.downDiv > div{
+	margin: 25px;
+	outline: 0;
+}
+
+.summaryEdit{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+.scroll{
+	overflow-y: scroll;
+}
+
+
+.friends{
+	width: 100%;
+	border-radius: 15px;
+	position: relative;
+	border: var(--div-component-border);
+	height: 400px;
+	overflow-y: scroll;
+	background-color: white;
+}
+
+.friendsPhone{
+	width: 100%;
+	border-radius: 15px;
+	position: relative;
+	border: var(--div-component-border);
+	height: 400px;
+	overflow-y: scroll;
+	display: none;
+	background-color: white;
+}
+
+.friends > h3{
+	margin: 10px;
+	padding: 0px;
+	width: 155px;
+}
+
+.aboutMe{
+	width: 100%;
+	border-radius: 15px;
+	position: relative;
+	border: var(--div-component-border);
+	background-color: white;
+}
+
+.aboutMePhone{
+	width: 100%;
+	border-radius: 15px;
+	position: relative;
+	border: var(--div-component-border);
+	display: none;
+}
+
+.saveBtn{
+	display: block;
+}
+
+
+.aboutMe > h3{
+	margin: 10px;
+	padding: 0px;
+	width: 120px;
+}
+
+.aboutEdit{
+	right: 15px;
+	top: 3px;
+}
+
+.infoGroup{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+	padding-top: 10px;
+}
+
+.infoItem{
+	width: 100%;
+	height: 60px;
+	display: flex;
+	flex-direction: row;
+	gap: 30px;
+}
+
+.textInfo{
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	margin-top: 3px;
+}
+
+.textInfo > h4,h5{
+	padding: 0px;
+	margin: 0px;
+}
+
+
+.iconInfo{
+	font-size: 27px;
+	margin: 10px;
+	width: 10px;
+	opacity: 0.9;
+}
+
+
+@media all and (max-width: 1330px){
+	.aboutMePhone{
+		display: block;
+	}
+
+	.friendsPhone{
+		display: block;
+	}
+
+	.aboutMe{
+		display: none;
+	}
+
+	.aboutMePhone > h3{
+		position: relative;
+		left: 15px;
+	}
+
+	.friends{
+		display: none;
+	}
+
+	.rightDiv{
+		display: none;
+	}
+	.leftDiv{
+		width: 100%;
+	}
+
+	.mainDiv{
+		width: 100%;
+	}
+
+	.aboutEdit{
+		left: 25px;
+	}
+
+}
+
+@media all and (max-width: 880px){
+
+	.shortsCont{
+	    grid-template-columns: repeat(1, 430px); /* 4 columns, each 240px wide */
+	    grid-auto-rows: 700px; /* Each row height is 340px */
+	    margin-left: auto;
+	    margin-right: auto;
+	}
+}
+
+@media all and (max-width: 590px){
+	.profileImage{
+		left: 0px;
+		margin-left: auto;
+		margin-right: auto;
+		bottom: 75px;
+
+	}
+
+	.addPhotoProfile{
+		bottom: 10px;
+		left: -15px;
+		display: none;
+	}
+
+	.profileImage{
+		width: 150px;
+		height: 150px;
+	}
+
+.profileImage > img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+
+}
+
+	.profileInfo{
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.profileText{
+		margin-left: auto;
+		margin-right: auto;
+		position: relative;
+		bottom: 75px
+	}
+
+	.profileText > p,h2{
+		text-align: center;
+	}
+
+	.edit{
+		position:relative;
+		margin-left: auto;
+		margin-right: auto;
+		right: 0px;
+		bottom: 50px;
+	}
+
+	.follow{
+		position:relative;
+		margin-left: auto;
+		margin-right: auto;
+		right: 0px;
+		bottom: 50px;
+	}
+
+
+}
+
+@media all and (max-width: 430px){
+	.shortsCont{
+	    width: 300px;
+	}
+}

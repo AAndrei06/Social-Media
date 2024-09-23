@@ -1,0 +1,293 @@
+.mainArea{
+	width: 100vw;
+	height: 100vh;
+	background: #f2f4f7;
+}
+
+.mainDiv{
+	width: calc(100vw - 20px);
+	height: calc(100vh - 20px - 60px);
+	position: relative;
+	top: 70px;
+	left: 10px;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
+.leftSection{
+	width: 350px;
+	height: 100%;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0px 0px 5px lightgray;
+	overflow-y: hidden;
+	scrollbar-gutter: stable;
+}
+
+.additional{
+	width: 300px;
+	position: fixed;
+	z-index: 99999;
+	height: calc(100vh - 80px);
+	left: 0px;
+	transform: translateX(-300px);
+	right: -300px;
+	transition: 0.3s;
+}
+
+.original{
+	display: block;
+}
+
+.arrow{
+	font-size: 30px;
+	font-weight: 700;
+	padding: 0px;
+	margin-top: 7px;
+	margin-left: 7px;
+	cursor: pointer;
+}
+
+.arrowRight{
+	background-color: white;
+	position: absolute;
+	top: 64px;
+	width: 40px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	box-shadow: 0px 0px 5px lightgray;
+	z-index: 23432;
+	cursor: pointer;
+	display: none;
+}
+
+.arrowRight > svg{
+	margin-left: 10px;
+	font-weight: 700;
+}
+
+.writeSection{
+	width: 100%;
+	height: 50px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	position: relative;
+}
+
+
+.inputWrite{
+	width: calc(100% - 150px);
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	outline: 0;
+	border: none;
+	border-radius: 30px;
+	font-size: 20px;
+	padding-left: 50px;
+	padding-right: 100px;
+	border: 1px solid gray;
+	background-color: #f5f6fa;
+}
+
+.sendBtn{
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	right: 20px;
+	top: 3px;
+	right: 3px;
+	border-radius: 30px;
+	padding-right: 10px;
+	outline: 0;
+	border: none;
+	color: white;
+	background-color: #3c52ff;
+}
+
+.emojiBtn{
+	font-size: 45px;
+	position: absolute;
+	right: 80px;
+	top: -12px;
+	height: 10px;
+	width: 20px;
+	font-weight: bold;
+	padding: 0px;
+	margin: 0px;
+	user-select: none;
+	cursor: pointer;
+}
+
+.sendBtn > svg{
+	font-size: 25px;
+	padding: 0px;
+	margin: 0px;
+	height: 20px;
+	width: 20px;
+}
+
+.div{
+	position: relative;
+	width: calc(100% - 40px);
+}
+
+.paper{
+	z-index: 335;
+	font-size: 25px;
+	margin: 0px;
+	padding: 0px;
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	opacity: 0.6;
+	cursor: pointer;
+}
+
+
+.leftSection:hover{
+	overflow-y: scroll;
+	scrollbar-gutter: stable;
+}
+
+.rightSection{
+	width: calc(100% - 300px - 10px);
+	height: 100%;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.searchBar{
+	width: 100%;
+	height: 40px;
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	margin-top: 10px;
+}
+
+.inputSearch{
+	width: calc(100% - 20px - 20px);
+	height: 40px;
+	outline: 0;
+	border: none;
+	padding: 0px;
+	font-size: 18px;
+	padding-left: 30px;
+	border-radius: 17px;
+	margin-left: 5px;
+	background-color: #f5f6fa;
+}
+
+.searchIcon{
+	font-size: 20px;
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	opacity: 0.9;
+
+}
+
+.friendInfo{
+	width: calc(100% - 14px);
+	height: 80px;
+	background-color: #f5f6fa;
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+	border-radius: 10px;
+	margin-left: 7px;
+	margin-top: 7px;
+}
+
+.friendInfo > h3{
+	position: relative;
+	top: 7px;
+}
+
+.friendInfo > img{
+	width: 70px;
+	height: 70px;
+	object-fit: cover;
+	border-radius: 50%;
+	border: 2px solid white;
+	margin-left: 20px;
+	margin-top: 3px;
+}
+
+.messagesSection{
+	width: 100%;
+	height: calc(100% - 150px);
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	overflow-y: hidden;
+	scrollbar-gutter: stable;
+}
+
+.messagesSection:hover{
+	overflow-y: scroll;
+}
+
+
+@media all and (min-width: 841px){
+	.additional{
+		display: none;
+	}
+}
+
+@media all and (max-width: 840px){
+	.original{
+		display: none;
+	}
+
+	.rightSection{
+		width: calc(100% - 0px);
+		height: 100%;
+		background-color: white;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.arrowRight{
+		display: block;
+	}
+
+	.additional{
+		overflow-y: scroll;
+	}
+
+	.messagesSection{
+		overflow-y: scroll;
+	}
+
+	.friendInfo{
+		height: 60px;
+		gap: 10px;
+	}
+
+	.friendInfo > h3{
+		position: relative;
+		top: 3px;
+		font-size: 15px;
+	}
+
+	.friendInfo > img{
+		width: 50px;
+		height: 50px;
+	}
+
+	.div{
+		position: relative;
+		top: 20px;
+		height: 50px;
+		width: calc(100% - 10px);
+	}
+
+	.writeSection{
+		height: 50px;
+	}
+}

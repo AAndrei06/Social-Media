@@ -1,0 +1,108 @@
+.box{
+	width: 240px;
+	height: 320px;
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	border: 2px solid lightgray;
+	border-radius: 10px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.image{
+	width: 240px;
+	height: 240px;
+	background-color: orange;
+	position: absolute;
+	top:0px;
+	left:0px;
+}
+
+.image > img{
+	width: 240px;
+	height: 240px;
+	object-fit: cover;
+}
+
+.name{
+	position: absolute;
+	bottom: 30px;
+	left: 5px;
+}
+
+.btn{
+	position: absolute;
+	bottom: 2px;
+	width: 96%;
+	margin-left: 2%;
+	height: 40px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	color: white;
+	outline: 0;
+	border: none;
+	background-color: #3c52ff;
+	border-radius: 10px;
+	padding-top: 3px;
+}
+
+.btn > svg{
+	font-size: 20px;
+	margin: 5px;
+	display: none;
+}
+
+.btn > h2{
+	padding: 0px;
+	margin: 0px;
+	margin-top: 2px;
+}
+
+
+
+@media all and (max-width: 530px){
+	.box{
+		width: 150px;
+		height: 230px;
+	}
+
+	.image{
+		width: 150px;
+		height: 150px;
+		background-color: orange;
+		position: absolute;
+		top:0px;
+		left:0px;
+	}
+
+	.image > img{
+		width: 150px;
+		height: 150px;
+		object-fit: cover;
+	}
+
+	.box > h4{
+		font-size: 14px;
+	}
+
+	.btn > h2{
+		display: none;
+	}
+
+	.btn{
+		padding: 0px;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
+
+	.btn > svg{
+		position: relative;
+		top: 3px;
+		display: block;
+	}
+
+}
