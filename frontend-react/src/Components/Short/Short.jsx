@@ -2,6 +2,7 @@ import styles from './short.module.css';
 import like from '../../assets/heartB.png';
 import comment from '../../assets/commentShort.png';
 import share from '../../assets/shareShort.png';
+import man from '../../assets/man.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import video from '../../assets/large.mp4';
@@ -37,6 +38,10 @@ export default function Short(props){
 		<>
 			<div className = {styles.video}>
 				<div className = {styles.display}>
+					<div className = {styles.info}>
+						<img src = {man}/>
+						<h5>Mihai Arseni Mititel</h5>
+					</div>
 					<div className = {styles.controls}>
 						<div onClick = {handleReport} className = {styles.control}>
 							<FontAwesomeIcon icon={faCircleExclamation} />

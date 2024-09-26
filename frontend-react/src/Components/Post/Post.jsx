@@ -5,7 +5,7 @@ import heartB from '../../assets/heartB.png';
 import comment from '../../assets/comments.png';
 import share from '../../assets/share.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsis, faPaperPlane, faStar, faShare, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsis, faPaperPlane, faStar, faShare, faCircleExclamation, faTrashCan, faPen } from '@fortawesome/free-solid-svg-icons'
 import EmojiPicker from 'emoji-picker-react';
 import { useState, useRef } from 'react';
 
@@ -52,6 +52,14 @@ export default function Post(props){
 							<p>Distribuie</p>
 						</div>
 						<div className = {styles.postMenuItem}>
+							<FontAwesomeIcon icon={faPen} />
+							<p>Editează</p>
+						</div>
+						<div className = {styles.postMenuItem+" "+styles.redColor}>
+							<FontAwesomeIcon icon={faTrashCan} />
+							<p>Șterge</p>
+						</div>
+						<div className = {styles.postMenuItem+" "+styles.redColor}>
 							<FontAwesomeIcon icon={faCircleExclamation} />
 							<p>Raportează</p>
 						</div>

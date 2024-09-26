@@ -2,6 +2,10 @@ import styles from './chat.module.css';
 import EmojiPicker from 'emoji-picker-react';
 import NavBar from '../Components/NavBar/NavBar.jsx';
 import Comment from '../Components/Comment/Comment.jsx';
+import PostShare from '../Components/Comment/PostShare.jsx';
+import ImageChat from '../Components/ImageChat/ImageChat.jsx';
+import ImageComment from '../Components/Comment/ImageComment.jsx';
+import ShortShare from '../Components/Comment/ShortShare.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faChevronLeft, faChevronRight, faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import ChatFriend from '../Components/ChatFriend/ChatFriend.jsx';
@@ -33,6 +37,7 @@ export default function Chat(){
 		<>
 			<main className = {styles.mainArea}>
 				<NavBar/>
+				<ImageChat/>
 				<div onClick = {() => toggleSide} className = {styles.arrowRight}>
 					<FontAwesomeIcon onClick = {toggleSide} className = {styles.arrow} icon={faChevronRight}/>
 				</div>
@@ -137,6 +142,12 @@ export default function Chat(){
 							m Hello World User from USA tArseni Hel World Welcome to my channelseni HelLorem ipsum Hello World User from USA tArseni HelLorem ipsu
 							m Hello World User from USA tArseni Hel World Welcome to my channelseni HelLorem ipsum Hello World User from USA tArseni HelLorem ipsu
 							m Hello World User from USA tArseni Hel World Welcome to my channelsm ipsumlo World Welm USA tArseni Hel World Welcome to my channelsm ipsumlo World Welcome to my channels"/>
+							<PostShare/>
+							<PostShare toRight/>
+							<ShortShare toRight/>
+							<ImageComment toRight/>
+							<ImageComment/>
+							<ImageComment/>
 						</div>
 						<div className = {styles.writeSection}>
 							<div className = {styles.div}>

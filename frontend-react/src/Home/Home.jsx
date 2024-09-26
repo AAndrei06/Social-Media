@@ -15,12 +15,14 @@ import EmojiPicker from 'emoji-picker-react';
 import { useState, useRef } from 'react';
 import CommentsSection from '../Components/CommentsSection/CommentsSection.jsx';
 import LikeSide from '../Components/LikeSide/LikeSide.jsx';
+import StoryView from '../Components/StoryView/StoryView.jsx';
 
 function Home(){
 
 	const [show, setShow] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [likeOpen, setLikeOpen] = useState(false);
+	const [storyOpen, setStoryOpen] = useState(false);
 
 	function handleShow(){
 		setShow(show => !show);
@@ -34,6 +36,9 @@ return(
 		<CommentsSection set = {setShow} open = {show}/>
 		{open &&
 		<PostForm setOpen = {setOpen}/>
+		}
+		{storyOpen &&
+		<StoryView set = {setStoryOpen} open = {storyOpen}/>
 		}
 		<div className = {styles.bodyPart}>
 			<div className = {styles.leftSide}>
@@ -57,18 +62,15 @@ return(
 											<div className = {styles.storyDiv}>
 
 												<Story create/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
-												<Story/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
+												<Story set = {setStoryOpen} open = {storyOpen}/>
 											</div>
 											<div className = {styles.postSection}>
 												<div>

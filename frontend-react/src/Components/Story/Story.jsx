@@ -9,7 +9,7 @@ export default function Story(props){
 	return(
 		<>
 		{!props.create &&
-			<div className = {styles.story}>
+			<div onClick = {() => props.set(open => !open)} className = {styles.story}>
 				<img className = {styles.storyImg} src = {nature}/>
 				<div className = {styles.profileInfo}>
 					<img className = {styles.profileImg} src = {profile}/>

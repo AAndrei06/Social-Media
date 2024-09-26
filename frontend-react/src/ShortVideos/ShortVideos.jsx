@@ -10,13 +10,17 @@ import './short.css';
 export default function ShortVideos(){
 	const [open, setOpen] = useState(false);
 
+	function handleSlideChange(){
+		setOpen(false);
+	}
+
 	return(
 		<>
 			<main className = {styles.main}>
 				<NavBar/>
 				<CommentsSection set = {setOpen} open = {open}/>
 				<div className = {styles.mainDiv}>
-					<Swiper direction={'vertical'} slidesPerView={1} mousewheel={true} modules={[Mousewheel]}
+					<Swiper onSlideChange={handleSlideChange} direction={'vertical'} slidesPerView={1} mousewheel={true} modules={[Mousewheel]}
 					pagination={{
 					clickable: true,
 
