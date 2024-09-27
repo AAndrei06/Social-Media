@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faChevronLeft, faChevronRight, faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import ChatFriend from '../Components/ChatFriend/ChatFriend.jsx';
 import man from '../assets/man.png';
+import ts from '../assets/test.png';
 import { useRef, useState } from 'react';
 
 export default function Chat(){
@@ -18,6 +19,9 @@ export default function Chat(){
 	const ref = useRef();
 	const inputRef = useRef();
 	const [open, setOpen] = useState(false);
+	const [show, setShow] = useState(false);
+	const [cImg, setcImg] = useState();
+	console.log(cImg);
 
 	function toggleSide(){
 		if (ref.current.style.right == "0px"){
@@ -33,11 +37,15 @@ export default function Chat(){
 		inputRef.current.value = inputRef.current.value + emoji.emoji;
 	}
 
+	function handleFile(){
+		document.getElementById("file-open").click();
+	}
+
 	return(
 		<>
 			<main className = {styles.mainArea}>
 				<NavBar/>
-				<ImageChat/>
+				<ImageChat set = {setShow} show = {show} img = {cImg}/>
 				<div onClick = {() => toggleSide} className = {styles.arrowRight}>
 					<FontAwesomeIcon onClick = {toggleSide} className = {styles.arrow} icon={faChevronRight}/>
 				</div>
@@ -145,13 +153,14 @@ export default function Chat(){
 							<PostShare/>
 							<PostShare toRight/>
 							<ShortShare toRight/>
-							<ImageComment toRight/>
-							<ImageComment/>
-							<ImageComment/>
+							<ImageComment set = {setShow} setImg = {setcImg} img = {ts} toRight/>
+							<ImageComment set = {setShow} setImg = {setcImg} img = {man}/>
+							<ImageComment set = {setShow} setImg = {setcImg} img = {ts}/>
 						</div>
 						<div className = {styles.writeSection}>
 							<div className = {styles.div}>
-								<FontAwesomeIcon className = {styles.paper} icon={faPaperclip}/>
+								<input type = "file" className = {styles.none} id = "file-open" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+								<FontAwesomeIcon onClick = {handleFile} className = {styles.paper} icon={faPaperclip}/>
 								<EmojiPicker style = {{position:"absolute",zIndex: '33',right:"10px", bottom: "50px"}} open = {open} width = {290} height = {400} onEmojiClick = {placeEmoji}/>
 								<div className = {styles.emojiBtn} onClick = {() => setOpen(!open)}>
 									☺

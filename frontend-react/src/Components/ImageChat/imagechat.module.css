@@ -12,9 +12,9 @@
 
 .mainDiv{
 	width: 90vw;
-	max-width: 800px;
-	max-height: 800px;
-	height: 80vh;
+	max-width: 1000px;
+	max-height: 1000px;
+	height: 90vh;
 	background-color: green;
 	border-radius: 10px;
 	position: relative;
@@ -38,6 +38,18 @@
 	gap: 20px;
 	font-size: 40px;
 	top: 10px;
+}
+
+.cont > a > svg{
+	cursor: pointer;
+}
+
+.cont > a{
+	color: black;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	bottom: 10px;
 }
 
 .cont > svg{

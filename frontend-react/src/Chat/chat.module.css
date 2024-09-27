@@ -15,6 +15,10 @@
 	gap: 10px;
 }
 
+.none{
+	display: none;
+}
+
 .leftSection{
 	width: 350px;
 	height: 100%;
