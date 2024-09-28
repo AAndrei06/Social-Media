@@ -51,7 +51,7 @@ export default function Post(props){
 							<FontAwesomeIcon icon={faShare} />
 							<p>Distribuie</p>
 						</div>
-						<div className = {styles.postMenuItem}>
+						<div onClick = {() => props.func('edit')} className = {styles.postMenuItem}>
 							<FontAwesomeIcon icon={faPen} />
 							<p>Editează</p>
 						</div>

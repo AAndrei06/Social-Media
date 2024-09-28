@@ -18,7 +18,7 @@ export default function Story(props){
 			</div>
 		}
 		{props.create &&
-			<div className = {styles.storyCreate}>
+			<div onClick = {() => props.func("story")} className = {styles.storyCreate}>
 				<img className = {styles.photo} src = {man}/>
 				<button className = {styles.btn}>
 					<FontAwesomeIcon icon={faPlus} />

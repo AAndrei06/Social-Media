@@ -1,12 +1,19 @@
 import styles from './leftitem.module.css';
 import add from '../../assets/add.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 
 export default function FriendItem(props){
 
 	const name = props.lf ? styles.toLeft : "";
 	const name2 = props.lf ? styles.contLf : "";
+
+	const [add, setAdd] = useState(false);
+
+	function handleAdd(){
+		setAdd(add => !add);
+	}
 
 	return(
 		<>
@@ -20,8 +27,13 @@ export default function FriendItem(props){
 					</div>
 					{props.suggestion &&
 						<div className = {styles.add}>
-							<button className = {styles.btn}>
-								<FontAwesomeIcon icon={faPlus} />
+							<button onClick = {handleAdd} className = {styles.btn}>
+								{!add && 
+									<FontAwesomeIcon icon={faPlus}/>
+								}
+								{add &&
+									<FontAwesomeIcon icon={faCheck}/>
+								}
 							</button>
 						</div>
 					}

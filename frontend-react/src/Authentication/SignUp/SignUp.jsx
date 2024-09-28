@@ -9,7 +9,7 @@ return(
 <>
 <main>
 	<div className = {styles.logoImg}>
-		<img src = {logo}/>
+		<img draggable = "false" src = {logo}/>
 	</div>
 	<div className = {styles.formContainer}>
 		
@@ -95,6 +95,7 @@ return(
 					</div>
 				</div>
 			</div>
+			<p className = {styles.dontHave}>Nu ai un cont? <a href="#">Înregistrează-te</a></p>
 		</div>
 	</div>
 

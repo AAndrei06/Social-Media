@@ -19,6 +19,10 @@
 	border-radius: 5px;
 }
 
+.mini{
+	height: 180px;
+}
+
 .head{
 	width: 100%;
 	height: 60px;
@@ -61,6 +65,11 @@
 	position: absolute;
 	left: 10px;
 	top: 310px;
+}
+
+.miniFile{
+	top: 30px;
+	left: 15px;
 }
 
 .file::file-selector-button {

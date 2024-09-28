@@ -23,6 +23,12 @@ function Home(){
 	const [open, setOpen] = useState(false);
 	const [likeOpen, setLikeOpen] = useState(false);
 	const [storyOpen, setStoryOpen] = useState(false);
+	const [type, setType] = useState("creează");
+
+	function handleOpen(typeF){
+		setType(type => typeF);
+		setOpen(open => !open);
+	}
 
 	function handleShow(){
 		setShow(show => !show);
@@ -35,7 +41,7 @@ return(
 		<LikeSide set = {setLikeOpen} open = {likeOpen}/>
 		<CommentsSection set = {setShow} open = {show}/>
 		{open &&
-		<PostForm setOpen = {setOpen}/>
+		<PostForm setOpen = {setOpen} type = {type}/>
 		}
 		{storyOpen &&
 		<StoryView set = {setStoryOpen} open = {storyOpen}/>
@@ -49,8 +55,11 @@ return(
 					<LeftItem name = "Videoclipuri Scurte"/>
 					<LeftItem name = "Mesaje"/>
 					<LeftItem name = "Favorite"/>
-					<div onClick = {() => setOpen(open => !open)}>
+					<div onClick = {() => handleOpen("create")}>
 						<LeftItem name = "Creează Postare"/>
+					</div>
+					<div onClick = {() => handleOpen("video")}>
+						<LeftItem name = "Creează Videoclip"/>
 					</div>
 				</div>
 				<div className = {styles.menuList}>
@@ -61,7 +70,7 @@ return(
 											<h3 className = {styles.H3}>Povești</h3>
 											<div className = {styles.storyDiv}>
 
-												<Story create/>
+												<Story func = {handleOpen} create/>
 												<Story set = {setStoryOpen} open = {storyOpen}/>
 												<Story set = {setStoryOpen} open = {storyOpen}/>
 												<Story set = {setStoryOpen} open = {storyOpen}/>
@@ -74,8 +83,8 @@ return(
 											</div>
 											<div className = {styles.postSection}>
 												<div>
-													<Post set = {handleShow} show = {handleShow} like = {likeOpen} setLike = {setLikeOpen}/>
-														<Post set = {handleShow} show = {handleShow} like = {likeOpen} setLike = {setLikeOpen}/>
+													<Post func = {handleOpen} set = {handleShow} show = {handleShow} like = {likeOpen} setLike = {setLikeOpen}/>
+														<Post func = {handleOpen} set = {handleShow} show = {handleShow} like = {likeOpen} setLike = {setLikeOpen}/>
 														</div>
 														<br/>
 														<br/>

@@ -16,7 +16,8 @@ export default function LeftItem(props){
 		'Videoclipuri Scurte': video,
 		'Mesaje': message,
 		'Favorite': favorite,
-		'Creează Postare': pen
+		'Creează Postare': pen,
+		'Creează Videoclip': pen
 	};
 
 	const image = props.img ? props.img : object[props.name];
