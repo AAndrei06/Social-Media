@@ -1,6 +1,7 @@
 import styles from './post.module.css';
 import test from '../../assets/test.png';
 import nature from '../../assets/nature.png';
+import video from '../../assets/large.mp4';
 import heartB from '../../assets/heartB.png';
 import comment from '../../assets/comments.png';
 import share from '../../assets/share.png';
@@ -49,7 +50,7 @@ export default function Post(props){
 						</div>
 						<div className = {styles.postMenuItem}>
 							<FontAwesomeIcon icon={faShare} />
-							<p>Distribuie</p>
+							<p>Trimite</p>
 						</div>
 						<div onClick = {() => props.func('edit')} className = {styles.postMenuItem}>
 							<FontAwesomeIcon icon={faPen} />
@@ -86,7 +87,10 @@ export default function Post(props){
 					</p>
 				</div>
 				<div className = {styles.bodyPhoto}>
-					<img src = {nature}/>
+					
+					<video controls>
+						<source src={video} type="video/mp4"/>
+					</video>
 				</div>
 			</div>
 			<div className = {styles.footer}>

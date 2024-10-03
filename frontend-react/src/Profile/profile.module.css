@@ -25,6 +25,10 @@
 	gap: 20px;
 }
 
+.resumeSpace{
+	min-height: 25px;
+}
+
 .rightDiv{
 	width: 30%;
 	height: 100%;
@@ -325,6 +329,7 @@
 .textInfo > h4,h5{
 	padding: 0px;
 	margin: 0px;
+	min-height: 25px;
 }
 
 

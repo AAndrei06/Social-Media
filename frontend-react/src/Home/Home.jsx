@@ -17,7 +17,14 @@ import CommentsSection from '../Components/CommentsSection/CommentsSection.jsx';
 import LikeSide from '../Components/LikeSide/LikeSide.jsx';
 import StoryView from '../Components/StoryView/StoryView.jsx';
 
+import { useOutletContext } from 'react-router-dom';
+
 function Home(){
+
+	const context = useOutletContext();
+	console.log(context.user);
+	console.log(context.token);
+	console.log(context.userId);
 
 	const [show, setShow] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -49,12 +56,21 @@ return(
 		<div className = {styles.bodyPart}>
 			<div className = {styles.leftSide}>
 				<div className = {styles.menuList}>
-					<LeftItem name = "Profil" img = {profil}/>
-					<LeftItem name = "Acasă"/>
-					<LeftItem name = "Prieteni"/>
-					<LeftItem name = "Videoclipuri Scurte"/>
-					<LeftItem name = "Mesaje"/>
-					<LeftItem name = "Favorite"/>
+					<div onClick = {() => context.profile(context.user.idKey)}>
+						<LeftItem name = "Profil" img = {profil}/>
+					</div>
+					<div onClick = {() => context.home()}>
+						<LeftItem name = "Acasă"/>
+					</div>
+					<div onClick = {() => context.friends()}>
+						<LeftItem name = "Prieteni"/>
+					</div>
+					<div onClick = {() => context.videos()}>
+						<LeftItem name = "Videoclipuri Scurte"/>
+					</div>
+					<div onClick = {() => context.chat()}>
+						<LeftItem name = "Mesaje"/>
+					</div>
 					<div onClick = {() => handleOpen("create")}>
 						<LeftItem name = "Creează Postare"/>
 					</div>
@@ -102,17 +118,43 @@ return(
 													<div className = {styles.menuList}>
 														<h3 className = {styles.friendsH3}>Prieteni activi</h3>
 														<div id = "active-friends">
-															<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
+															<div onClick = {() => context.profile(3)}>
+																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
+															</div>
 														</div>
 														<h3 className = {styles.friendsH3}>Sugestii de prietenie</h3>
 														<div id = "suggestion-friends">
+															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
+															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
+															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
+															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
 															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
 															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
 															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>

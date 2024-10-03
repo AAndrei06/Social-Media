@@ -3,9 +3,10 @@ import add from '../../assets/add.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
 export default function FriendItem(props){
-
+	const context = useOutletContext();
 	const name = props.lf ? styles.toLeft : "";
 	const name2 = props.lf ? styles.contLf : "";
 
@@ -19,7 +20,7 @@ export default function FriendItem(props){
 		<>
 			<div className = {styles.item+' '+styles.deactivate}>
 				<div className = {styles.container+" "+name2}>
-					<div className = {styles.image+" "+name}>
+					<div onClick = {() => context.profile(2672)} className = {styles.image+" "+name}>
 						<img src = {props.img}/>
 					</div>
 					<div className = {styles.text}>
