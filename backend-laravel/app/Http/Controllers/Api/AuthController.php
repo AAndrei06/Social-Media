@@ -30,7 +30,8 @@ class AuthController extends Controller
             'last_name'=>$data['name'],
             'birth_date'=>$data['date'],
             'gender'=>$data['gender'],
-            'user_id'=>$user->id
+            'user_id'=>$user->id,
+            'resume'=>''
         ]);
 
         $token = $user->createToken('main')->plainTextToken;

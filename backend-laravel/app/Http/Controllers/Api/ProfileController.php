@@ -21,9 +21,10 @@ class ProfileController extends Controller
 
     public function profilePost($id, Request $request){
 
+        $user = Auth::user();
+        $profile = $user->profile;
+
         if ($request->header('Action-Of-Profile') == 'bannerPhotoChange'){
-            $user = Auth::user();
-            $profile = $user->profile;
 
             $request->validate([
                 'file' => 'image|mimes:jpeg,png,jpg,gif'
@@ -47,8 +48,6 @@ class ProfileController extends Controller
                              'fileLink' => $uploadedImageResponse]);
 
         }else if ($request->header('Action-Of-Profile') == 'profilePhotoChange'){
-            $user = Auth::user();
-            $profile = $user->profile;
 
             $request->validate([
                 'file' => 'image|mimes:jpeg,png,jpg,gif'
@@ -61,6 +60,7 @@ class ProfileController extends Controller
             $image_uploaded_path = $image->store($uploadFolder, 'public');
             $profile->profile_photo = str_replace('localhost','127.0.0.1:8000',Storage::disk('public')->url($image_uploaded_path));
             $profile->save();
+            
             $uploadedImageResponse = array(
                 "image_name" => basename($image_uploaded_path),
                 "image_url" => str_replace('localhost','127.0.0.1:8000',Storage::disk('public')->url($image_uploaded_path)),
@@ -70,6 +70,26 @@ class ProfileController extends Controller
                              'status' => 'success',
                              'code' => 200,
                              'fileLink' => $uploadedImageResponse]);
+        }else if ($request->header('Action-Of-Profile') == 'updateInfo'){
+            
+            $profile->occupation = $request['occupation'];
+            $profile->location = $request['location'];
+            $profile->person = $request['person'];
+            $profile->education = $request['education'];
+            $profile->save();
+
+            return response()->json(array(
+                'occupation' => $profile->occupation,
+                'location' => $profile->location,
+                'person' => $profile->person,
+                'education' => $profile->education
+            ));
+
+        }else if ($request->header('Action-Of-Profile') == 'updateResume'){
+
+            $profile->resume = $request['resume'];
+            $profile->save();
+            return response($profile->resume);
         }
 
 

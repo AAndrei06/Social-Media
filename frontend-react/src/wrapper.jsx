@@ -8,7 +8,6 @@ export default function Wrapper(){
 	const [user, setUser] = useState(null);
 	const [token, setToken] = useState(null);
 	const [errors, setErrors] = useState();
-
 	const axiosClient = axios.create({
 		baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`
 	});
@@ -20,15 +19,14 @@ export default function Wrapper(){
 	axiosClient.interceptors.response.use((response) => {
 		return response;
 	});
-
-	if (!user){
+	
+	if (localStorage.getItem("ACCESS_TOKEN") && token == null && user == null){
+		setToken(localStorage.getItem("ACCESS_TOKEN"));
 		axiosClient.get('/user').then((data) => {
 			setUser(data.data);
+		}).catch((e) => {
+			setUser({'h':'1'});
 		});
-	}
-
-	if (!token){
-		setToken(localStorage.getItem("ACCESS_TOKEN"));
 	}
 
 	function goToProfile(idx){

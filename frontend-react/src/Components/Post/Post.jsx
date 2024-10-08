@@ -9,13 +9,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsis, faPaperPlane, faStar, faShare, faCircleExclamation, faTrashCan, faPen } from '@fortawesome/free-solid-svg-icons'
 import EmojiPicker from 'emoji-picker-react';
 import { useState, useRef } from 'react';
+import { formatDistanceToNow } from 'date-fns';
+import { ro } from 'date-fns/locale';
+import { useOutletContext } from 'react-router-dom';  
 
 export default function Post(props){
+
+	const context = useOutletContext();
+	const client = context.client;
 
 	const ref = useRef('');
 	const [open, setOpen] = useState(false);
 	const [openPostMenu, setOpenPostMenu] = useState(false);
 	const bd = props.bd ? styles.putBorder : null;
+
+	const formattedTime = formatDistanceToNow(new Date(props.created), {
+		addSuffix: true,
+		locale: ro,
+	});
 
 	function placeEmoji(emoji){
 		ref.current.value = ref.current.value + emoji.emoji;
@@ -28,15 +39,29 @@ export default function Post(props){
 	function hideShowPostMenu(){
 		setOpenPostMenu(open => !open);
 	}
+
+	async function deletePost(){
+        try {
+            const response = await client.post(`/post/delete/${props.idKey}`, {
+                headers: {
+                    'Action-Of-Home': 'deletePost',
+                },
+            });
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+	}
+
 	return (
 		<>
 		<div className = {styles.post + ' ' + bd}>
 			<div className = {styles.header}>
 				<div className = {styles.headerInfo}>
-					<img className = {styles.postProfileImg} src = {test}/>
+					<img className = {styles.postProfileImg} src = {props.user_photo}/>
 					<div className = {styles.postTextInfo}>
-						<p>Andrei Arseni</p>
-						<p>4 ore in urma</p>
+						<p>{props.fullname}</p>
+						<p>{formattedTime}</p>
 					</div>
 				</div>
 				<div onClick = {hideShowPostMenu} className = {styles.menuIcon}>
@@ -52,11 +77,11 @@ export default function Post(props){
 							<FontAwesomeIcon icon={faShare} />
 							<p>Trimite</p>
 						</div>
-						<div onClick = {() => props.func('edit')} className = {styles.postMenuItem}>
+						<div onClick = {() => {props.func('edit');props.setId(id => props.idKey)}} className = {styles.postMenuItem}>
 							<FontAwesomeIcon icon={faPen} />
 							<p>Editează</p>
 						</div>
-						<div className = {styles.postMenuItem+" "+styles.redColor}>
+						<div onClick = {() => deletePost()} className = {styles.postMenuItem+" "+styles.redColor}>
 							<FontAwesomeIcon icon={faTrashCan} />
 							<p>Șterge</p>
 						</div>
@@ -68,30 +93,21 @@ export default function Post(props){
 				}
 			</div>
 			<div className = {styles.body}>
-				<div className = {styles.bodyText}>
-					<p>
-						Iniţial, începând cu anul 1500, textul Lorem Ipsum era
-						 utilizat numai în tipografii, de către culegători.
-						  În prezent, datorită apariţiei şi utilizării globale
-						   <strong>a computerelor, textul Lorem ipsum este utilizat pentru</strong>
-						   a simula orice text cu aspect neutru, atât pentru lucrări
-						    tipografice cât şi pentru orice alte lucrări care presupun text
-						     - în web design, design pentru logo-uri corporative, ştampile etc.
-						     Iniţial, începând cu anul 1500, textul Lorem Ipsum era
-						 utilizat numai în tipografii, de către culegători.
-						  În prezent, datorită apariţiei şi utilizării globale
-						   a computerelor, textul Lorem ipsum este utilizat pentru 
-						   a simula orice text cu aspect neutru, atât pentru lucrări
-						    tipografice cât şi pentru orice alte lucrări care presupun text
-						     - în web design, design pentru logo-uri corporative, ştampile etc.
-					</p>
+				<div className = {styles.bodyText} dangerouslySetInnerHTML={{ __html: props.body }}>
 				</div>
-				<div className = {styles.bodyPhoto}>
-					
-					<video controls>
-						<source src={video} type="video/mp4"/>
-					</video>
-				</div>
+				{props.file &&
+					<div className = {styles.bodyPhoto}>
+						{props.file.endsWith('.mp4') &&
+							<video controls>
+								<source src={props.file} type="video/mp4"/>
+							</video>
+						}
+
+						{!props.file.endsWith('.mp4') &&
+							<img src = {props.file}/>
+						}
+					</div>
+				}
 			</div>
 			<div className = {styles.footer}>
 				<div className = {styles.options}>

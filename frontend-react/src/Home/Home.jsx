@@ -12,7 +12,7 @@ import PostForm from '../Components/PostForm/PostForm.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faChevronLeft, faChevronRight, faPaperclip, faPaperPlane, faXmark } from '@fortawesome/free-solid-svg-icons';
 import EmojiPicker from 'emoji-picker-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import CommentsSection from '../Components/CommentsSection/CommentsSection.jsx';
 import LikeSide from '../Components/LikeSide/LikeSide.jsx';
 import StoryView from '../Components/StoryView/StoryView.jsx';
@@ -22,15 +22,40 @@ import { useOutletContext } from 'react-router-dom';
 function Home(){
 
 	const context = useOutletContext();
-	console.log(context.user);
-	console.log(context.token);
-	console.log(context.userId);
+	const client = context.client;
+
+	const [posts, setPosts] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
 
 	const [show, setShow] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [likeOpen, setLikeOpen] = useState(false);
 	const [storyOpen, setStoryOpen] = useState(false);
-	const [type, setType] = useState("creează");
+	const [type, setType] = useState("create");
+	const [id, setId] = useState('nothing');
+
+	console.log(id);
+	console.log(type);
+
+	useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await client.get('/');
+                setPosts(response.data);
+                
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPosts();
+    }, []);
+
+	if (loading) return <p>Loading...</p>;
+	console.log(posts);
 
 	function handleOpen(typeF){
 		setType(type => typeF);
@@ -41,6 +66,8 @@ function Home(){
 		setShow(show => !show);
 	}
 
+
+
 return(
 <>
 <main className = {styles.mainArea}>
@@ -48,7 +75,7 @@ return(
 		<LikeSide set = {setLikeOpen} open = {likeOpen}/>
 		<CommentsSection set = {setShow} open = {show}/>
 		{open &&
-		<PostForm setOpen = {setOpen} type = {type}/>
+		<PostForm setOpen = {setOpen} type = {type} idKey = {id}/>
 		}
 		{storyOpen &&
 		<StoryView set = {setStoryOpen} open = {storyOpen}/>
@@ -99,8 +126,24 @@ return(
 											</div>
 											<div className = {styles.postSection}>
 												<div>
-													<Post func = {handleOpen} set = {handleShow} show = {handleShow} like = {likeOpen} setLike = {setLikeOpen}/>
-														<Post func = {handleOpen} set = {handleShow} show = {handleShow} like = {likeOpen} setLike = {setLikeOpen}/>
+													{posts.map(post => (
+														<Post 
+															fullname = {post.user.profile.first_name+' '+post.user.profile.last_name}
+															body = {post.body}
+															created = {post.created_at}
+															user_photo = {post.user.profile.profile_photo}
+															file = {post.file} 
+															key = {post.uuid} 
+															func = {handleOpen} 
+															set = {handleShow}
+															setId = {setId} 
+															show = {handleShow} 
+															like = {likeOpen} 
+															setLike = {setLikeOpen}
+															idKey = {post.uuid}
+															/>
+
+														))}
 														</div>
 														<br/>
 														<br/>
