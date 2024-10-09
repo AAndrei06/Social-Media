@@ -123,8 +123,29 @@ class HomeController extends Controller
     public function writeComment($id, Request $request){
 
         $post = Post::where('uuid',$id)->first();
+        $user = Auth::user();
 
-        return response('comment create');     
+        $comment = Comment::create([
+            'user_id' => $user->id,
+            'post_id' => $post->id,
+            'content' => $request->input('content')
+        ]);
 
+        return response()->json($comment);     
+
+    }
+
+    public function getComments($id, Request $request){
+
+        $post = Post::where('uuid',$id)->first();
+        $comments = $post->comments()->with(['user', 'user.profile'])->get();
+        return response()->json($comments);
+    }
+
+
+    public function deleteComment($id, Request $request){
+        $comment = Comment::find($id);
+        $comment->delete();
+        return response('Comment deleted with id '.$id);
     }
 }

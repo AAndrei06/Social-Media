@@ -24,5 +24,8 @@ Route::middleware('auth:sanctum')->post('/', [HomeController::class,'createPost'
 Route::middleware('auth:sanctum')->get('/', [HomeController::class,'showContent']);
 Route::middleware('auth:sanctum')->post('/post/edit/{id}', [HomeController::class,'editPost']);
 Route::middleware('auth:sanctum')->post('/post/delete/{id}', [HomeController::class,'deletePost']);
+Route::middleware('auth:sanctum')->post('/post/comment/{id}', [HomeController::class,'writeComment']);
+Route::middleware('auth:sanctum')->get('/post/get/comments/{id}', [HomeController::class,'getComments']);
+Route::middleware('auth:sanctum')->post('/post/delete/comment/{id}', [HomeController::class,'deleteComment']);
 
 // NU UITA DE MIDDLEWARE SANCTUM CA SA MEARGA REQUEST

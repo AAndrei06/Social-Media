@@ -27,6 +27,8 @@ function Home(){
 	const [posts, setPosts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [commentPostId, setCommentPostId] = useState('1');
+	console.log(commentPostId);
 
 	const [show, setShow] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -34,9 +36,6 @@ function Home(){
 	const [storyOpen, setStoryOpen] = useState(false);
 	const [type, setType] = useState("create");
 	const [id, setId] = useState('nothing');
-
-	console.log(id);
-	console.log(type);
 
 	useEffect(() => {
         const fetchPosts = async () => {
@@ -73,7 +72,7 @@ return(
 <main className = {styles.mainArea}>
 	<NavBar/>
 		<LikeSide set = {setLikeOpen} open = {likeOpen}/>
-		<CommentsSection set = {setShow} open = {show}/>
+		<CommentsSection uuidPost = {commentPostId} set = {setShow} open = {show}/>
 		{open &&
 		<PostForm setOpen = {setOpen} type = {type} idKey = {id}/>
 		}
@@ -141,6 +140,7 @@ return(
 															like = {likeOpen} 
 															setLike = {setLikeOpen}
 															idKey = {post.uuid}
+															setCommentPostId = {setCommentPostId}
 															/>
 
 														))}

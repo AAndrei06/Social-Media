@@ -53,6 +53,31 @@ export default function Post(props){
         }
 	}
 
+
+	async function handleCommentSubmit(e){
+		e.preventDefault();
+
+		const payload = {
+			'content': ref.current.value
+		};
+
+		try {
+            const response = await client.post(`/post/comment/${props.idKey}`,payload, {
+                headers: {
+                    'Action-Of-Home': 'writeComment',
+                },
+            });
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+	}
+
+	async function handleCommentsDisplay(){
+		props.set(o => !o);
+		props.setCommentPostId(d => props.idKey);
+	}
+
 	return (
 		<>
 		<div className = {styles.post + ' ' + bd}>
@@ -115,7 +140,7 @@ export default function Post(props){
 						<img src = {heartB}/>
 						<p styles = {{cursor: 'pointer'}} onClick = {() => props.setLike(o => !o)}>334543</p>
 					</div>
-					<div onClick = {() => props.set(o => !o)} className = {styles.option}>
+					<div onClick = {() => handleCommentsDisplay()} className = {styles.option}>
 						<img src = {comment}/>
 						<p>1</p>
 					</div>
@@ -127,13 +152,15 @@ export default function Post(props){
 				<div className = {styles.comment}>
 					<div className = {styles.center}>
 						<div className = {styles.inputAlign}>
-							<input ref = {ref} className = {styles.inputText} placeholder = "Scrie un comentariu" type = "text"/>
-							<div onClick = {toggleEmojies} className = {styles.emojiBtn}>
-								☺
-							</div>
-							<button className = {styles.sendBtn}>
-								<FontAwesomeIcon icon={faPaperPlane} />
-							</button>
+							<form method="POST" onSubmit = {(e) => handleCommentSubmit(e)}>
+								<input ref = {ref} className = {styles.inputText} placeholder = "Scrie un comentariu" type = "text"/>
+								<div onClick = {toggleEmojies} className = {styles.emojiBtn}>
+									☺
+								</div>
+								<button type = "submit" className = {styles.sendBtn}>
+									<FontAwesomeIcon icon={faPaperPlane} />
+								</button>
+							</form>
 						</div>
 						<EmojiPicker style = {{position:"absolute",zIndex: '33', bottom: "50px", right: "10px"}} open = {open} width = {280} height = {400} onEmojiClick = {placeEmoji}/>
 					</div>

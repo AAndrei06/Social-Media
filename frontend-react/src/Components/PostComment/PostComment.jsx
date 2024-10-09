@@ -1,36 +1,42 @@
 import styles from './postcomment.module.css';
 import man from '../../assets/man.png';
+import { useOutletContext } from 'react-router-dom';
 
-export default function PostComment(){
+export default function PostComment(props){
+
+	const context = useOutletContext();
+	const client = context.client;
+
+	async function deleteComment(commentId){
+		try {
+            const response = await client.post(`/post/delete/comment/${commentId}`, {
+                headers: {
+                    'Action-Of-Home': 'deleteComment',
+                },
+            });
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+	}
+
 	return(
 		<div className = {styles.comment}>
 			<div className = {styles.head}>
 				<div className = {styles.photo}>
-					<img src = {man}/>
+					<img src = {props.comment.user.profile.profile_photo}/>
 				</div>
 				<h5 className = {styles.name}>
-					Andrei Arseni Hello World
+					{props.comment.user.profile.first_name + ' ' + props.comment.user.profile.last_name}
 				</h5>
 			</div>
 			<div className = {styles.body}>
 			<p>
-				Contrary to popular belief, Lorem Ipsum 
-				is not simply random text. It has roots
-				 in a piece of classical Latin literature
-				  from 45 BC, making it over 2000 years old.
-				   Richard McClintock, a Latin professor at 
-				   Hampden-Sydney College in Virginia, looked 
-				   up one of the more obscure Latin words, 
-				   consectetur, from a Lorem Ipsum passage,
-				    and going through the cites of the word
-				     in classical literature, discovered the
-				      undoubtable source. Lorem Ipsum comes 
-				      from sections 1.10.32 and 1.10.33 of "de
-				       Finibus Bonorum et Malorum" (The Extremes
-				        of Good and Evil) by Cicero, written in 45 BC.
-				 This book is a treatise on the theory of ethics,
-				  very popular during the Renaissance. The first line of Lorem Ipsum, "L
+				{props.comment.content}
 			</p>
+			<div className = {styles.btnDiv}>
+				<h4 onClick = {() => deleteComment(props.comment.id)} className = {styles.btn}>Șterge</h4>
+			</div>
 			</div>
 		</div>
 	);
