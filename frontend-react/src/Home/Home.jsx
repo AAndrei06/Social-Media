@@ -28,7 +28,7 @@ function Home(){
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [commentPostId, setCommentPostId] = useState('1');
-	console.log(commentPostId);
+	const [likePostId, setLikePostId] = useState('1');
 
 	const [show, setShow] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -42,7 +42,6 @@ function Home(){
             try {
                 const response = await client.get('/');
                 setPosts(response.data);
-                
             } catch (err) {
                 setError(err);
             } finally {
@@ -54,7 +53,6 @@ function Home(){
     }, []);
 
 	if (loading) return <p>Loading...</p>;
-	console.log(posts);
 
 	function handleOpen(typeF){
 		setType(type => typeF);
@@ -71,7 +69,7 @@ return(
 <>
 <main className = {styles.mainArea}>
 	<NavBar/>
-		<LikeSide set = {setLikeOpen} open = {likeOpen}/>
+		<LikeSide uuidPost = {likePostId} set = {setLikeOpen} open = {likeOpen}/>
 		<CommentsSection uuidPost = {commentPostId} set = {setShow} open = {show}/>
 		{open &&
 		<PostForm setOpen = {setOpen} type = {type} idKey = {id}/>
@@ -141,6 +139,9 @@ return(
 															setLike = {setLikeOpen}
 															idKey = {post.uuid}
 															setCommentPostId = {setCommentPostId}
+															setLikePostId = {setLikePostId}
+															liked = {post.liked_by_user}
+															nrLikes = {post.like_count}
 															/>
 
 														))}

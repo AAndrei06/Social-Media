@@ -33,7 +33,7 @@ export default function CommentsSection(props){
         };
 
         fetchComments();
-    }, [props.uuidPost]);
+    }, [props.uuidPost, props.open]);
 
     if (loading) {
         return <div>Loading comments...</div>;

@@ -3,6 +3,7 @@ import test from '../../assets/test.png';
 import nature from '../../assets/nature.png';
 import video from '../../assets/large.mp4';
 import heartB from '../../assets/heartB.png';
+import heartA from '../../assets/heartA.png';
 import comment from '../../assets/comments.png';
 import share from '../../assets/share.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,6 +19,8 @@ export default function Post(props){
 	const context = useOutletContext();
 	const client = context.client;
 
+	const imgRef = useRef();
+	const nrOfLikes = useRef();
 	const ref = useRef('');
 	const [open, setOpen] = useState(false);
 	const [openPostMenu, setOpenPostMenu] = useState(false);
@@ -27,6 +30,26 @@ export default function Post(props){
 		addSuffix: true,
 		locale: ro,
 	});
+
+	async function likePost(){
+		try {
+            const response = await client.post(`/post/like/${props.idKey}`, {
+                headers: {
+                    'Action-Of-Home': 'likePost',
+                },
+            });
+            if (response.data.msg == "Liked"){
+            	imgRef.current.src = heartA;
+            	nrOfLikes.current.innerText = response.data.nr;
+            }else{
+            	imgRef.current.src = heartB;
+            	nrOfLikes.current.innerText = response.data.nr;
+            }
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+	}
 
 	function placeEmoji(emoji){
 		ref.current.value = ref.current.value + emoji.emoji;
@@ -73,7 +96,12 @@ export default function Post(props){
         }
 	}
 
-	async function handleCommentsDisplay(){
+	function handleLikesDisplay(){
+		props.setLike(o => !o);
+		props.setLikePostId(d => props.idKey);
+	}
+
+	function handleCommentsDisplay(){
 		props.set(o => !o);
 		props.setCommentPostId(d => props.idKey);
 	}
@@ -137,8 +165,8 @@ export default function Post(props){
 			<div className = {styles.footer}>
 				<div className = {styles.options}>
 					<div className = {styles.option}>
-						<img src = {heartB}/>
-						<p styles = {{cursor: 'pointer'}} onClick = {() => props.setLike(o => !o)}>334543</p>
+						<img onClick = {() => likePost()} ref = {imgRef} src = {props.liked ? heartA : heartB}/>
+						<p ref = {nrOfLikes} styles = {{cursor: 'pointer'}} onClick = {() => handleLikesDisplay()}>{props.nrLikes}</p>
 					</div>
 					<div onClick = {() => handleCommentsDisplay()} className = {styles.option}>
 						<img src = {comment}/>

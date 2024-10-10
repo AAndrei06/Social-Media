@@ -113,10 +113,17 @@ class HomeController extends Controller
     }
 
     public function showContent(){
+        $currentUserId = Auth::id();
 
-        $posts = Post::all();
+        $posts = Post::with(['user.profile:id,user_id,profile_photo,first_name,last_name'])->get();
 
-        return Post::with(['user.profile:id,user_id,profile_photo,first_name,last_name'])->get();
+        $posts->transform(function ($post) use ($currentUserId) {
+            $post->liked_by_user = $post->likes()->where('user_id', $currentUserId)->exists();
+            $post->like_count = $post->likes()->count();
+            return $post;
+        });
+
+        return response()->json($posts);
     }
 
 
@@ -147,5 +154,41 @@ class HomeController extends Controller
         $comment = Comment::find($id);
         $comment->delete();
         return response('Comment deleted with id '.$id);
+    }
+
+    public function likePost($id, Request $request){
+        $post = Post::where('uuid',$id)->first();
+        $user = Auth::user();
+        if (!$post->likes()->where('user_id', $user->id)->exists()) {
+            $post->likes()->attach($user->id);
+            return response()->json([
+                'msg' => 'Liked',
+                'nr' => $post->likes()->count()
+            ]);
+        } else {
+            $post->likes()->detach($user->id);
+            return response()->json([
+                'msg' => 'Disliked',
+                'nr' => $post->likes()->count()
+            ]);
+        }
+        return response()->json($post->likes);
+    }
+
+
+    public function getLikes($id, Request $request){
+        $post = Post::where('uuid',$id)->first();
+        $usersWhoLiked = $post->likes()->with('profile:id,user_id,profile_photo,first_name,last_name')->get();
+
+        $result = $usersWhoLiked->map(function ($user) {
+            return [
+                'idKey' => $user->idKey,
+                'profile_photo' => $user->profile->profile_photo,
+                'first_name' => $user->profile->first_name,
+                'last_name' => $user->profile->last_name
+            ];
+        });
+
+        return response()->json($result);
     }
 }
