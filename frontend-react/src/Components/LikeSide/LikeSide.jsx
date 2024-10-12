@@ -21,6 +21,7 @@ export default function LikeSide(props){
                 setLikes(response.data);
                 console.log('Likes ',response.data);
             } catch (err) {
+            	setLikes([]);
                 console.log(err);
             } finally {
                 setLoading(false);

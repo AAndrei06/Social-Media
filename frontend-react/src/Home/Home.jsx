@@ -70,7 +70,7 @@ return(
 <main className = {styles.mainArea}>
 	<NavBar/>
 		<LikeSide uuidPost = {likePostId} set = {setLikeOpen} open = {likeOpen}/>
-		<CommentsSection uuidPost = {commentPostId} set = {setShow} open = {show}/>
+		<CommentsSection type = {"homePost"} uuidPost = {commentPostId} set = {setShow} open = {show}/>
 		{open &&
 		<PostForm setOpen = {setOpen} type = {type} idKey = {id}/>
 		}

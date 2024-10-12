@@ -3,12 +3,22 @@ import like from '../../assets/heartB.png';
 import comment from '../../assets/commentShort.png';
 import share from '../../assets/shareShort.png';
 import man from '../../assets/man.png';
+import heartB from '../../assets/heartB.png';
+import heartA from '../../assets/heartA.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCircleExclamation, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import video from '../../assets/large.mp4';
 import { useState, useRef, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
 export default function Short(props){
+
+	const context = useOutletContext();
+	const client = context.client;
+	const user = context.user;
+
+	const imgRef = useRef();
+	const nrOfLikes = useRef();
 
 	const [pause, setPause] = useState(false);
 	const [desc, setDesc] = useState(false);
@@ -26,6 +36,39 @@ export default function Short(props){
 		console.log("Report");
 	}
 
+	async function handleLikeVideo(){
+		try {
+            const response = await client.post(`/video/like/${props.video.uuid}`, {
+                headers: {
+                    'Action-Of-Home': 'likeVideo',
+                },
+            });
+            if (response.data.msg == "Liked"){
+            	imgRef.current.src = heartA;
+            	nrOfLikes.current.innerText = response.data.nr;
+            }else{
+            	imgRef.current.src = heartB;
+            	nrOfLikes.current.innerText = response.data.nr;
+            }
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+	}
+
+	async function handleDeleteShort(){
+		try {
+            const response = await client.post(`/video/delete/${props.video.uuid}`, {
+                headers: {
+                    'Action-Of-Home': 'deleteVideo',
+                },
+            });
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+	}
+
 	useEffect(() => {
 		if (props.play){
 			ref.current.play();
@@ -38,45 +81,52 @@ export default function Short(props){
 		<>
 			<div className = {styles.video}>
 				<div className = {styles.display}>
-					<div className = {styles.info}>
-						<img src = {man}/>
-						<h5>Mihai Arseni Mititel</h5>
+					<div className = {styles.info} onClick = {() => context.profile(props.video.user.idKey)}>
+						<img src = {props.video.user.profile.profile_photo}/>
+						<h5>{props.video.user.profile.first_name + ' ' + props.video.user.profile.last_name}</h5>
 					</div>
 					<div className = {styles.controls}>
-						<div onClick = {handleReport} className = {styles.control}>
-							<FontAwesomeIcon icon={faCircleExclamation} />
-						</div>
+						{props.video.user.idKey == user.idKey &&
+							<div onClick = {() => handleDeleteShort()} className = {styles.control}>
+								<FontAwesomeIcon icon={faTrashCan} />
+							</div>
+						}
+						{!props.video.user.idKey == user.idKey &&
+							<div onClick = {handleReport} className = {styles.control}>
+								<FontAwesomeIcon icon={faCircleExclamation} />
+							</div>
+						}
 					</div>
 					<video ref = {ref} onClick = {handlePause}>
-						<source src={video} type="video/mp4"/>
+						<source src={props.video.file} type="video/mp4"/>
 					</video>
 					<div className = {styles.description}>
 					{desc &&
-						<p>Lorem Ipsum is simply dummy text of the printing and typ
-						esetting industry. Lorem Ipsum has been the industry's standard
-						 dummy text ever since the 1500s, when an unknown printer took a galley of 
-						 type and scrambled it to make a type specimen book. It has survived not only
-						  five centuries, but also the leap into electronic typesetting, r
-						  emaining essentially unchanged. It was popularised in the 1960s
-						   with the release of Letraset sheets containing Lorem Ipsum passages, and
-						 more recently with desktop publishing software like Aldus Pa
-						 geMaker including versions of Lorem Ipsum.</p>
+						<>
+							<p dangerouslySetInnerHTML={{ __html: props.video.body }}></p>
+							<div onClick = {() => setDesc(desc => !desc)} className = {styles.more}>
+								Mai puțin...
+							</div>
+						</>
 					}
 					{!desc &&
-						<p>Lorem Ipsum is simply dummy text of...</p>
+						<>
+							<p dangerouslySetInnerHTML={{ __html: props.video.body.slice(0,30) }}></p>
+							<div onClick = {() => setDesc(desc => !desc)} className = {styles.more}>
+								Mai mult...
+							</div>
+						</>
 					}
-					<div onClick = {() => setDesc(desc => !desc)} className = {styles.more}>
-						Mai mult...
-					</div>
+					
 					</div>
 				</div>
 				<div className = {styles.optionSection}>
 					<div className = {styles.option}>
-						<img src = {like}/>
-						<p>3453453</p>
+						<img onClick = {() => handleLikeVideo()} ref = {imgRef} src = {props.video.liked_by_user ? heartA : heartB}/>
+						<p ref = {nrOfLikes}>{props.video.like_count}</p>
 					</div>
 
-					<div onClick = {() => props.set(o => !o)} className = {styles.option}>
+					<div onClick = {() => {props.set(o => !o);props.setId(id => props.video.uuid)}} className = {styles.option}>
 						<img src = {comment}/>
 						<p>333</p>
 					</div>

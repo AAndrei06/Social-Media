@@ -19,6 +19,9 @@ export default function Wrapper(){
 	axiosClient.interceptors.response.use((response) => {
 		return response;
 	});
+
+	console.log('user');
+	console.log(user);
 	
 	if (localStorage.getItem("ACCESS_TOKEN") && token == null && user == null){
 		setToken(localStorage.getItem("ACCESS_TOKEN"));

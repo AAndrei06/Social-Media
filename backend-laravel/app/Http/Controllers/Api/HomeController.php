@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Video;
+use App\Models\Commentv;
 
 class HomeController extends Controller
 {
@@ -191,4 +193,58 @@ class HomeController extends Controller
 
         return response()->json($result);
     }
+
+    public function createShort(Request $request){
+
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'file' => 'file|max:409600',
+            'content' => 'required|string|max:1000'
+        ], [
+            'file.file' => 'Fișier invalid',
+            'file.max' => 'Mărimea depășește 400 MB',
+            'content.required' => 'Conținutul este necesar.',
+            'content.string' => 'Conținutul trebuie să fie un text valid.',
+            'content.max' => 'Conținutul nu poate depăși 1000 de caractere.'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $file = null;
+        if ($request->file('file')){
+            $file = $request->file('file');
+
+            $mimeType = $file->getMimeType();
+
+            if (strpos($mimeType, 'video/') !== 0) {
+                return response()->json(['errors' => 'Fișierul trebuie să fie un video'], 422);
+            }
+
+            $uploadFolder = 'shortVideoFiles';
+            $image = $request->file('file');
+            $image_uploaded_path = $image->store($uploadFolder, 'public');
+            $file = str_replace('localhost','127.0.0.1:8000',Storage::disk('public')->url($image_uploaded_path));
+        }
+        $uuid = Str::uuid()->toString();
+
+        $video = Video::create([
+            'user_id' => $user->id,
+            'uuid' => $uuid,
+            'body' => $request->input('content'),
+            'file' => $file
+        ]);
+
+
+        return response()->json([
+            'success' => true,
+            'video' => $video
+        ]);
+
+    }
+
+
+    
+
 }

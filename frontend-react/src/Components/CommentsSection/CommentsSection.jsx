@@ -19,24 +19,73 @@ export default function CommentsSection(props){
 		ref.current.value = ref.current.value + emoji.emoji;
 	}
 
-	useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                const response = await client.get(`/post/get/comments/${props.uuidPost}/`);
-                setComments(response.data);
-                console.log(response.data);
-            } catch (err) {
-                console.log(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+	if (props.type == "homePost"){
 
-        fetchComments();
-    }, [props.uuidPost, props.open]);
+		useEffect(() => {
+	        const fetchComments = async () => {
+	            try {
+	                const response = await client.get(`/post/get/comments/${props.uuidPost}/`);
+	                setComments(response.data);
+	                console.log(response.data);
+	            } catch (err) {
+	            	setComments([]);
+	                console.log(err);
+	            } finally {
+	                setLoading(false);
+	            }
+	        };
+
+	        fetchComments();
+	    }, [props.uuidPost, props.open]);
+
+	}else if (props.type == "shortVideos"){
+		useEffect(() => {
+	        const fetchComments = async () => {
+	            try {
+	                const response = await client.get(`/video/get/comments/${props.id}/`);
+	                setComments(response.data);
+	                console.log(response.data);
+	            } catch (err) {
+	            	setComments([]);
+	                console.log(err);
+	            } finally {
+	                setLoading(false);
+	            }
+	        };
+
+	        fetchComments();
+	    }, [props.id, props.open]);
+	}
 
     if (loading) {
         return <div>Loading comments...</div>;
+    }
+
+
+    async function postComment(e){
+    	e.preventDefault();
+    	console.log('post post comment on '+props.uuidPost);
+    }
+
+    async function videoComment(e){
+    	e.preventDefault();
+
+		const payload = {
+			'content': ref.current.value
+		};
+
+		try {
+            const response = await client.post(`/video/comment/${props.id}`,payload, {
+                headers: {
+                    'Action-Of-Home': 'writeCommentVideo',
+                },
+            });
+            console.log(response.data);
+            setComments(prevComments => [response.data,...prevComments]);
+        	ref.current.value = "";
+        } catch (error) {
+            console.error(error);
+        }
     }
 
 	return(
@@ -51,18 +100,23 @@ export default function CommentsSection(props){
 					<PostComment key = {comment.id} comment = {comment}/>
 				))}
 				</div>
-				<div className = {styles.writeSection}>
-					<input ref = {ref} type = "text" placeholder = "Scrie un comentariu"/>
-					<EmojiPicker onEmojiClick = {placeEmoji}
-					 style = {{position:"absolute",zIndex: '334543534',right:"10px", bottom: "55px"}} open = {open} width = {290} height = {400}/>
+				<form method = "POST" onSubmit = {(e) => props.type == 'shortVideos' ? videoComment(e) : postComment(e)}>
+					<div className = {styles.writeSection}>
 					
-					<div className = {styles.emojiBtn} onClick = {() => setOpen(open => !open)}>
-						☺
+						<input ref = {ref} type = "text" placeholder = "Scrie un comentariu"/>
+						<EmojiPicker onEmojiClick = {placeEmoji}
+						 style = {{position:"absolute",zIndex: '334543534',right:"10px", bottom: "55px"}} open = {open} width = {290} height = {400}/>
+						
+						<div className = {styles.emojiBtn} onClick = {() => setOpen(open => !open)}>
+							☺
+						</div>
+
+						<button type = "submit" className = {styles.btnComment}>
+							<FontAwesomeIcon icon={faPaperPlane}/>
+						</button>
+					
 					</div>
-					<button className = {styles.btnComment}>
-						<FontAwesomeIcon icon={faPaperPlane}/>
-					</button>
-				</div>
+				</form>
 			</div>
 		}
 		</>

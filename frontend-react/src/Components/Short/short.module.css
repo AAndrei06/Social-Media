@@ -69,7 +69,7 @@
 	height: 30px;
 	width: 40px;
 	top: 7px;
-	z-index: 0;
+	z-index: 999;
 }
 
 .control{
@@ -78,6 +78,7 @@
 	color: white;
 	cursor: pointer;
 	color: #ff0033;
+
 }
 
 .display > video{
@@ -98,6 +99,7 @@
 
 .description > p{
 	margin-bottom: 30px;
+	float: left;
 }
 
 .more{
@@ -110,14 +112,14 @@
 
 
 .info{
-	width: 220px;
-	height: 50px;
 	position: absolute;
 	top: 0px;
 	margin: 5px;
 	display: flex;
 	flex-direction: row;
 	gap: 15px;
+	z-index: 9999;
+	cursor: pointer;
 }
 
 .info > img{

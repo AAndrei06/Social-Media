@@ -15,10 +15,6 @@ export default function PostForm(props){
 		'video':'Creează un videoclip scurt'
 	};
 
-	if (props.type == "edit"){
-
-	}
-
 	const context = useOutletContext();
 	const client = context.client;
 	const tRef = useRef("");
@@ -28,8 +24,8 @@ export default function PostForm(props){
 		tRef.current = text;
 	}
 
-	const name = props.type == "story" || props.type == "video" ? styles.mini : "";
-	const name2 = props.type == "story" || props.type == "video" ? styles.miniFile : "";
+	const name = props.type == "story" ? styles.mini : "";
+	const name2 = props.type == "story" ? styles.miniFile : "";
 
 	if (props.type == "create"){
 
@@ -82,6 +78,25 @@ export default function PostForm(props){
 	        } catch (error) {
 	            console.error('Error uploading file:', error);
 	        }
+	    }else if (props.type == 'video'){
+	    	const file = fileRef.current.files[0];
+			console.log(file);
+			const payload = {
+				'content': tRef.current,
+				'file':file
+			};
+
+	        try {
+	            const response = await client.post('/video/create', payload, {
+	                headers: {
+	                    'Content-Type': 'multipart/form-data',
+	                    'Action-Of-Home': 'createVideo',
+	                },
+	            });
+	            console.log(response);
+	        } catch (error) {
+	            console.error('Error uploading file:', error);
+	        }
 	    }
 	}
 
@@ -100,7 +115,7 @@ export default function PostForm(props){
 				</div>
 				<div className = {styles.body}>
 					<form method = "POST" onSubmit = {(e) => handleSubmit(e)}>
-						{(props.type != "story" && props.type != 'video') && 
+						{(props.type != "story") && 
 							<>
 
 								<EditorFancy up = {updateRef}/>
