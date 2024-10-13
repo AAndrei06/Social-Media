@@ -15,7 +15,11 @@ export default function Profile(){
 	const context = useOutletContext();
 	const { id } = useParams();
 	const client = context.client;
+	const user = context.user;
 
+	if (user == null){
+		return (<>Hello</>);		
+	}
 	const backImgRef = useRef();
 	const frontImgRef = useRef();
 	const nameRef = useRef();
@@ -27,6 +31,7 @@ export default function Profile(){
 	const personRef = useRef();
 	const registeredRef = useRef();
 
+	const notMyProfile = (id != user.idKey);
 	const occupationRef2 = useRef();
 	const locationRef2 = useRef();
 	const educationRef2 = useRef();
@@ -46,11 +51,12 @@ export default function Profile(){
 		    ref.current.addEventListener('change', () => {
 		    	console.log('hello'+ref.current.innerHTML);
 		    });
+		    /*
 		    return () => {
 		      ref.current.removeEventListener('change',() => {
 		    	console.log('hello'+ref.current.innerHTML);
 		    });
-		    };
+		    };*/
 		  }, []);
 	}
 
@@ -251,30 +257,40 @@ return(
 				<div className = {styles.upDiv}>
 					<div className = {styles.backImage}>
 						<img ref = {backImgRef}/>
-						<input onChange = {(e) => handleChangeBackImg(e)} id = "fileInp1" type="file" style={{ display: 'none'}}/>
-						<div onClick = {() => {document.getElementById('fileInp1').click()}} className = {styles.addPhoto+' '+styles.addPhotoBack}>
-							
-							<FontAwesomeIcon className = {styles.iconChange} icon={faImage} />
-							<h5>Schimbă Fotografia</h5>
-						</div>
+						{!notMyProfile &&
+							<>
+							<input onChange = {(e) => handleChangeBackImg(e)} id = "fileInp1" type="file" style={{ display: 'none'}}/>
+							<div onClick = {() => {document.getElementById('fileInp1').click()}} className = {styles.addPhoto+' '+styles.addPhotoBack}>
+								
+								<FontAwesomeIcon className = {styles.iconChange} icon={faImage} />
+								<h5>Schimbă Fotografia</h5>
+							</div>
+							</>
+						}
 					</div>
 					<div className = {styles.profileInfo}>
 						<div className = {styles.profileImage}>
 							<img ref = {frontImgRef}/>
-							<input onChange = {(e) => handleChangeFrontImg(e)} id = "fileInp2" type="file" style={{ display: 'none'}}/>
-							<div onClick = {() => {document.getElementById('fileInp2').click()}} className = {styles.addPhoto+' '+styles.addPhotoProfile}>
-								<FontAwesomeIcon className = {styles.iconChange} icon={faImage} />
-								<h5>Schimbă Fotografia</h5>
-							</div>
+							{!notMyProfile &&
+							<>
+								<input onChange = {(e) => handleChangeFrontImg(e)} id = "fileInp2" type="file" style={{ display: 'none'}}/>
+								<div onClick = {() => {document.getElementById('fileInp2').click()}} className = {styles.addPhoto+' '+styles.addPhotoProfile}>
+									<FontAwesomeIcon className = {styles.iconChange} icon={faImage} />
+									<h5>Schimbă Fotografia</h5>
+								</div>
+							</>
+							}
 						</div>
 						<div className = {styles.profileText}>
 							<h2 ref = {nameRef}></h2>
 							<p><span ref = {followedRef}>27</span> de urmăritori</p>
 							<p><span ref = {followsRef}>56</span> urmărește</p>
 						</div>
-						<div className = {styles.follow}>
-							<button><FontAwesomeIcon className = {styles.icon} icon={faUserPlus} />&nbsp;&nbsp;Urmărește</button>
-						</div>
+						{notMyProfile &&
+							<div className = {styles.follow}>
+								<button><FontAwesomeIcon className = {styles.icon} icon={faUserPlus} />&nbsp;&nbsp;Urmărește</button>
+							</div>
+						}
 						<div className = {styles.infoBtns}>
 							<button>Videoclipuri scurte</button>
 							<button>Videoclipuri scurte</button>
@@ -298,14 +314,16 @@ return(
 
 				<div className = {styles.aboutMePhone}>
 					<h3>Despre Mine</h3>
-					<div className = {styles.btnPhoneAbout}>
-						{!editingInfoRefs2 &&
-							<button onClick = {() => handleEditing2()}><FontAwesomeIcon className = {styles.icon} icon={faPen} />&nbsp;&nbsp;Editează</button>
-						}
-						{editingInfoRefs2 &&
-							<button onClick = {() => handleEditing2()}><FontAwesomeIcon className = {styles.icon} icon={faCircleCheck} />&nbsp;&nbsp;Salvează</button>
-						}
-					</div>
+					{!notMyProfile &&
+						<div className = {styles.btnPhoneAbout}>
+							{!editingInfoRefs2 &&
+								<button onClick = {() => handleEditing2()}><FontAwesomeIcon className = {styles.icon} icon={faPen} />&nbsp;&nbsp;Editează</button>
+							}
+							{editingInfoRefs2 &&
+								<button onClick = {() => handleEditing2()}><FontAwesomeIcon className = {styles.icon} icon={faCircleCheck} />&nbsp;&nbsp;Salvează</button>
+							}
+						</div>
+					}
 					<div className = {styles.infoGroup}>
 						<div className = {styles.infoItem}>
 							<div className = {styles.iconInfo}>
@@ -358,14 +376,17 @@ return(
 				
 				<div className = {styles.downDiv}>
 					<h3>Rezumat</h3>
-					<div className = {styles.edit+' '+styles.summaryEdit}>
-					{!editBio &&
-						<button onClick = {() => handleBio()}><FontAwesomeIcon className = {styles.icon} icon={faPen} />&nbsp;&nbsp;Editează</button>
+					{!notMyProfile &&
+						<div className = {styles.edit+' '+styles.summaryEdit}>
+
+						{!editBio &&
+							<button onClick = {() => handleBio()}><FontAwesomeIcon className = {styles.icon} icon={faPen} />&nbsp;&nbsp;Editează</button>
+						}
+						{editBio &&
+							<button onClick = {() => handleBio()}><FontAwesomeIcon className = {styles.icon} icon={faCircleCheck} />&nbsp;&nbsp;Salvează</button>
+						}
+						</div>
 					}
-					{editBio &&
-						<button onClick = {() => handleBio()}><FontAwesomeIcon className = {styles.icon} icon={faCircleCheck} />&nbsp;&nbsp;Salvează</button>
-					}
-					</div>
 					<div className = {styles.resumeSpace}>
 					<p ref = {resumeRef}>
 					Lorem Ipsum is simply dummy text of the printing and typesetting 
@@ -385,14 +406,16 @@ return(
 			<div className = {styles.rightDiv}>
 				<div className = {styles.aboutMe}>
 					<h3>Despre Mine</h3>
-					<div className = {styles.edit+' '+styles.aboutEdit+' '+styles.actualEdit}>
-						{!editingInfoRefs &&
-							<button onClick = {() => handleEditing()}><FontAwesomeIcon className = {styles.icon} icon={faPen} />&nbsp;&nbsp;Editează</button>
-						}
-						{editingInfoRefs &&
-							<button onClick = {() => handleEditing()}><FontAwesomeIcon className = {styles.icon} icon={faCircleCheck} />&nbsp;&nbsp;Salvează</button>
-						}
-					</div>
+					{!notMyProfile &&
+						<div className = {styles.edit+' '+styles.aboutEdit+' '+styles.actualEdit}>
+							{!editingInfoRefs &&
+								<button onClick = {() => handleEditing()}><FontAwesomeIcon className = {styles.icon} icon={faPen} />&nbsp;&nbsp;Editează</button>
+							}
+							{editingInfoRefs &&
+								<button onClick = {() => handleEditing()}><FontAwesomeIcon className = {styles.icon} icon={faCircleCheck} />&nbsp;&nbsp;Salvează</button>
+							}
+						</div>
+					}
 					<div className = {styles.infoGroup}>
 						<div className = {styles.infoItem}>
 							<div className = {styles.iconInfo}>

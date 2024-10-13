@@ -1,27 +1,36 @@
 import styles from './postcomment.module.css';
 import man from '../../assets/man.png';
 import { useOutletContext } from 'react-router-dom';
+import { useRef } from 'react';
 
 export default function PostComment(props){
 
 	const context = useOutletContext();
 	const client = context.client;
+	const nrOfComments = useRef();
+	const thisRef = useRef();
 
 	async function deleteComment(commentId){
+
+		const url = props.type == 'homePost' ? `/post/delete/comment/${commentId}` : `/video/delete/comment/${commentId}`;
+
 		try {
-            const response = await client.post(`/post/delete/comment/${commentId}`, {
+            const response = await client.post(url, {
                 headers: {
                     'Action-Of-Home': 'deleteComment',
                 },
             });
-            console.log(response);
+            console.log(response.data);
+            if (response.data == 'success'+commentId){
+            	thisRef.current.style.display = "none";
+            }
         } catch (error) {
             console.log(error);
         }
 	}
 
 	return(
-		<div className = {styles.comment}>
+		<div ref = {thisRef} className = {styles.comment}>
 			<div className = {styles.head}>
 				<div className = {styles.photo}>
 					<img src = {props.comment.user.profile.profile_photo}/>

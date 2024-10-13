@@ -123,10 +123,6 @@ export default function Post(props){
 				{openPostMenu &&
 					<div className = {styles.postMenu}>
 						<div className = {styles.postMenuItem}>
-							<FontAwesomeIcon icon={faStar} />
-							<p>Adaugă la favorite</p>
-						</div>
-						<div className = {styles.postMenuItem}>
 							<FontAwesomeIcon icon={faShare} />
 							<p>Trimite</p>
 						</div>
@@ -170,7 +166,7 @@ export default function Post(props){
 					</div>
 					<div onClick = {() => handleCommentsDisplay()} className = {styles.option}>
 						<img src = {comment}/>
-						<p>1</p>
+						<p>{props.nrComments}</p>
 					</div>
 					<div className = {styles.option}>
 						<img src = {share}/>

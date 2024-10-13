@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/delete/{id}', [ShortVideoController::class, 'deleteVideo']);
         Route::post('/comment/{id}', [ShortVideoController::class, 'commentVideo']);
         Route::get('/get/comments/{id}', [ShortVideoController::class, 'getCommentsVideo']);
+        Route::post('/delete/comment/{id}', [ShortVideoController::class, 'deleteCommentVideo']);
     });
 
     // Video listing

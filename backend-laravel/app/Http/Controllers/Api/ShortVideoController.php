@@ -21,6 +21,7 @@ class ShortVideoController extends Controller
         $videos->transform(function ($video) use ($currentUserId) {
             $video->liked_by_user = $video->likes()->where('user_id', $currentUserId)->exists();
             $video->like_count = $video->likes()->count();
+            $video->nr_of_comments = $video->comments()->count();
             return $video;
         });
 
@@ -88,5 +89,11 @@ class ShortVideoController extends Controller
         $video = Video::where('uuid',$id)->first();
         $comments = $video->comments()->with(['user', 'user.profile'])->get();
         return response()->json($comments);
+    }
+
+    public function deleteCommentVideo($id, Request $request){
+        $comment = Commentv::find($id);
+        $comment->delete();
+        return response('success'.$id);
     }
 }

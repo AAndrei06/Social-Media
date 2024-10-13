@@ -128,7 +128,7 @@ export default function Short(props){
 
 					<div onClick = {() => {props.set(o => !o);props.setId(id => props.video.uuid)}} className = {styles.option}>
 						<img src = {comment}/>
-						<p>333</p>
+						<p>{props.video.nr_of_comments}</p>
 					</div>
 					<div className = {styles.option}>
 						<img src = {share}/>

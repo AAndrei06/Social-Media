@@ -42,6 +42,7 @@ function Home(){
             try {
                 const response = await client.get('/');
                 setPosts(response.data);
+                console.log(response.data);
             } catch (err) {
                 setError(err);
             } finally {
@@ -127,6 +128,7 @@ return(
 														<Post 
 															fullname = {post.user.profile.first_name+' '+post.user.profile.last_name}
 															body = {post.body}
+															nrComments = {post.nr_of_comments}
 															created = {post.created_at}
 															user_photo = {post.user.profile.profile_photo}
 															file = {post.file} 

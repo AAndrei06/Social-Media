@@ -74,6 +74,13 @@ class HomeController extends Controller
         }
 
         if ($request->file('file')){
+            $file = $request->file('file');
+            $mimeType = $file->getMimeType();
+
+            if (strpos($mimeType, 'image/') !== 0 && strpos($mimeType, 'video/') !== 0) {
+                return response()->json(['errors' => 'Fișierul trebuie să fie o imagine sau un video'], 422);
+            }
+
             $fileUrl = $post->file;
 
             $filename = basename($fileUrl);
@@ -122,6 +129,7 @@ class HomeController extends Controller
         $posts->transform(function ($post) use ($currentUserId) {
             $post->liked_by_user = $post->likes()->where('user_id', $currentUserId)->exists();
             $post->like_count = $post->likes()->count();
+            $post->nr_of_comments = $post->comments()->count();
             return $post;
         });
 
@@ -140,6 +148,8 @@ class HomeController extends Controller
             'content' => $request->input('content')
         ]);
 
+        $comment->load(['user', 'user.profile']);
+
         return response()->json($comment);     
 
     }
@@ -155,7 +165,7 @@ class HomeController extends Controller
     public function deleteComment($id, Request $request){
         $comment = Comment::find($id);
         $comment->delete();
-        return response('Comment deleted with id '.$id);
+        return response('success'.$id);
     }
 
     public function likePost($id, Request $request){
