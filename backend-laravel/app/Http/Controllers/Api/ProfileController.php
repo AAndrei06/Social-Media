@@ -6,13 +6,24 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
     public function profileGet($id, Request $request){
-        
-        $user = Auth::user();
+        $current = Auth::user();
+        $user = User::where('idKey', $id)->first();
         $profile = $user->profile;
+
+        $followersCount = $user->followers()->count();
+        $followingCount = $user->following()->count();
+
+        $isFollowing = $user->followers()->where('follower_id', $current->id)->exists();
+
+        $profile->followers_count = $followersCount;
+        $profile->following_count = $followingCount;
+        $profile->is_following = $isFollowing;
+
         return response()->json(array(
             'profile' => $profile,
             'user' => $user
@@ -92,9 +103,26 @@ class ProfileController extends Controller
             return response($profile->resume);
         }
 
-
-
-
     }
+
+
+
+    public function follow($id, Request $request){
+
+        $currentUser = Auth::user();
+        $toFollow = User::where('idKey',$id)->first();
+
+        $toFollow->followers()->toggle($currentUser->id);
+
+        return response([
+            'id' => $id,
+            'follows' => $request->input('followId'),
+            'followers1' => $toFollow->followers()->get(),
+            'follows1' => $toFollow->following()->get(),
+            'followers2' => $currentUser->followers()->get(),
+            'follows2' => $currentUser->following()->get()
+        ]);
+    }
+
 
 }

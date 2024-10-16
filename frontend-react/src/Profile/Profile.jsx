@@ -14,12 +14,16 @@ export default function Profile(){
 
 	const context = useOutletContext();
 	const { id } = useParams();
+	console.log(id);
 	const client = context.client;
 	const user = context.user;
 
 	if (user == null){
 		return (<>Hello</>);		
 	}
+
+	const isFollowIt = useRef();
+	const [followsM,setFollowsM] = useState();
 	const backImgRef = useRef();
 	const frontImgRef = useRef();
 	const nameRef = useRef();
@@ -30,7 +34,6 @@ export default function Profile(){
 	const educationRef = useRef();
 	const personRef = useRef();
 	const registeredRef = useRef();
-
 	const notMyProfile = (id != user.idKey);
 	const occupationRef2 = useRef();
 	const locationRef2 = useRef();
@@ -51,12 +54,12 @@ export default function Profile(){
 		    ref.current.addEventListener('change', () => {
 		    	console.log('hello'+ref.current.innerHTML);
 		    });
-		    /*
+		    
 		    return () => {
 		      ref.current.removeEventListener('change',() => {
 		    	console.log('hello'+ref.current.innerHTML);
 		    });
-		    };*/
+		    };
 		  }, []);
 	}
 
@@ -175,11 +178,12 @@ export default function Profile(){
     .then(({ data }) => {
         if (data.profile){
         	const profile = data.profile;
+        	isFollowIt.current.innerHTML = profile.is_following ? "Nu mai urmări" : "Urmărește";
         	backImgRef.current.src = profile.back_photo;
         	frontImgRef.current.src = profile.profile_photo;
         	nameRef.current.innerText = profile.last_name+' '+profile.first_name;
-        	followsRef.current.innerText = profile.follows;
-        	followedRef.current.innerText = profile.is_followed;
+        	followsRef.current.innerText = profile.following_count;
+        	followedRef.current.innerText = profile.followers_count;
         	occupationRef.current.innerText = profile.occupation;
         	educationRef.current.innerText = profile.education;
         	locationRef.current.innerText = profile.location;
@@ -248,6 +252,27 @@ export default function Profile(){
         }
     };
 
+
+
+    async function handleFollow(){
+    	const payload = {
+        	'followId':user.idKey
+        };
+
+        try {
+            // Replace with your actual endpoint
+            const response = await client.post(`profile/follow/${id}`, payload, {
+                headers: {
+                    'Action-Of-Profile': 'profileFollow',
+                },
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    }
+
+
 return(
 <>
 <main className = {styles.mainArea}>
@@ -283,12 +308,13 @@ return(
 						</div>
 						<div className = {styles.profileText}>
 							<h2 ref = {nameRef}></h2>
-							<p><span ref = {followedRef}>27</span> de urmăritori</p>
-							<p><span ref = {followsRef}>56</span> urmărește</p>
+							<p><span ref = {followedRef}></span> de urmăritori</p>
+							<p><span ref = {followsRef}></span> urmărește</p>
 						</div>
 						{notMyProfile &&
-							<div className = {styles.follow}>
-								<button><FontAwesomeIcon className = {styles.icon} icon={faUserPlus} />&nbsp;&nbsp;Urmărește</button>
+							<div onClick = {() => handleFollow()} className = {styles.follow}>
+								<button onClick = {() => setFollowsM(d => !d)} ref = {isFollowIt}>
+							    </button>
 							</div>
 						}
 						<div className = {styles.infoBtns}>

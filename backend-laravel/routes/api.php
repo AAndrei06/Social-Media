@@ -25,7 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Profile routes
     Route::get('/profile/{id}', [ProfileController::class, 'profileGet']);
     Route::post('/profile/{id}', [ProfileController::class, 'profilePost']);
-    
+    Route::post('/profile/follow/{id}', [ProfileController::class, 'follow']);
+
     // Home (Posts) routes
     Route::prefix('post')->group(function () {
         Route::post('/edit/{id}', [HomeController::class, 'editPost']);
