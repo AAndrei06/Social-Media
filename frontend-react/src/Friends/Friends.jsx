@@ -4,11 +4,28 @@ import FriendListItem from '../Components/FriendListItem/FriendListItem.jsx';
 import FriendBox from '../Components/FriendBox/FriendBox.jsx';
 import { faUserPlus, faChevronRight, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
 export default function Friends(){
 
 	const [open, setOpen] = useState(true);
+
+	const context = useOutletContext();
+	const client = context.client;
+	const [friends, setFriends] = useState([]);
+
+	useEffect(() => {
+		async function getAll(){
+			client.get('/friends/get').then(({data}) => {
+				console.log(data);
+				setFriends(data.mutual_followers);
+			});
+		}
+
+		getAll();
+		
+	},[]);
 
 	return(<>
 			<main className = {styles.mainArea}>
@@ -23,16 +40,9 @@ export default function Friends(){
 					<FontAwesomeIcon icon = {faXmark}/>
 					</div>
 					<div>
-						<FriendListItem/>
-						<FriendListItem/>
-						<FriendListItem/>
-						<FriendListItem/>
-						<FriendListItem/>
-						<FriendListItem/>
-						<FriendListItem/>
-						<FriendListItem/>
-						<FriendListItem/>
-						<FriendListItem/>
+						{friends != [] && friends.map(friend => (
+							<FriendListItem key = {friend.id} friend = {friend}/>
+						))}
 					</div>
 						
 				</div>

@@ -4,7 +4,7 @@ import { faEllipsis, faUserMinus, faEnvelope, faUserPlus } from '@fortawesome/fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 
-export default function FriendListItem(){
+export default function FriendListItem(props){
 
 	const [show, setShow] = useState(false);
 	const [follow, setFollow] = useState(false);
@@ -13,9 +13,9 @@ export default function FriendListItem(){
 		<>
 			<div className = {styles.friendObject}>
 				<div className = {styles.image}>
-					<img src = {man}/>
+					<img src = {props.friend.profile.profile_photo}/>
 				</div>
-				<h4 className = {styles.h4}>Arseni Andrei</h4>
+				<h4 className = {styles.h4}>{props.friend.profile.first_name+' '+props.friend.profile.last_name}</h4>
 				<div onClick = {() => setShow(show => !show)} className = {styles.friendOptions}>
 					<FontAwesomeIcon icon={faEllipsis}/>
 				</div>

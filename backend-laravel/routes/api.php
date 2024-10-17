@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\ShortVideoController;
+use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\FriendController;
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE');
@@ -36,6 +38,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/delete/comment/{id}', [HomeController::class, 'deleteComment']);
         Route::post('/like/{id}', [HomeController::class, 'likePost']);
         Route::get('/get/likes/{id}', [HomeController::class, 'getLikes']);
+    });
+
+    Route::prefix('chat')->group(function () {
+        Route::get('/get', [ChatController::class, 'getChat']);
+        Route::get('/get/messages/{id}', [ChatController::class, 'getMessages']);
+        Route::post('/send/message', [ChatController::class, 'sendMessage']);
+    });
+
+    Route::prefix('friends')->group(function () {
+        Route::get('/get', [FriendController::class, 'getFriends']);
     });
 
     // Home (Main) content routes

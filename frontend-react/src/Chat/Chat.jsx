@@ -11,11 +11,16 @@ import { faMagnifyingGlass, faChevronLeft, faChevronRight, faPaperclip, faPaperP
 import ChatFriend from '../Components/ChatFriend/ChatFriend.jsx';
 import man from '../assets/man.png';
 import ts from '../assets/test.png';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
 export default function Chat(){
 
-
+	const context = useOutletContext();
+	const [currentId, setCurrentId] = useState(null);
+	const [messages, setMessages] = useState([]);
+	const client = context.client;
+	const [friends, setFriends] = useState([]);
 	const ref = useRef();
 	const inputRef = useRef();
 	const [open, setOpen] = useState(false);
@@ -41,6 +46,60 @@ export default function Chat(){
 		document.getElementById("file-open").click();
 	}
 
+	console.log('c: ',currentId);
+	useEffect(() => {   
+		const fetchFriends = async () => {
+		client.get(`/chat/get`)
+		.then(({ data }) => {
+		 setFriends(data.mutual_followers);
+		 setCurrentId(data.mutual_followers[0].id);
+		 
+		})
+		.catch(error => {
+		 console.error(error);
+		});
+		};
+
+		fetchFriends();
+	}, []);
+
+
+	useEffect(() => {   
+		client.get(`/chat/get/messages/${currentId}`).then(({data}) => {
+		 	setMessages(data);
+		 	console.log('m2: ',data);
+		 }).then(() => {
+		 	console.log('m: ',messages);
+		 });
+	}, [currentId]);
+
+
+	function getMessages(){
+		client.get(`/chat/get/messages/${currentId}`).then(({data}) => {
+		 	setMessages(data);
+		 	console.log('m2: ',data);
+		 }).then(() => {
+		 	console.log('m: ',messages);
+		 });
+	}
+
+	//setInterval(getMessages,3000);
+
+	function writeMsg(){
+		const payload = {
+			'receiver_id':currentId,
+			'message': inputRef.current.value
+		};
+		client.post('/chat/send/message', payload, {
+            headers: {
+                'Action-Of-Chat': 'sendMsg'
+            },
+        }).then(({data}) => {
+			console.log(data);
+			inputRef.current.value = '';
+		})
+	}
+
 	return(
 		<>
 			<main className = {styles.mainArea}>
@@ -58,31 +117,11 @@ export default function Chat(){
 						</div>
 						<br/>
 						<div>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
 
+						{friends != [] && friends.map(friend => (
+							<ChatFriend key = {friend.idKey} friend = {friend}/>
+						))}
+							
 						</div>
 					</div>
 					<div className = {styles.leftSection+' '+styles.original}>
@@ -92,36 +131,9 @@ export default function Chat(){
 						</div>
 						<br/>
 						<div>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
-							<ChatFriend/>
+							{friends != [] && friends.map(friend => (
+								<ChatFriend key = {friend.idKey} friend = {friend}/>
+							))}
 						</div>
 					</div>
 					<div className = {styles.rightSection}>
@@ -130,6 +142,11 @@ export default function Chat(){
 							<h3>Mihai Arseni Mititel</h3>
 						</div>
 						<div className = {styles.messagesSection}>
+							{messages != [] && messages.map((msg) => (
+								<Comment key = {msg.id} toRight = {msg.is_sender} message = {msg}/>
+							))}
+
+							{/*
 							<Comment toRight = {true} message = "Lorem ipsullo World Welcome to my channels"/>
 							<Comment toRight = {false} message = "Lorem ipsum Hello World User from USA tArseni Hello
 							Lorem ipsum Hello World User from USA tArseni HelLorem ipsum Hello World User from USA tArs
@@ -156,6 +173,7 @@ export default function Chat(){
 							<ImageComment set = {setShow} setImg = {setcImg} img = {ts} toRight/>
 							<ImageComment set = {setShow} setImg = {setcImg} img = {man}/>
 							<ImageComment set = {setShow} setImg = {setcImg} img = {ts}/>
+							*/}
 						</div>
 						<div className = {styles.writeSection}>
 							<div className = {styles.div}>
@@ -166,7 +184,7 @@ export default function Chat(){
 									☺
 								</div>
 								<input ref = {inputRef} className = {styles.inputWrite} type = "text" placeholder = "Scrie un mesaj"/>
-								<button className = {styles.sendBtn}>
+								<button onClick = {() => writeMsg()} className = {styles.sendBtn}>
 									<FontAwesomeIcon icon={faPaperPlane}/>
 								</button>
 							</div>

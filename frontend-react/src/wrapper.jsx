@@ -36,22 +36,13 @@ export default function Wrapper(){
 	useEffect(() => {
 		setToken(localStorage.getItem("ACCESS_TOKEN"));
 		axiosClient.get('/user').then((data) => {
-			console.log(data.data);
 			setUser(data.data);
-			console.log(user);
 		}).catch((e) => {
 			setUser({'h':'1'});
 		});
 	}, []);
 
 	
-
-	console.log('user-------------');
-	console.log(user);
-	console.log(localStorage.getItem("ACCESS_TOKEN"));
-	console.log(token);
-	console.log(user);
-	console.log('edn-------------');
 
 	function goToProfile(idx){
 		navigate(`profile/${idx}`);

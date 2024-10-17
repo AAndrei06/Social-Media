@@ -54,12 +54,12 @@ export default function Profile(){
 		    ref.current.addEventListener('change', () => {
 		    	console.log('hello'+ref.current.innerHTML);
 		    });
-		    
+		    /*
 		    return () => {
 		      ref.current.removeEventListener('change',() => {
 		    	console.log('hello'+ref.current.innerHTML);
 		    });
-		    };
+		    };*/
 		  }, []);
 	}
 
@@ -178,7 +178,11 @@ export default function Profile(){
     .then(({ data }) => {
         if (data.profile){
         	const profile = data.profile;
+        	try{
         	isFollowIt.current.innerHTML = profile.is_following ? "Nu mai urmări" : "Urmărește";
+        	}catch(err){
+        		console.log("My profile");
+        	}
         	backImgRef.current.src = profile.back_photo;
         	frontImgRef.current.src = profile.profile_photo;
         	nameRef.current.innerText = profile.last_name+' '+profile.first_name;
