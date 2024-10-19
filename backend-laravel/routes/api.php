@@ -40,6 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/get/likes/{id}', [HomeController::class, 'getLikes']);
     });
 
+    Route::post('/story/create', [HomeController::class, 'createStory']);
+    Route::get('/story/get', [HomeController::class, 'showStories']);
+    Route::post('/story/delete/{id}', [HomeController::class, 'deleteStory']);
+
     Route::prefix('chat')->group(function () {
         Route::get('/get', [ChatController::class, 'getChat']);
         Route::get('/get/messages/{id}', [ChatController::class, 'getMessages']);

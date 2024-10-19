@@ -25,11 +25,12 @@ function Home(){
 	const client = context.client;
 
 	const [posts, setPosts] = useState([]);
+	const [stories, setStories] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [commentPostId, setCommentPostId] = useState('1');
 	const [likePostId, setLikePostId] = useState('1');
-
+	const [story, setStory] = useState({});
 	const [show, setShow] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [likeOpen, setLikeOpen] = useState(false);
@@ -50,7 +51,21 @@ function Home(){
             }
         };
 
+        const fetchStories = async () => {
+            try {
+                const response = await client.get('/story/get');
+                setStories(response.data);
+                console.log("stories");
+                console.log(response.data);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStories();
         fetchPosts();
+        
     }, []);
 
 	if (loading) return <p>Loading...</p>;
@@ -76,7 +91,7 @@ return(
 		<PostForm setOpen = {setOpen} type = {type} idKey = {id}/>
 		}
 		{storyOpen &&
-		<StoryView set = {setStoryOpen} open = {storyOpen}/>
+		<StoryView story = {story} set = {setStoryOpen} open = {storyOpen}/>
 		}
 		<div className = {styles.bodyPart}>
 			<div className = {styles.leftSide}>
@@ -112,15 +127,11 @@ return(
 											<div className = {styles.storyDiv}>
 
 												<Story func = {handleOpen} create/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
-												<Story set = {setStoryOpen} open = {storyOpen}/>
+												{stories != [] && stories.map(story => (
+													<Story setStory = {setStory} key = {story.uuid} set = {setStoryOpen} story = {story} open = {storyOpen}/>
+												))}
+												
+												
 											</div>
 											<div className = {styles.postSection}>
 												<div>

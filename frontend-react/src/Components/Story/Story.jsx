@@ -7,28 +7,48 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useOutletContext } from 'react-router-dom';
 
 export default function Story(props){
+	
 	const context = useOutletContext();
-
-	return(
-		<>
-		{!props.create &&
-			<div className = {styles.story}>
-				<img onClick = {() => props.set(open => !open)} className = {styles.storyImg} src = {nature}/>
-				<div onClick = {() => context.profile(3453)} className = {styles.profileInfo}>
-					<img className = {styles.profileImg} src = {profile}/>
-					<p>Andrei Arseni</p>
+	if (!props.story){
+		if (context.user){
+			return(
+				<>
+				{props.create &&
+					<div onClick = {() => props.func("story")} className = {styles.storyCreate}>
+						<img className = {styles.photo} src = {context.user.profile.profile_photo}/>
+						<button className = {styles.btn}>
+							<FontAwesomeIcon icon={faPlus} />
+						</button>
+						<h4>Creează o poveste</h4>
+					</div>
+				}
+				</>
+			);
+		}
+	}else{
+		return(
+			<>
+			{!props.create &&
+				<div className = {styles.story}>
+					<img onClick = {() => {props.setStory(s => props.story);props.set(open => !open)}} className = {styles.storyImg} src = {props.story.user.profile.profile_photo}/>
+					<div onClick = {() => context.profile(props.story.user.idKey)} className = {styles.profileInfo}>
+						<img className = {styles.profileImg} src = {props.story.user.profile.profile_photo}/>
+						<p>{props.story.user.profile.first_name+' '+props.story.user.profile.last_name}</p>
+					</div>
 				</div>
-			</div>
-		}
-		{props.create &&
-			<div onClick = {() => props.func("story")} className = {styles.storyCreate}>
-				<img className = {styles.photo} src = {man}/>
-				<button className = {styles.btn}>
-					<FontAwesomeIcon icon={faPlus} />
-				</button>
-				<h4>Creează o poveste</h4>
-			</div>
-		}
-		</>
-	);
+			}
+			{props.create &&
+				<div onClick = {() => props.func("story")} className = {styles.storyCreate}>
+					<img className = {styles.photo} src = {context.user.profile.profile_photo}/>
+					<button className = {styles.btn}>
+						<FontAwesomeIcon icon={faPlus} />
+					</button>
+					<h4>Creează o poveste</h4>
+				</div>
+			}
+			</>
+		);
+	}
+
+	
 };

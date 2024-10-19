@@ -38,6 +38,20 @@
 	color: white;
 }
 
+.trash{
+	position: absolute;
+	font-size: 30px;
+	font-weight: bold;
+	right: 60px;
+	top: 7px;
+	padding: 0px;
+	margin: 0px;
+	cursor: pointer;
+	z-index: 999999;
+	color: red;
+
+}
+
 .close > svg{
 	padding: 0px;
 	margin: 0px;

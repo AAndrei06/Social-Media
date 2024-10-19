@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\Post;
+use App\Models\Story;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\Video;
@@ -255,6 +256,104 @@ class HomeController extends Controller
     }
 
 
+    public function createStory(Request $request){
+
+
+        $user = Auth::user();
+
+        if ($user->stories()->count() > 0){
+            return "Deja ai un story";
+        }
+
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:mp4|max:51200'
+        ], [
+            'file.file' => 'Fișier invalid',
+            'file.max' => 'Mărimea depășește 50 MB'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $file = null;
+        if ($request->file('file')){
+            $file = $request->file('file');
+
+            $mimeType = $file->getMimeType();
+
+            if (strpos($mimeType, 'video/') !== 0) {
+                return response()->json(['errors' => 'Fișierul trebuie să fie un video'], 422);
+            }
+
+            $uploadFolder = 'storyFiles';
+            $image = $request->file('file');
+            $image_uploaded_path = $image->store($uploadFolder, 'public');
+            $file = str_replace('localhost','127.0.0.1:8000',Storage::disk('public')->url($image_uploaded_path));
+        }
+        $uuid = Str::uuid()->toString();
+
+        $story = Story::create([
+            'user_id' => $user->id,
+            'uuid' => $uuid,
+            'file' => $file
+        ]);
+
+
+        return response()->json([
+            'success' => true,
+            'story' => $story
+        ]);
+    }
+
+
+
+    public function showStories(){
+        $user = Auth::user();
+
+        $mutualFollowers = User::whereHas('followers', function ($query) use ($user) {
+            $query->where('follower_id', $user->id);
+        })->whereHas('following', function ($query) use ($user) {
+            $query->where('followed_id', $user->id);
+        })->with('profile')
+          ->get();
+
+
+        $stories = collect();
+
+    
+        $userFirstStory = $user->stories()->with('user.profile')->first();
+        if ($userFirstStory) {
+            $stories->push($userFirstStory->load(['user', 'user.profile']));
+        }
+
+        foreach ($mutualFollowers as $follower) {
+            $firstStory = $follower->stories()->with('user.profile')->first();
+            if ($firstStory) {
+                $stories->push($firstStory->load(['user', 'user.profile']));
+            }
+        }
+
+        return response()->json($stories);
+    }
+
+    public function deleteStory($id, Request $request){
+        $story = Story::where('uuid',$id)->first();
+
+        if ($story->file != null || $story->file != ''){
+            $fileUrl = $story->file;
+
+            $filename = basename($fileUrl);
+
+            $storagePath = 'storyFiles/' . $filename;
+            if (Storage::disk('public')->exists($storagePath)) {
+                Storage::disk('public')->delete($storagePath);  
+            }
+        }
+
+        $story->delete();
+
+        return response('deleted story with id'.$id);
+    }
     
 
 }

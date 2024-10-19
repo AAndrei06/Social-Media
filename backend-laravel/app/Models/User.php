@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Profile;
 use App\Models\Post;
+use App\Models\Story;
 
 class User extends Authenticatable
 {
@@ -55,6 +56,10 @@ class User extends Authenticatable
 
     public function posts(){
         return $this->hasMany(Post::class);
+    }
+
+    public function stories(){
+        return $this->hasMany(Story::class);
     }
 
     public function following()

@@ -97,6 +97,43 @@ export default function PostForm(props){
 	        } catch (error) {
 	            console.error('Error uploading file:', error);
 	        }
+	    }else if (props.type == "story"){
+	    	const file = fileRef.current.files[0];
+
+	    	if (file.type === 'video/mp4' && file.name.endsWith('.mp4')){
+
+		        const videoElement = document.createElement('video');
+
+		        videoElement.preload = 'metadata';
+		        videoElement.src = URL.createObjectURL(file);
+
+		        videoElement.onloadedmetadata = async function () {
+		            const duration = videoElement.duration;
+		            if (duration < 30) {
+		                e.preventDefault();
+		                const payload = {
+							'file':file
+						};
+						
+				        try {
+				            const response = await client.post('/story/create', payload, {
+				                headers: {
+				                    'Content-Type': 'multipart/form-data',
+				                    'Action-Of-Home': 'createStory',
+				                },
+				            });
+				            console.log(response);
+				        } catch (error) {
+				            console.error('Error uploading file:', error);
+				        }
+				        console.log("30 <");
+		            } else {
+		                console.log(' 30 >');
+		            }
+		        };
+		    }else{
+		    	console.log("not a video");
+		    }
 	    }
 	}
 
