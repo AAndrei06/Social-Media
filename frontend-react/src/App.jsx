@@ -15,6 +15,7 @@ export default function App() {
   <Routes>
     <Route path="/" element = {<Wrapper/>}>
       <Route index element = {<Home/>}/>
+      <Route index path = "/:uuid" element = {<Home/>}/>
       <Route path="friends" element={<Friends/>}/>
       <Route path="videos" element={<Shorts/>}/>
       <Route path="chat" element={<Chat/>}/>

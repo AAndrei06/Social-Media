@@ -14,12 +14,14 @@ export default function Friends(){
 	const context = useOutletContext();
 	const client = context.client;
 	const [friends, setFriends] = useState([]);
+	const [suggestions, setSuggestion] = useState([]);
 
 	useEffect(() => {
 		async function getAll(){
 			client.get('/friends/get').then(({data}) => {
 				console.log(data);
 				setFriends(data.mutual_followers);
+				setSuggestion(data.suggestions);
 			});
 		}
 
@@ -52,24 +54,10 @@ export default function Friends(){
 					<div className = {styles.suggestionList}>
 						<h2 className = {styles.h2}>Sugestii de prietenie</h2>
 						<div className = {styles.friendsSuggestions}>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
-							<FriendBox/>
+
+							{suggestions != [] && suggestions.map(suggestion => (
+								<FriendBox key = {suggestion.id} user = {suggestion}/>
+							))}
 						</div>
 					</div>
 				</div>

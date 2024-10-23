@@ -102,6 +102,11 @@ class HomeController extends Controller
         return response()->json($post);
     }
 
+    public function getPost($id, Request $request){
+        $post = Post::where('uuid',$id)->first();
+        return response()->json($post);
+    }
+
     public function deletePost($id, Request $request){
         
         $post = Post::where('uuid',$id)->first();

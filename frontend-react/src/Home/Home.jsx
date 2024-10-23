@@ -17,7 +17,7 @@ import CommentsSection from '../Components/CommentsSection/CommentsSection.jsx';
 import LikeSide from '../Components/LikeSide/LikeSide.jsx';
 import StoryView from '../Components/StoryView/StoryView.jsx';
 
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 
 function Home(){
 
@@ -37,8 +37,28 @@ function Home(){
 	const [storyOpen, setStoryOpen] = useState(false);
 	const [type, setType] = useState("create");
 	const [id, setId] = useState('nothing');
+	const [suggestions, setSuggestions] = useState([]);
+	const [post, setPost] = useState({});
+	const { uuid } = useParams();
 
-	useEffect(() => {
+	console.log(uuid);
+	if (uuid){
+		useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                const response = await client.get(`post/get/${uuid}`);
+                console.log(response.data);
+            }catch(err){
+            	console.log(err);
+            }
+        };
+
+        fetchPost();
+        
+    }, []);
+	}else{
+
+		useEffect(() => {
         const fetchPosts = async () => {
             try {
                 const response = await client.get('/');
@@ -63,12 +83,25 @@ function Home(){
                 setLoading(false);
             }
         };
+
+        async function getAll(){
+			client.get('/friends/get').then(({data}) => {
+				console.log(data);
+				setSuggestions(data.suggestions);
+			});
+		}
+
+		getAll();
         fetchStories();
         fetchPosts();
         
     }, []);
-
 	if (loading) return <p>Loading...</p>;
+	}
+
+	
+
+	
 
 	function handleOpen(typeF){
 		setType(type => typeF);
@@ -208,18 +241,12 @@ return(
 														</div>
 														<h3 className = {styles.friendsH3}>Sugestii de prietenie</h3>
 														<div id = "suggestion-friends">
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
-															<FriendItem suggestion = {true} name = "Parinti" img = "src/assets/test.png"/>
+														{suggestions != [] && suggestions.map(suggestion => (
+															<FriendItem suggestion = {true} user = {suggestion}/>
+														))}
+															
+														
+															
 														</div>
 														
 													</div>
