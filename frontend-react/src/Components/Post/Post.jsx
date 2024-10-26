@@ -18,7 +18,7 @@ export default function Post(props){
 
 	const context = useOutletContext();
 	const client = context.client;
-
+	const postRef = useRef();
 	const imgRef = useRef();
 	const nrOfLikes = useRef();
 	const ref = useRef('');
@@ -71,6 +71,8 @@ export default function Post(props){
                 },
             });
             console.log(response);
+            context.showSuccess("Postarea a fost ștearsă cu succes!");
+            postRef.current.style.display = "none";
         } catch (error) {
             console.log(error);
         }
@@ -91,6 +93,8 @@ export default function Post(props){
                 },
             });
             console.log(response);
+            ref.current.value = "";
+            context.showSuccess("Comentariul a fost postat cu succes!");
         } catch (error) {
             console.log(error);
         }
@@ -108,7 +112,7 @@ export default function Post(props){
 
 	return (
 		<>
-		<div className = {styles.post + ' ' + bd}>
+		<div ref = {postRef} className = {styles.post + ' ' + bd}>
 			<div className = {styles.header}>
 				<div className = {styles.headerInfo}>
 					<img className = {styles.postProfileImg} src = {props.user_photo}/>

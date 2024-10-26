@@ -42,65 +42,60 @@ function Home(){
 	const { uuid } = useParams();
 
 	console.log(uuid);
-	if (uuid){
-		useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                const response = await client.get(`post/get/${uuid}`);
-                console.log(response.data);
-            }catch(err){
-            	console.log(err);
-            }
-        };
+	useEffect(() => {
+    const fetchPost = async () => {
+        try {
+            const response = await client.get(`post/get/${uuid}`);
+            console.log(response.data);
+            setPost(response.data);
+        }catch(err){
+        	console.log(err);
+        }
+    };
 
-        fetchPost();
+    fetchPost();
         
     }, []);
-	}else{
 
-		useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await client.get('/');
-                setPosts(response.data);
-                console.log(response.data);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+	useEffect(() => {
+    const fetchPosts = async () => {
+        try {
+            const response = await client.get('/');
+            setPosts(response.data);
+            console.log(response.data);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        const fetchStories = async () => {
-            try {
-                const response = await client.get('/story/get');
-                setStories(response.data);
-                console.log("stories");
-                console.log(response.data);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchStories = async () => {
+        try {
+            const response = await client.get('/story/get');
+            setStories(response.data);
+            console.log("stories");
+            console.log(response.data);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        async function getAll(){
-			client.get('/friends/get').then(({data}) => {
-				console.log(data);
-				setSuggestions(data.suggestions);
-			});
-		}
+    async function getAll(){
+		client.get('/friends/get').then(({data}) => {
+			console.log(data);
+			setSuggestions(data.suggestions);
+		});
+	}
 
-		getAll();
-        fetchStories();
-        fetchPosts();
+	getAll();
+    fetchStories();
+    fetchPosts();
         
     }, []);
 	if (loading) return <p>Loading...</p>;
-	}
-
-	
-
 	
 
 	function handleOpen(typeF){
@@ -111,7 +106,6 @@ function Home(){
 	function handleShow(){
 		setShow(show => !show);
 	}
-
 
 
 return(
@@ -168,7 +162,30 @@ return(
 											</div>
 											<div className = {styles.postSection}>
 												<div>
-													{posts.map(post => (
+													{post != {} &&
+														<Post 
+															fullname = {post.user.profile.first_name+' '+post.user.profile.last_name}
+															body = {post.body}
+															nrComments = {post.nr_of_comments}
+															created = {post.created_at}
+															user_photo = {post.user.profile.profile_photo}
+															file = {post.file} 
+															key = {post.uuid} 
+															func = {handleOpen} 
+															set = {handleShow}
+															setId = {setId} 
+															show = {handleShow} 
+															like = {likeOpen} 
+															setLike = {setLikeOpen}
+															idKey = {post.uuid}
+															setCommentPostId = {setCommentPostId}
+															setLikePostId = {setLikePostId}
+															liked = {post.liked_by_user}
+															nrLikes = {post.like_count}
+															/>
+
+													}
+													{post == {} && posts.map(post => (
 														<Post 
 															fullname = {post.user.profile.first_name+' '+post.user.profile.last_name}
 															body = {post.body}

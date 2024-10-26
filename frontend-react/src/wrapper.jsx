@@ -7,7 +7,9 @@ export default function Wrapper(){
 	const navigate = useNavigate();
 	const [user, setUser] = useState(null);
 	const [token, setToken] = useState(null);
-	const [errors, setErrors] = useState();
+	const [message, setMessage] = useState('');
+	const [err, setErr] = useState(false);
+	const [showAlert, setShowAlert] = useState(true);
 	const axiosClient = axios.create({
 		baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`
 	});
@@ -41,6 +43,18 @@ export default function Wrapper(){
 			setUser({'h':'1'});
 		});
 	}, []);
+
+	function showError(msg){
+		setShowAlert(o => true);
+		setMessage(e => msg);
+		setErr(e => true);
+	}
+
+	function showSuccess(msg){
+		setShowAlert(o => true);
+		setMessage(e => msg);
+		setErr(e => false);
+	}
 
 	
 
@@ -89,8 +103,15 @@ export default function Wrapper(){
 					setUser: setUser,
 					setToken: setToken,
 					client: axiosClient,
-					errors: errors,
-					setErrors: setErrors
+					message: message,
+					setMessage: setMessage,
+					showAlert: showAlert,
+					setShowAlert: setShowAlert,
+					err: err,
+					setErr: setErr,
+					showError: showError,
+					showSuccess, showSuccess
+
 				}
 			}/>
 		</>

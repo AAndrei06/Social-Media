@@ -26,7 +26,7 @@ export default function PostForm(props){
 
 	const name = props.type == "story" ? styles.mini : "";
 	const name2 = props.type == "story" ? styles.miniFile : "";
-
+	/*
 	if (props.type == "create"){
 
 		const payload = {
@@ -36,7 +36,7 @@ export default function PostForm(props){
 		client.post('/',payload).then((data) => {
 			console.log(data);
 		});
-	}
+	}*/
 
 	async function handleSubmit(e){
 		e.preventDefault();
@@ -56,9 +56,16 @@ export default function PostForm(props){
 	                    'Action-Of-Home': 'createPost',
 	                },
 	            });
-	            console.log(response);
+	            console.log('re', response);
+	            context.showSuccess('Postare creată cu success!');
 	        } catch (error) {
-	            console.error('Error uploading file:', error);
+	        	if (error){
+	        		if (error.response.data.errors.content){
+			        	context.showError(error.response.data.errors.content[0]);
+			        }else{
+			        	context.showError(error.response.data.errors);
+			        }
+		        }
 	        }
 	    }else if (props.type == 'edit'){
 	    	const file = fileRef.current.files[0];
@@ -75,8 +82,15 @@ export default function PostForm(props){
 	                },
 	            });
 	            console.log(response);
+	            context.showSuccess('Postare editată cu success!');
 	        } catch (error) {
-	            console.error('Error uploading file:', error);
+	            if (error){
+	        		if (error.response.data.errors.content){
+			        	context.showError(error.response.data.errors.content[0]);
+			        }else{
+			        	context.showError(error.response.data.errors);
+			        }
+		        }
 	        }
 	    }else if (props.type == 'video'){
 	    	const file = fileRef.current.files[0];
@@ -94,8 +108,15 @@ export default function PostForm(props){
 	                },
 	            });
 	            console.log(response);
+	            context.showSuccess('Videoclip scurt creat cu success!');
 	        } catch (error) {
-	            console.error('Error uploading file:', error);
+	            if (error){
+	        		if (error.response.data.errors.content){
+			        	context.showError(error.response.data.errors.content[0]);
+			        }else{
+			        	context.showError(error.response.data.errors);
+			        }
+		        }
 	        }
 	    }else if (props.type == "story"){
 	    	const file = fileRef.current.files[0];

@@ -38,6 +38,12 @@
 	position: fixed;
 }
 
+.err{
+	background-color: #f8d7da;
+	color: #721c29;
+	border: 2px solid #721c29;
+}
+
 .notifications:hover{
 	overflow-y: scroll;
 }

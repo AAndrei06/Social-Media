@@ -23,13 +23,14 @@ class HomeController extends Controller
 
         $validator = Validator::make($request->all(), [
             'file' => 'file|max:409600',
-            'content' => 'required|string|max:1000'
+            'content' => 'required|string|min:20|max:1000'
         ], [
             'file.file' => 'Fișier invalid',
             'file.max' => 'Mărimea depășește 400 MB',
             'content.required' => 'Conținutul este necesar.',
             'content.string' => 'Conținutul trebuie să fie un text valid.',
-            'content.max' => 'Conținutul nu poate depăși 1000 de caractere.'
+            'content.max' => 'Conținutul nu poate depăși 1000 de caractere.',
+            'content.min' => 'Conținutul trebuie să conțină cel puțin 20 caractere.'
         ]);
 
         if ($validator->fails()) {
@@ -103,7 +104,19 @@ class HomeController extends Controller
     }
 
     public function getPost($id, Request $request){
-        $post = Post::where('uuid',$id)->first();
+        $currentUserId = Auth::id();
+
+        // Retrieve the post by UUID
+        $post = Post::with(['user.profile:id,user_id,profile_photo,first_name,last_name'])
+                    ->where('uuid', $id)
+                    ->firstOrFail(); // This will throw a 404 if not found
+
+        // Attach additional data to the post
+        $post->liked_by_user = $post->likes()->where('user_id', $currentUserId)->exists();
+        $post->like_count = $post->likes()->count();
+        $post->nr_of_comments = $post->comments()->count();
+
+        // Return the post as a JSON response
         return response()->json($post);
     }
 
@@ -144,6 +157,15 @@ class HomeController extends Controller
 
 
     public function writeComment($id, Request $request){
+
+        $request->validate([
+            'content' => 'required|string|min:1|max:1000'
+        ], [
+            'content.required' => 'Conținutul comentariului este necesar.',
+            'content.string' => 'Comentariului trebuie să fie un text valid.',
+            'content.min' => 'Comentariului trebuie să conțină cel puțin 1 caracter.',
+            'content.max' => 'Comentariului nu poate depăși 1000 de caractere.'
+        ]);
 
         $post = Post::where('uuid',$id)->first();
         $user = Auth::user();
@@ -216,13 +238,14 @@ class HomeController extends Controller
 
         $validator = Validator::make($request->all(), [
             'file' => 'file|max:409600',
-            'content' => 'required|string|max:1000'
+            'content' => 'required|string|min:20|max:1000'
         ], [
             'file.file' => 'Fișier invalid',
             'file.max' => 'Mărimea depășește 400 MB',
             'content.required' => 'Conținutul este necesar.',
             'content.string' => 'Conținutul trebuie să fie un text valid.',
-            'content.max' => 'Conținutul nu poate depăși 1000 de caractere.'
+            'content.max' => 'Conținutul nu poate depăși 1000 de caractere.',
+            'content.min' => 'Conținutul trebuie să conțină cel puțin 20 caractere.'
         ]);
 
         if ($validator->fails()) {

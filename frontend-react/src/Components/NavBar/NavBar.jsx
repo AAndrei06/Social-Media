@@ -15,22 +15,27 @@ export default function NavBar(){
 	const [show, setShow] = useState(false);
 	const [slide, setSlide] = useState(false);
 	const [showNotification,setShowNotification] = useState(false);
-	const [showAlert, setShowAlert] = useState(true);
+	const err = context.err ? styles.err : '';
+	console.log(context.err);
 
 	useEffect(() => {
-		if (showAlert == true){
+
+		if (context.showAlert == true){
 			setTimeout(() => {
-				setShowAlert(o => !o);
-			},4000);
+				context.setShowAlert(o => !o);
+				context.setErr(o => false);
+				context.setMessage(e => '');
+			},3000);
 		}
-	},[showAlert]);
+	},[context.message]);
+
+	
 
 	function showHide(){
 		setSlide(s => false);
 		setShowNotification(s => false);
 		setShow(show => !show);
 		document.getElementById("slider").style.transform = "translateX(0px)";
-
 	}
 
 	function showHideSlide(){
@@ -55,9 +60,9 @@ export default function NavBar(){
 
 	return(
 		<div className = {styles.navBar}>
-			{showAlert &&
-				<div className = {styles.alert}>
-					<p>Bine ai venit!!!</p>
+			{context.showAlert &&
+				<div className = {styles.alert+' '+err}>
+					<p>{context.message || "Bine ai venit!!!"}</p>
 				</div>
 			}
 			<div id = "slider" className = {styles.menuSlide}>
