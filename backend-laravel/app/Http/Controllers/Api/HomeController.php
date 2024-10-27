@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Comment;
 use App\Models\Video;
 use App\Models\Commentv;
+use App\Models\Profile;
 
 class HomeController extends Controller
 {
@@ -382,6 +383,47 @@ class HomeController extends Controller
 
         return response('deleted story with id'.$id);
     }
-    
+
+
+
+    public function searchContent(Request $request)
+    {
+        $query = $request->query('query');
+
+        if (empty($query)) {
+            return response()->json(['message' => 'Query is required.'], 400);
+        }
+
+        $posts = Post::where('body', 'LIKE', '%' . $query . '%')->get()->map(function ($post) {
+            return [
+                'type' => 'post',
+                'data' => $post
+            ];
+        });
+
+        $videos = Video::where('body', 'LIKE', '%' . $query . '%')->get()->map(function ($video) {
+            return [
+                'type' => 'video',
+                'data' => $video
+            ];
+        });
+
+        $profiles = Profile::where('first_name', 'LIKE', '%' . $query . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $query . '%')
+                            ->with('user') // Eager load the associated user
+                            ->get()
+                            ->map(function ($profile) {
+                                return [
+                                    'type' => 'profile',
+                                    'data' => $profile,
+                                    'user' => $profile->user // Include the user object
+                                ];
+                            });
+
+        $results = $posts->concat($videos)->concat($profiles);
+
+        return response()->json($results);
+    }
+
 
 }

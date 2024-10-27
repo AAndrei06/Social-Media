@@ -16,7 +16,7 @@ export default function Short(props){
 	const context = useOutletContext();
 	const client = context.client;
 	const user = context.user;
-
+	if (user){
 	const imgRef = useRef();
 	const nrOfLikes = useRef();
 
@@ -138,4 +138,5 @@ export default function Short(props){
 			</div>
 		</>
 	);
+}
 }

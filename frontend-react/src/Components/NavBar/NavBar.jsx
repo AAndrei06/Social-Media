@@ -1,17 +1,21 @@
 import styles from './navbar.module.css';
 import photo from '../../assets/default.png';
 import logo from '../../assets/logo.png';
+import blank from '../../assets/blank_post.png';
 import LeftItem from '../../Components/Item/LeftItem.jsx';
 import Notification from '../../Components/Notifications/Notification.jsx';
 import profil from '../../assets/default.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faMessage, faBell, faBars, faFileVideo, faXmark} from '@fortawesome/free-solid-svg-icons'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, Navigate, useOutletContext } from 'react-router-dom';
+
 
 export default function NavBar(){
 	const context = useOutletContext();
-
+	const client = context.client;
+	const searchRef = useRef();
+	const [results, setResults] = useState([]);
 	const [show, setShow] = useState(false);
 	const [slide, setSlide] = useState(false);
 	const [showNotification,setShowNotification] = useState(false);
@@ -19,7 +23,6 @@ export default function NavBar(){
 	console.log(context.err);
 
 	useEffect(() => {
-
 		if (context.showAlert == true){
 			setTimeout(() => {
 				context.setShowAlert(o => !o);
@@ -28,6 +31,34 @@ export default function NavBar(){
 			},3000);
 		}
 	},[context.message]);
+
+	async function search() {
+	    try {
+	        const query = searchRef.current.value;
+
+	        if (!query || query.length < 1) {
+	            console.error("Search query is required.");
+	            return;
+	        }
+
+	        const response = await client.get('/search', {
+	            params: { query: query },
+	            headers: {
+	                'Action-Of-Home': 'search',
+	                'Content-Type': 'application/json'
+	            },
+	        });
+
+	        setResults(r => response.data);
+
+	        console.log('Search results:', response.data);
+	    } catch (error) {
+	        console.error('Error during search:', error);
+	    }
+	}
+
+
+
 
 	
 
@@ -56,6 +87,20 @@ export default function NavBar(){
 		setShow(s => false);
 		setShowNotification(s => !s);
 		document.getElementById("slider").style.transform = "translateX(0px)";
+	}
+
+	function truncateHtml(html, length) {
+	    const tempDiv = document.createElement('div');
+	    tempDiv.innerHTML = html;
+	    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+	    const truncatedText = textContent.length > length ? textContent.slice(0, length) + '...' : textContent;
+	    return truncatedText;
+	}
+
+	function extractText(html) {
+	    const tempElement = document.createElement('div'); // Create a temporary element
+	    tempElement.innerHTML = html; // Set the innerHTML to the HTML string
+	    return tempElement.innerText || tempElement.textContent; // Return the text content
 	}
 
 	return(
@@ -110,20 +155,42 @@ export default function NavBar(){
 			<div className = {styles.searchSection}>
 				<div className = {styles.inputSearch}>
 					<FontAwesomeIcon className = {styles.glassIconSearch} icon={faMagnifyingGlass} />
-					<input type = "text"/>
+					<input ref = {searchRef} onChange = {() => search()} type = "text"/>
 					
 				</div>
 				<div className = {styles.resultsSearch}>
-					<div className = {styles.result}>
-						<div className = {styles.infoLayout}>
-							<img src = {photo}/>
-							<div className = {styles.textInfo}>
-								<p>Andrei Arseni</p>
-								<p>Cont</p>
-							</div>
-						</div>
-					</div>
-					
+					{results.length > 0 && results.map(result => (
+					    <div key={result.data.id} className={styles.result}>
+					        {result.type === 'profile' && (
+					            <div className={styles.infoLayout}>
+					                <img src={result.data.profile_photo}/>
+					                <div className={styles.textInfo}>
+					                    <p>{result.data.first_name + ' ' + result.data.last_name}</p>
+					                    <p>Utilizator</p>
+					                </div>
+					            </div>
+					        )}
+					        {result.type === 'post' && (
+					            <div className={styles.infoLayout}>
+					                <img src={result.data.file ? result.data.file : blank}/>
+					                <div className={styles.textInfo}>
+					                    <p>{extractText(result.data.body).substring(0,20) + ((result.data.body.length > 20) ? '...' : '')}</p>
+					                    <p>Postare</p>
+					                </div>
+					            </div>
+					        )}
+					        {result.type === 'video' && (
+					            <div className={styles.infoLayout}>
+					                <img src={result.data.profile_photo}/>
+					                <div className={styles.textInfo}>
+					                    <p>{extractText(result.data.body).substring(0,20) + ((result.data.body.length > 20) ? '...' : '')}</p>
+					                    <p>Video</p>
+					                </div>
+					            </div>
+					        )}
+					    </div>
+					))}
+
 				</div>
 				<FontAwesomeIcon className = {styles.xMark} icon={faXmark} onClick = {showHide}/>
 			</div>

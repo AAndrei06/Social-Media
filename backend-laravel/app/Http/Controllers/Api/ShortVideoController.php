@@ -96,4 +96,18 @@ class ShortVideoController extends Controller
         $comment->delete();
         return response('success'.$id);
     }
+
+    public function getVideo($id, Request $request){
+        $currentUserId = Auth::id();
+
+        $video = Video::with(['user.profile:id,user_id,profile_photo,first_name,last_name'])
+                  ->where('uuid', $id)
+                  ->firstOrFail();
+
+        $video->liked_by_user = $video->likes()->where('user_id', $currentUserId)->exists();
+        $video->like_count = $video->likes()->count();
+        $video->nr_of_comments = $video->comments()->count();
+
+        return response()->json($video);
+    }
 }

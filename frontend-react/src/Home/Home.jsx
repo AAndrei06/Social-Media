@@ -38,7 +38,7 @@ function Home(){
 	const [type, setType] = useState("create");
 	const [id, setId] = useState('nothing');
 	const [suggestions, setSuggestions] = useState([]);
-	const [post, setPost] = useState({});
+	const [post, setPost] = useState(null);
 	const { uuid } = useParams();
 
 	console.log(uuid);
@@ -162,7 +162,7 @@ return(
 											</div>
 											<div className = {styles.postSection}>
 												<div>
-													{post != {} &&
+													{post != null &&
 														<Post 
 															fullname = {post.user.profile.first_name+' '+post.user.profile.last_name}
 															body = {post.body}
@@ -185,7 +185,7 @@ return(
 															/>
 
 													}
-													{post == {} && posts.map(post => (
+													{post == null && posts.map(post => (
 														<Post 
 															fullname = {post.user.profile.first_name+' '+post.user.profile.last_name}
 															body = {post.body}

@@ -8,6 +8,96 @@ import { useOutletContext } from 'react-router-dom';
 
 export default function PostForm(props){
 
+
+
+
+
+
+
+
+const getFirstFrameFromVideo = (
+    videoFile, // Expecting a File object
+    options = {
+        extension: "png",
+    }
+) => {
+    return new Promise((resolve, reject) => {
+        // Check if videoFile is valid
+        if (!videoFile || videoFile.size === 0) {
+            reject(new Error("Invalid video file"));
+            return;
+        }
+
+        const video = document.createElement('video');
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const urlRef = URL.createObjectURL(videoFile);
+
+        video.src = urlRef;
+        video.crossOrigin = 'anonymous'; // Allow cross-origin access
+        video.preload = 'metadata';
+
+        video.addEventListener('loadedmetadata', () => {
+            // Set canvas size to video dimensions
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            video.currentTime = 0; // Go to the first frame
+        });
+
+        video.addEventListener('loadeddata', () => {
+            // Draw the first frame onto the canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to blob and resolve with File
+            canvas.toBlob((blob) => {
+                // Check if blob was created successfully
+                if (!blob) {
+                    reject(new Error('Failed to create image blob'));
+                    return;
+                }
+
+                // Resolve with the new File object
+                resolve(
+                    new File([blob], `${videoFile.name}_first_frame.${options.extension}`, {
+                        type: 'image/' + options.extension
+                    })
+                );
+
+                // Clean up resources
+                URL.revokeObjectURL(urlRef);
+                video.remove();
+                canvas.remove();
+            }, 'image/' + options.extension);
+        });
+
+        // Error handling
+        video.addEventListener('error', (event) => {
+            reject(new Error('Error loading video: ' + event.message));
+            // Clean up in case of error
+            URL.revokeObjectURL(urlRef);
+            video.remove();
+            canvas.remove();
+        });
+
+        // Load the video
+        video.load();
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	const obj = {
 		'create':'Creează o postare',
 		'edit':'Editează postarea',
@@ -93,7 +183,16 @@ export default function PostForm(props){
 		        }
 	        }
 	    }else if (props.type == 'video'){
+
 	    	const file = fileRef.current.files[0];
+
+	    	try {
+		        const firstFrameImage = await getFirstFrameFromVideo(file);
+		        console.log('First frame image:', firstFrameImage);
+		        // Use the generated image file as needed
+		    } catch (error) {
+		        console.error('Error getting first frame:', error);
+		    }
 			console.log(file);
 			const payload = {
 				'content': tRef.current,
@@ -109,6 +208,7 @@ export default function PostForm(props){
 	            });
 	            console.log(response);
 	            context.showSuccess('Videoclip scurt creat cu success!');
+	            props.setOpen(o => !o);
 	        } catch (error) {
 	            if (error){
 	        		if (error.response.data.errors.content){

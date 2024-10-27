@@ -6,22 +6,36 @@ import { Pagination, Navigation, Mousewheel } from 'swiper/modules';
 import CommentsSection from '../Components/CommentsSection/CommentsSection.jsx';
 import { useState, useEffect } from 'react';
 import './short.css';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 
 export default function ShortVideos(){
 
 	const context = useOutletContext();
 	const client = context.client;
-
 	const [videos, setVideos] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	/*
-	const [commentPostId, setCommentPostId] = useState('1');
-	const [likePostId, setLikePostId] = useState('1');
-*/
+	const [video, setVideo] = useState(null);
 	const [open, setOpen] = useState(false);
 	const [id, setId] = useState('1');
+
+	const { uuid } = useParams();
+	console.log(uuid);
+
+	useEffect(() => {
+    const fetchVideo = async () => {
+        try {
+            const response = await client.get(`video/get/${uuid}`);
+            console.log(response.data);
+            setVideo(response.data);
+        }catch(err){
+        	console.log(err);
+        }
+    };
+
+    fetchVideo();
+        
+    }, []);
 
 	function handleSlideChange(){
 		setOpen(false);
@@ -55,7 +69,13 @@ export default function ShortVideos(){
 
 					}}
 					>
-					{videos.map(video => (
+					{video != null && 
+						<SwiperSlide key = {video.id}>
+							{({isActive}) => (<Short video = {video} setId = {setId} set = {setOpen} open = {open} play = {isActive}/>)}
+						</SwiperSlide>
+					}
+
+					{video == null && videos.map(video => (
 						<SwiperSlide key = {video.id}>
 							{({isActive}) => (<Short video = {video} setId = {setId} set = {setOpen} open = {open} play = {isActive}/>)}
 						</SwiperSlide>

@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile/{id}', [ProfileController::class, 'profileGet']);
     Route::post('/profile/{id}', [ProfileController::class, 'profilePost']);
     Route::post('/profile/follow/{id}', [ProfileController::class, 'follow']);
+    Route::get('/search', [HomeController::class, 'searchContent']);
 
     // Home (Posts) routes
     Route::prefix('post')->group(function () {
@@ -67,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/comment/{id}', [ShortVideoController::class, 'commentVideo']);
         Route::get('/get/comments/{id}', [ShortVideoController::class, 'getCommentsVideo']);
         Route::post('/delete/comment/{id}', [ShortVideoController::class, 'deleteCommentVideo']);
+        Route::get('/get/{id}', [ShortVideoController::class, 'getVideo']);
     });
 
     // Video listing
