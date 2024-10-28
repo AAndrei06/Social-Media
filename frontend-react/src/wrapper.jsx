@@ -40,7 +40,7 @@ export default function Wrapper(){
 		axiosClient.get('/user').then((data) => {
 			setUser(data.data);
 		}).catch((e) => {
-			setUser({'h':'1'});
+			setUser(null);
 		});
 	}, []);
 

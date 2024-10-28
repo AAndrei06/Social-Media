@@ -13,7 +13,8 @@ class Story extends Model
     protected $fillable = [
                            'file',
                            'uuid',
-                           'user_id'
+                           'user_id',
+                           'image'
                            ];
 
     public function user(){

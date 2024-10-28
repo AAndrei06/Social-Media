@@ -13,19 +13,10 @@ export default function PostForm(props){
 
 
 
-
-
-const getFirstFrameFromVideo = (
-    videoFile, // Expecting a File object
-    options = {
-        extension: "png",
-    }
-) => {
+const getFrame = async (videoFile) => {
     return new Promise((resolve, reject) => {
-        // Check if videoFile is valid
         if (!videoFile || videoFile.size === 0) {
-            reject(new Error("Invalid video file"));
-            return;
+            return reject(new Error("Invalid video file"));
         }
 
         const video = document.createElement('video');
@@ -37,62 +28,52 @@ const getFirstFrameFromVideo = (
         video.crossOrigin = 'anonymous'; // Allow cross-origin access
         video.preload = 'metadata';
 
+        // Set the time to capture the frame (you can adjust this)
+        const captureTime = 0.5; // Capture at 0.5 seconds (adjust as needed)
+
         video.addEventListener('loadedmetadata', () => {
             // Set canvas size to video dimensions
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
 
-            video.currentTime = 0; // Go to the first frame
+            // Ensure the video duration is enough
+            if (video.duration < captureTime) {
+                return reject(new Error('Video is too short for the specified capture time.'));
+            }
+
+            // Set the current time to capture the frame
+            video.currentTime = captureTime;
         });
 
-        video.addEventListener('loadeddata', () => {
-            // Draw the first frame onto the canvas
+        // Listen for the `seeked` event to ensure the video is ready
+        video.addEventListener('seeked', () => {
+            // Draw the frame onto the canvas
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Convert canvas to blob and resolve with File
+            // Convert canvas to blob and resolve with a File
             canvas.toBlob((blob) => {
-                // Check if blob was created successfully
                 if (!blob) {
-                    reject(new Error('Failed to create image blob'));
-                    return;
+                    return reject(new Error('Failed to create image blob'));
                 }
 
-                // Resolve with the new File object
-                resolve(
-                    new File([blob], `${videoFile.name}_first_frame.${options.extension}`, {
-                        type: 'image/' + options.extension
-                    })
-                );
+                // Create a File object from the blob
+                const file = new File([blob], `${videoFile.name}_frame.png`, {
+                    type: 'image/png'
+                });
 
-                // Clean up resources
-                URL.revokeObjectURL(urlRef);
-                video.remove();
-                canvas.remove();
-            }, 'image/' + options.extension);
+                resolve(file); // Return the File object
+            }, 'image/png'); // Specify the image format
         });
 
         // Error handling
         video.addEventListener('error', (event) => {
             reject(new Error('Error loading video: ' + event.message));
-            // Clean up in case of error
-            URL.revokeObjectURL(urlRef);
-            video.remove();
-            canvas.remove();
         });
 
         // Load the video
         video.load();
     });
 };
-
-
-
-
-
-
-
-
-
 
 
 
@@ -116,17 +97,6 @@ const getFirstFrameFromVideo = (
 
 	const name = props.type == "story" ? styles.mini : "";
 	const name2 = props.type == "story" ? styles.miniFile : "";
-	/*
-	if (props.type == "create"){
-
-		const payload = {
-
-		};
-
-		client.post('/',payload).then((data) => {
-			console.log(data);
-		});
-	}*/
 
 	async function handleSubmit(e){
 		e.preventDefault();
@@ -148,8 +118,10 @@ const getFirstFrameFromVideo = (
 	            });
 	            console.log('re', response);
 	            context.showSuccess('Postare creată cu success!');
+	            props.setOpen(o => !o);
 	        } catch (error) {
 	        	if (error){
+	        		
 	        		if (error.response.data.errors.content){
 			        	context.showError(error.response.data.errors.content[0]);
 			        }else{
@@ -173,6 +145,7 @@ const getFirstFrameFromVideo = (
 	            });
 	            console.log(response);
 	            context.showSuccess('Postare editată cu success!');
+	            props.setOpen(o => !o);
 	        } catch (error) {
 	            if (error){
 	        		if (error.response.data.errors.content){
@@ -187,8 +160,7 @@ const getFirstFrameFromVideo = (
 	    	const file = fileRef.current.files[0];
 
 	    	try {
-		        const firstFrameImage = await getFirstFrameFromVideo(file);
-		        console.log('First frame image:', firstFrameImage);
+		        
 		        // Use the generated image file as needed
 		    } catch (error) {
 		        console.error('Error getting first frame:', error);
@@ -220,6 +192,10 @@ const getFirstFrameFromVideo = (
 	        }
 	    }else if (props.type == "story"){
 	    	const file = fileRef.current.files[0];
+	    	if (!file){
+	    		context.showError("Alegeți un video!");
+	    	}
+
 
 	    	if (file.type === 'video/mp4' && file.name.endsWith('.mp4')){
 
@@ -232,8 +208,12 @@ const getFirstFrameFromVideo = (
 		            const duration = videoElement.duration;
 		            if (duration < 30) {
 		                e.preventDefault();
+		                const firstFrameImage = await getFrame(file);
+		                console.log(firstFrameImage);
+		                
 		                const payload = {
-							'file':file
+							'file':file,
+							'image':firstFrameImage
 						};
 						
 				        try {
@@ -243,17 +223,24 @@ const getFirstFrameFromVideo = (
 				                    'Action-Of-Home': 'createStory',
 				                },
 				            });
-				            console.log(response);
+				            console.log(response.data);
+
+				            if (response.data == "Exists"){
+				            	context.showError("Deja ai o poveste!");
+				            }else{
+				            	context.showSuccess('Povestea creată cu success!');
+				       			props.setOpen(o => !o);
+				            }
 				        } catch (error) {
 				            console.error('Error uploading file:', error);
 				        }
-				        console.log("30 <");
+				        
 		            } else {
-		                console.log(' 30 >');
+		                context.showError("Video-ul are peste 30 de secunde!");
 		            }
 		        };
 		    }else{
-		    	console.log("not a video");
+		    	context.showError("Fișierul nu este un video!");
 		    }
 	    }
 	}

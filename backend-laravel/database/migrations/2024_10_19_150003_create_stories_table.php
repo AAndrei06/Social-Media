@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id');
             $table->unsignedBigInteger('user_id');
             $table->string('uuid');
+            $table->string('image')->nullable(true);
             $table->string('file')->nullable(true);
             $table->timestamps();
             $table->foreign('user_id')

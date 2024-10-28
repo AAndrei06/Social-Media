@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Jobs\DeletePostJob;
+use App\Jobs\CreatePostJob;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -52,6 +54,7 @@ class HomeController extends Controller
             $image_uploaded_path = $image->store($uploadFolder, 'public');
             $file = str_replace('localhost','127.0.0.1:8000',Storage::disk('public')->url($image_uploaded_path));
         }
+
         $uuid = Str::uuid()->toString();
 
         $post = Post::create([
@@ -66,7 +69,7 @@ class HomeController extends Controller
             'success' => true,
             'post' => $post
         ]);
-    }
+    } 
 
     public function editPost($id, Request $request){
 
@@ -107,38 +110,23 @@ class HomeController extends Controller
     public function getPost($id, Request $request){
         $currentUserId = Auth::id();
 
-        // Retrieve the post by UUID
         $post = Post::with(['user.profile:id,user_id,profile_photo,first_name,last_name'])
                     ->where('uuid', $id)
-                    ->firstOrFail(); // This will throw a 404 if not found
+                    ->firstOrFail();
 
-        // Attach additional data to the post
         $post->liked_by_user = $post->likes()->where('user_id', $currentUserId)->exists();
         $post->like_count = $post->likes()->count();
         $post->nr_of_comments = $post->comments()->count();
 
-        // Return the post as a JSON response
         return response()->json($post);
     }
 
-    public function deletePost($id, Request $request){
-        
-        $post = Post::where('uuid',$id)->first();
+    public function deletePost($id, Request $request)
+    {
+        // Dispatch the delete post job asynchronously
+        DeletePostJob::dispatch($id);
 
-        if ($post->file != null || $post->file != ''){
-            $fileUrl = $post->file;
-
-            $filename = basename($fileUrl);
-
-            $storagePath = 'postFiles/' . $filename;
-            if (Storage::disk('public')->exists($storagePath)) {
-                Storage::disk('public')->delete($storagePath);  
-            }
-        }
-
-        $post->delete();
-
-        return response('deleted post with id'.$id);
+        return response('Deletion of post with ID ' . $id . ' has been queued.');
     }
 
     public function showContent(){
@@ -285,26 +273,32 @@ class HomeController extends Controller
     }
 
 
+
+
     public function createStory(Request $request){
 
 
         $user = Auth::user();
 
         if ($user->stories()->count() > 0){
-            return "Deja ai un story";
+            return "Exists";
         }
 
         $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:mp4|max:51200'
+            'file' => 'required|mimes:mp4|max:51200',
+            'image' => 'required|mimes:png'
         ], [
             'file.file' => 'Fișier invalid',
-            'file.max' => 'Mărimea depășește 50 MB'
+            'file.max' => 'Mărimea depășește 50 MB',
+            'image.required' => "Mandatory",
+            'image.mimes' => "image not"
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $file = null;
+        $frame = null;
         if ($request->file('file')){
             $file = $request->file('file');
 
@@ -316,15 +310,23 @@ class HomeController extends Controller
 
             $uploadFolder = 'storyFiles';
             $image = $request->file('file');
+
+            error_log($image);
+            $frame = $request->file('image');
+            error_log($frame);
+
             $image_uploaded_path = $image->store($uploadFolder, 'public');
+            $frame_uploaded_path = $frame->store($uploadFolder, 'public');
             $file = str_replace('localhost','127.0.0.1:8000',Storage::disk('public')->url($image_uploaded_path));
+            $frame = str_replace('localhost','127.0.0.1:8000',Storage::disk('public')->url($frame_uploaded_path));
         }
         $uuid = Str::uuid()->toString();
 
         $story = Story::create([
             'user_id' => $user->id,
             'uuid' => $uuid,
-            'file' => $file
+            'file' => $file,
+            'image' => $frame
         ]);
 
 
@@ -372,6 +374,17 @@ class HomeController extends Controller
             $fileUrl = $story->file;
 
             $filename = basename($fileUrl);
+
+            $storagePath = 'storyFiles/' . $filename;
+            if (Storage::disk('public')->exists($storagePath)) {
+                Storage::disk('public')->delete($storagePath);  
+            }
+        }
+
+        if ($story->image != null || $story->image != ''){
+            $imageUrl = $story->image;
+
+            $filename = basename($imageUrl);
 
             $storagePath = 'storyFiles/' . $filename;
             if (Storage::disk('public')->exists($storagePath)) {

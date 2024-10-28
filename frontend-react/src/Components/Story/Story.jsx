@@ -30,7 +30,7 @@ export default function Story(props){
 			<>
 			{!props.create &&
 				<div className = {styles.story}>
-					<img onClick = {() => {props.setStory(s => props.story);props.set(open => !open)}} className = {styles.storyImg} src = {props.story.user.profile.profile_photo}/>
+					<img onClick = {() => {props.setStory(s => props.story);props.set(open => !open)}} className = {styles.storyImg} src = {props.story.image}/>
 					<div onClick = {() => context.profile(props.story.user.idKey)} className = {styles.profileInfo}>
 						<img className = {styles.profileImg} src = {props.story.user.profile.profile_photo}/>
 						<p>{props.story.user.profile.first_name+' '+props.story.user.profile.last_name}</p>
