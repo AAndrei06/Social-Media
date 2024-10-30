@@ -10,6 +10,64 @@ use App\Models\User;
 class FriendController extends Controller
 {
     public function getFriends(){
+
+
+        $user = Auth::user();
+
+        // Get mutual followers
+        $mutualFollowers = User::whereHas('followers', function ($query) use ($user) {
+            $query->where('follower_id', $user->id);
+        })->whereHas('following', function ($query) use ($user) {
+            $query->where('followed_id', $user->id);
+        })->with('profile')
+          ->get();
+
+        // Get current user's followers and following
+        $myFollowers = $user->followers()->pluck('follower_id');
+        $myFollowing = $user->following()->pluck('followed_id');
+
+        // Merge followers and following
+        $myFollowersAndFollowing = $myFollowers->merge($myFollowing);
+
+        // Get followers of followers
+        $followersOfFollowers = User::whereIn('id', $myFollowers)
+            ->with(['followers' => function ($query) use ($myFollowersAndFollowing, $user) {
+                $query->whereNotIn('follower_id', $myFollowersAndFollowing)
+                      ->where('follower_id', '!=', $user->id);
+            }])
+            ->get()
+            ->flatMap(function ($follower) {
+                return $follower->followers->pluck('id');
+            });
+
+        // Get new followers excluding those already followed or following
+        $newFollowers = $followersOfFollowers->diff($myFollowersAndFollowing)->filter(function ($followerId) use ($user) {
+            return $followerId != $user->id;
+        });
+
+        // Fetch data for new followers
+        $newFollowersData = User::whereIn('id', $newFollowers)->with('profile')->get();
+
+        // Get suggested followers who follow me but I don't follow back
+        $suggestedFollowers = User::whereIn('id', $myFollowers)
+            ->whereNotIn('id', $myFollowing)
+            ->where('id', '!=', $user->id)
+            ->with('profile')
+            ->get();
+
+        // Merge new followers and suggested followers
+        $suggestions = $newFollowersData->merge($suggestedFollowers);
+
+        // Return response with mutual followers and suggestions
+        return response()->json([
+            'mutual_followers' => $mutualFollowers,
+            'suggestions' => $suggestions
+        ]);
+
+
+
+
+        /*
         $user = Auth::user();
 
         $mutualFollowers = User::whereHas('followers', function ($query) use ($user) {
@@ -21,38 +79,30 @@ class FriendController extends Controller
 
         $myFollowers = $user->followers()->pluck('follower_id');
 
-        // Step 2: Get all the users the current user is following
         $myFollowing = $user->following()->pluck('followed_id');
 
-        // Combine followers and following into one list to filter out later
         $myFollowersAndFollowing = $myFollowers->merge($myFollowing);
 
-        // Step 3: Retrieve followers of my followers, filtering out those that I already follow or who already follow me, and exclude the current user
         $followersOfFollowers = User::whereIn('id', $myFollowers)
             ->with(['followers' => function ($query) use ($myFollowersAndFollowing, $user) {
-                // Get followers of followers but exclude those that already follow me, those I follow, and the current user
                 $query->whereNotIn('follower_id', $myFollowersAndFollowing)
                       ->where('follower_id', '!=', $user->id);
             }])
             ->get()
             ->flatMap(function ($follower) {
-                // Extract and return the followers of the followers
                 return $follower->followers->pluck('id');
             });
 
-        // Step 4: Filter out users that are already following me or I am following, and exclude the current user
         $newFollowers = $followersOfFollowers->diff($myFollowersAndFollowing)->filter(function ($followerId) use ($user) {
-            return $followerId != $user->id;  // Exclude current user's ID
+            return $followerId != $user->id;
         });
 
-        // Step 5: Fetch and return user data for the new followers, including their profiles
         $newFollowersData = User::whereIn('id', $newFollowers)->with('profile')->get();
-
-
 
         return response()->json([
             'mutual_followers' => $mutualFollowers,
             'suggestions' => $newFollowersData
         ]);
+        */
     }
 }

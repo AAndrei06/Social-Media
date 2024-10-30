@@ -111,7 +111,7 @@ function Home(){
 return(
 <>
 <main className = {styles.mainArea}>
-	<NavBar/>
+	<NavBar setType = {setType} setOpen = {setOpen}/>
 		<LikeSide uuidPost = {likePostId} set = {setLikeOpen} open = {likeOpen}/>
 		<CommentsSection type = {"homePost"} uuidPost = {commentPostId} set = {setShow} open = {show}/>
 		{open &&

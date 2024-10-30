@@ -11,7 +11,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, Navigate, useOutletContext } from 'react-router-dom';
 
 
-export default function NavBar(){
+export default function NavBar(props){
 	const context = useOutletContext();
 	const client = context.client;
 	const searchRef = useRef();
@@ -59,7 +59,10 @@ export default function NavBar(){
 
 
 
-
+	function handleOpen(typeF){
+		props.setType(type => typeF);
+		props.setOpen(open => !open);
+	}
 	
 
 	function showHide(){
@@ -127,6 +130,12 @@ export default function NavBar(){
 					</div>
 					<div onClick = {() => context.chat()}>
 						<LeftItem name = "Mesaje"/>
+					</div>
+					<div onClick = {() => handleOpen("create")}>
+						<LeftItem name = "Creează Postare"/>
+					</div>
+					<div onClick = {() => handleOpen("video")}>
+						<LeftItem name = "Creează Videoclip"/>
 					</div>
 				</div>
 			</div>

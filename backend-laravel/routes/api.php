@@ -8,11 +8,11 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\ShortVideoController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\FriendController;
-
+/*
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE');
 header('Access-Control-Allow-Headers: *');
-
+*/
 Route::get('/user', function (Request $request) {
     $user = $request->user()->load('profile');
     return response()->json($user);

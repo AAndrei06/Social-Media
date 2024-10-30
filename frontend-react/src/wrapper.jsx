@@ -8,6 +8,7 @@ export default function Wrapper(){
 	const [user, setUser] = useState(null);
 	const [token, setToken] = useState(null);
 	const [message, setMessage] = useState('');
+	const [errors, setErrors] = useState();
 	const [err, setErr] = useState(false);
 	const [showAlert, setShowAlert] = useState(true);
 	const axiosClient = axios.create({
@@ -110,8 +111,9 @@ export default function Wrapper(){
 					err: err,
 					setErr: setErr,
 					showError: showError,
-					showSuccess, showSuccess
-
+					showSuccess, showSuccess,
+					errors: errors,
+					setErrors: setErrors
 				}
 			}/>
 		</>

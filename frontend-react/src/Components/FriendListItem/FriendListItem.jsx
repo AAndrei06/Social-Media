@@ -3,11 +3,35 @@ import man from '../../assets/man.png';
 import { faEllipsis, faUserMinus, faEnvelope, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
 export default function FriendListItem(props){
 
 	const [show, setShow] = useState(false);
 	const [follow, setFollow] = useState(false);
+	const context = useOutletContext();
+	const user = context.user;
+	const client = context.client;
+
+	async function handleFollow(id){
+
+    	const payload = {
+        	'followId':user.idKey
+        };
+
+        try {
+            // Replace with your actual endpoint
+            const response = await client.post(`profile/follow/${id}`, payload, {
+                headers: {
+                    'Action-Of-Profile': 'profileFollow',
+                },
+            });
+            console.log(response.data);
+            setFollow(f => !f)
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    }
 
 	return(
 		<>
@@ -21,7 +45,7 @@ export default function FriendListItem(props){
 				</div>
 				{show &&
 				<div className = {styles.options}>
-					<div onClick = {() => setFollow(f => !f)} className = {styles.option}>
+					<div onClick = {() => handleFollow(props.friend.idKey)} className = {styles.option}>
 					{follow &&
 						<>
 							<FontAwesomeIcon icon={faUserPlus}/>

@@ -13,11 +13,14 @@ import man from '../assets/man.png';
 import ts from '../assets/test.png';
 import { useRef, useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
+//import Pusher from 'pusher-js';
 
 export default function Chat(){
 
 	const context = useOutletContext();
 	const [currentId, setCurrentId] = useState(null);
+	const [friend, setFriend] = useState(null);
+	const messagesContainerRef = useRef();
 	const [messages, setMessages] = useState([]);
 	const client = context.client;
 	const [friends, setFriends] = useState([]);
@@ -26,8 +29,7 @@ export default function Chat(){
 	const [open, setOpen] = useState(false);
 	const [show, setShow] = useState(false);
 	const [cImg, setcImg] = useState();
-	console.log(cImg);
-
+	console.log('c: ', currentId);
 	function toggleSide(){
 		if (ref.current.style.right == "0px"){
 			ref.current.style.transform = "translateX(-300px)";
@@ -47,6 +49,38 @@ export default function Chat(){
 	}
 
 	console.log('c: ',currentId);
+	/*
+	useEffect(() => {
+		Pusher.logToConsole = true;
+
+	    const pusher = new Pusher('8e2186322ddf08632270', {
+	      cluster: 'eu'
+	    });
+
+	    const channel = pusher.subscribe('chat');
+	    channel.bind('message', function(data) {
+	    	console.log('ADDED NEW MESSAGE');
+	    	setMessages((prevMessages) => [...prevMessages, data.message]);
+
+	    });
+	},[]);
+	*/
+	useEffect(() => {   
+		const fetchFriends = async () => {
+		client.get(`/chat/get`)
+		.then(({ data }) => {
+		 setFriends(data.mutual_followers);
+		 setCurrentId(data.mutual_followers[0].id);
+		 
+		})
+		.catch(error => {
+		 console.error(error);
+		});
+		};
+
+		fetchFriends();
+	}, [currentId]);
+
 	useEffect(() => {   
 		const fetchFriends = async () => {
 		client.get(`/chat/get`)
@@ -64,26 +98,23 @@ export default function Chat(){
 	}, []);
 
 
+	useEffect(() => {
+	    if (messagesContainerRef.current) {
+	        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+	    }
+	}, [messages]);
+
+
 	useEffect(() => {   
 		client.get(`/chat/get/messages/${currentId}`).then(({data}) => {
-		 	setMessages(data);
+		 	setMessages(data.messages);
+		 	setFriend(data.otherUser);
 		 	console.log('m2: ',data);
 		 }).then(() => {
 		 	console.log('m: ',messages);
 		 });
 	}, [currentId]);
 
-
-	function getMessages(){
-		client.get(`/chat/get/messages/${currentId}`).then(({data}) => {
-		 	setMessages(data);
-		 	console.log('m2: ',data);
-		 }).then(() => {
-		 	console.log('m: ',messages);
-		 });
-	}
-
-	//setInterval(getMessages,3000);
 
 	function writeMsg(){
 		const payload = {
@@ -137,13 +168,15 @@ export default function Chat(){
 						</div>
 					</div>
 					<div className = {styles.rightSection}>
-						<div className = {styles.friendInfo}>
-							<img src = {man}/>
-							<h3>Mihai Arseni Mititel</h3>
-						</div>
-						<div className = {styles.messagesSection}>
+						{friend != null &&
+							<div className = {styles.friendInfo}>
+								<img src = {friend.profile.profile_photo}/>
+								<h3>{friend.profile.first_name+' '+friend.profile.last_name}</h3>
+							</div>
+						}
+						<div ref = {messagesContainerRef} className = {styles.messagesSection}>
 							{messages != [] && messages.map((msg) => (
-								<Comment key = {msg.id} toRight = {msg.is_sender} message = {msg}/>
+								<Comment key = {msg.id} toRight = {msg.sender_id == context.user.id} message = {msg}/>
 							))}
 
 							{/*

@@ -13,9 +13,9 @@ export default function LikeSide(props){
 
 	const [loading, setLoading] = useState(true);
 	const [likes, setLikes] = useState([]);
-
+	console.log(likes);
 	useEffect(() => {
-        const fetchComments = async () => {
+        const fetchLikes = async () => {
             try {
                 const response = await client.get(`/post/get/likes/${props.uuidPost}/`);
                 setLikes(response.data);
@@ -28,7 +28,7 @@ export default function LikeSide(props){
             }
         };
 
-        fetchComments();
+        fetchLikes();
     }, [props.uuidPost, props.open]);
 
     if (loading){
@@ -42,9 +42,9 @@ export default function LikeSide(props){
 				<h2 className = {styles.likes}>Aprecieri</h2>
 				<FontAwesomeIcon onClick = {() => props.set(o => !o)} className = {styles.mark} icon={faXmark}/>
 				<br/>
-				{likes.map((like) => (
+				{likes != [] && likes.map((like) => (
 					<div key = {like.idKey} onClick = {() => context.profile(like.idKey)}>
-						<FriendItem lf img = {like.profile_photo} name = {like.first_name+' '+like.last_name}/>
+						<FriendItem like = {like} lf img = {like.profile_photo}/>
 					</div>
 				))}
 				

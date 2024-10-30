@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Message;
+//use App\Events\MessageSend;
 
 class ChatController extends Controller
 {
@@ -43,7 +44,17 @@ class ChatController extends Controller
             return $message;
         });
 
-        return response()->json($messages);
+        $otherUser = User::with('profile')->find($otherUserId);
+
+        if (!$otherUser) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        return response()->json([
+            'messages' => $messages,
+            'otherUser' => $otherUser
+        ]);
+
     }
 
     public function sendMessage(Request $request)
@@ -71,9 +82,8 @@ class ChatController extends Controller
 
         $message->save();
 
-        return response()->json([
-            'status' => 'Message sent successfully!',
-            'message' => $message
-        ], 201);
+        //event(new MessageSend($message));
+
+        return response()->json($message);
     }
 }
