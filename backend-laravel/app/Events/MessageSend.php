@@ -1,6 +1,4 @@
-
 <?php
-/*
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
@@ -32,4 +30,4 @@ class MessageSend implements ShouldBroadcast
     {
         return 'message';
     }
-}*/
+}

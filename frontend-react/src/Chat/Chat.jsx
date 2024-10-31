@@ -13,7 +13,7 @@ import man from '../assets/man.png';
 import ts from '../assets/test.png';
 import { useRef, useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-//import Pusher from 'pusher-js';
+import Pusher from 'pusher-js';
 
 export default function Chat(){
 
@@ -49,7 +49,7 @@ export default function Chat(){
 	}
 
 	console.log('c: ',currentId);
-	/*
+	
 	useEffect(() => {
 		Pusher.logToConsole = true;
 
@@ -64,7 +64,7 @@ export default function Chat(){
 
 	    });
 	},[]);
-	*/
+	
 	useEffect(() => {   
 		const fetchFriends = async () => {
 		client.get(`/chat/get`)
