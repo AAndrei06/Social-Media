@@ -63,6 +63,10 @@ export default function Wrapper(){
 		navigate(`profile/${idx}`);
 	}
 
+	function goToPost(idx){
+		navigate(`/${idx}`);
+	}
+
 	function goToChat(){
 		navigate("chat");
 	}
@@ -113,7 +117,8 @@ export default function Wrapper(){
 					showError: showError,
 					showSuccess, showSuccess,
 					errors: errors,
-					setErrors: setErrors
+					setErrors: setErrors,
+					goToPost: goToPost
 				}
 			}/>
 		</>

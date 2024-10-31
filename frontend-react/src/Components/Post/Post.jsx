@@ -110,6 +110,11 @@ export default function Post(props){
 		props.setCommentPostId(d => props.idKey);
 	}
 
+	function prepareForSend(){
+		props.setSendOpen(true);
+		props.setTypeOfSend(props.idKey);
+	}
+
 	return (
 		<>
 		<div ref = {postRef} className = {styles.post + ' ' + bd}>
@@ -172,7 +177,7 @@ export default function Post(props){
 						<img src = {comment}/>
 						<p>{props.nrComments}</p>
 					</div>
-					<div className = {styles.option}>
+					<div onClick = {() => prepareForSend()} className = {styles.option}>
 						<img src = {share}/>
 						<p>1</p>
 					</div>

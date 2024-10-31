@@ -18,6 +18,9 @@ import Pusher from 'pusher-js';
 export default function Chat(){
 
 	const context = useOutletContext();
+	if (!context.user){
+		return (<>...Loading</>)
+	}
 	const [currentId, setCurrentId] = useState(null);
 	const [friend, setFriend] = useState(null);
 	const messagesContainerRef = useRef();
@@ -29,6 +32,9 @@ export default function Chat(){
 	const [open, setOpen] = useState(false);
 	const [show, setShow] = useState(false);
 	const [cImg, setcImg] = useState();
+	const chatSearchRef = useRef();
+	const chatSearchRef1 = useRef();
+
 	console.log('c: ', currentId);
 	function toggleSide(){
 		if (ref.current.style.right == "0px"){
@@ -48,26 +54,72 @@ export default function Chat(){
 		document.getElementById("file-open").click();
 	}
 
+	async function searchFriends(){
+		if (chatSearchRef.current.value == ''){
+			fetchFriends();
+		}
+		await client.get(`/chat/get/friends/${chatSearchRef.current.value}`).then(({data}) => {
+		 	setFriends(data);
+		 	console.log('m2: ',data);
+		 }).then(() => {
+		 	console.log('m: ',messages);
+		 });
+	}
+
+	async function searchFriends1(){
+		if (chatSearchRef1.current.value == ''){
+			fetchFriends();
+		}
+		await client.get(`/chat/get/friends/${chatSearchRef1.current.value}`).then(({data}) => {
+		 	setFriends(data);
+		 	console.log('m2: ',data);
+		 }).then(() => {
+		 	console.log('m: ',messages);
+		 });
+	}
+
+
 	console.log('c: ',currentId);
-	
+
+	async function getTheChat(){
+		await client.get(`/chat/get/messages/${currentId}`).then(({data}) => {
+		 	setMessages(data.messages);
+		 	setFriend(data.otherUser);
+		 	console.log('m2: ',data);
+		 }).then(() => {
+		 	console.log('m: ',messages);
+		 });
+	}
+
 	useEffect(() => {
-		Pusher.logToConsole = true;
+		getTheChat();
+	    Pusher.logToConsole = true;
+	    if (currentId && context.user.id){
+	    	console.log(currentId);
+		    const pusher = new Pusher("8e2186322ddf08632270", {
+		        cluster: "eu"
+		    });
 
-	    const pusher = new Pusher('8e2186322ddf08632270', {
-	      cluster: 'eu'
-	    });
+		    // Folosește context.user.id și currentId pentru a construi numele canalului
+		    const user1Id = Math.min(context.user.id, currentId);
+		    const user2Id = Math.max(context.user.id, currentId);
+		    const channel = pusher.subscribe(`chat.${user1Id}.${user2Id}`);
+		    console.log('c ',channel);
+		    channel.bind('message', function(data) {
+		        console.log('ADDED NEW MESSAGE');
+		        setMessages((prevMessages) => [...prevMessages, data.message]);
+		    });
 
-	    const channel = pusher.subscribe('chat');
-	    channel.bind('message', function(data) {
-	    	console.log('ADDED NEW MESSAGE');
-	    	setMessages((prevMessages) => [...prevMessages, data.message]);
+		    return () => {
+		        channel.unbind_all();
+		        channel.unsubscribe();
+		    };
+		}
+	}, [currentId]);
 
-	    });
-	},[]);
-	
-	useEffect(() => {   
-		const fetchFriends = async () => {
-		client.get(`/chat/get`)
+
+	async function fetchFriends(){
+		await client.get(`/chat/get`)
 		.then(({ data }) => {
 		 setFriends(data.mutual_followers);
 		 setCurrentId(data.mutual_followers[0].id);
@@ -76,9 +128,13 @@ export default function Chat(){
 		.catch(error => {
 		 console.error(error);
 		});
-		};
+	}
+	
+	useEffect(() => {  
+		if (friend == null){ 
 
-		fetchFriends();
+			fetchFriends();
+		}
 	}, [currentId]);
 
 	useEffect(() => {   
@@ -104,7 +160,7 @@ export default function Chat(){
 	    }
 	}, [messages]);
 
-
+	/*
 	useEffect(() => {   
 		client.get(`/chat/get/messages/${currentId}`).then(({data}) => {
 		 	setMessages(data.messages);
@@ -114,12 +170,13 @@ export default function Chat(){
 		 	console.log('m: ',messages);
 		 });
 	}, [currentId]);
-
+*/
 
 	function writeMsg(){
 		const payload = {
 			'receiver_id':currentId,
-			'message': inputRef.current.value
+			'message': inputRef.current.value,
+			'type': 'text'
 		};
 		client.post('/chat/send/message', payload, {
             headers: {
@@ -130,7 +187,11 @@ export default function Chat(){
 			inputRef.current.value = '';
 		})
 	}
+/*
+	function changeId(){
 
+	}
+*/
 	return(
 		<>
 			<main className = {styles.mainArea}>
@@ -144,13 +205,13 @@ export default function Chat(){
 						<FontAwesomeIcon onClick = {toggleSide} className = {styles.arrow} icon={faChevronLeft}/>	
 						<div className = {styles.searchBar}>
 							<FontAwesomeIcon className = {styles.searchIcon} icon={faMagnifyingGlass}/>						
-							<input className = {styles.inputSearch} type = "text" placeholder = "Caută un prieten"/>
+							<input ref = {chatSearchRef} onChange = {() => searchFriends()} className = {styles.inputSearch} type = "text" placeholder = "Caută un prieten"/>
 						</div>
 						<br/>
 						<div>
 
 						{friends != [] && friends.map(friend => (
-							<ChatFriend key = {friend.idKey} friend = {friend}/>
+							<ChatFriend setCurrentId = {setCurrentId} key = {friend.idKey} friend = {friend}/>
 						))}
 							
 						</div>
@@ -158,12 +219,12 @@ export default function Chat(){
 					<div className = {styles.leftSection+' '+styles.original}>
 						<div className = {styles.searchBar}>
 							<FontAwesomeIcon className = {styles.searchIcon} icon={faMagnifyingGlass}/>						
-							<input className = {styles.inputSearch} type = "text" placeholder = "Caută un prieten"/>
+							<input ref = {chatSearchRef1} onChange = {() => searchFriends1()} className = {styles.inputSearch} type = "text" placeholder = "Caută un prieten"/>
 						</div>
 						<br/>
 						<div>
 							{friends != [] && friends.map(friend => (
-								<ChatFriend key = {friend.idKey} friend = {friend}/>
+								<ChatFriend setCurrentId = {setCurrentId} key = {friend.idKey} friend = {friend}/>
 							))}
 						</div>
 					</div>
@@ -175,9 +236,17 @@ export default function Chat(){
 							</div>
 						}
 						<div ref = {messagesContainerRef} className = {styles.messagesSection}>
-							{messages != [] && messages.map((msg) => (
-								<Comment key = {msg.id} toRight = {msg.sender_id == context.user.id} message = {msg}/>
-							))}
+							{messages.length > 0 && messages.map((msg) => {
+							    switch (msg.type) {
+							        case 'text':
+							            return <Comment key={msg.id} toRight={msg.sender_id == context.user.id} message={msg} />;
+							        case 'post':
+							            return <PostShare key={msg.id} msg={msg} toRight={msg.sender_id == context.user.id} />;
+							        default:
+							            return null; // În caz că tipul de mesaj nu este recunoscut
+							    }
+							})}
+
 
 							{/*
 							<Comment toRight = {true} message = "Lorem ipsullo World Welcome to my channels"/>

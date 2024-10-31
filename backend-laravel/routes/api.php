@@ -49,6 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('chat')->group(function () {
         Route::get('/get', [ChatController::class, 'getChat']);
         Route::get('/get/messages/{id}', [ChatController::class, 'getMessages']);
+        Route::get('/get/friends/{query}', [ChatController::class, 'searchFriends']);
         Route::post('/send/message', [ChatController::class, 'sendMessage']);
     });
 

@@ -31,7 +31,7 @@ export default function PostComment(props){
 
 	return(
 		<div ref = {thisRef} className = {styles.comment}>
-			<div className = {styles.head}>
+			<div onClick = {() => context.profile(props.comment.user.idKey)} className = {styles.head}>
 				<div className = {styles.photo}>
 					<img src = {props.comment.user.profile.profile_photo}/>
 				</div>

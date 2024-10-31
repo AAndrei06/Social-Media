@@ -3,8 +3,6 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -23,11 +21,17 @@ class MessageSend implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
-        return ['chat'];
+        // Sortăm ID-urile pentru a crea un canal unic
+        $user1Id = min($this->message->sender_id, $this->message->receiver_id);
+        $user2Id = max($this->message->sender_id, $this->message->receiver_id);
+        
+        return [
+            new Channel('chat.' . $user1Id . '.' . $user2Id), // Canal unic
+        ];
     }
 
     public function broadcastAs()
     {
-        return 'message';
+        return 'message'; // Numele evenimentului
     }
 }

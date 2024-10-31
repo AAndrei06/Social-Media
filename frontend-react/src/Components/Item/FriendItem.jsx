@@ -7,6 +7,25 @@ import { useOutletContext } from 'react-router-dom';
 
 export default function FriendItem(props){
 
+	if (props.friend){
+
+		return(
+			<>
+				<div className = {styles.item+' '+styles.deactivate}>
+					<div className = {styles.container}>
+						<div className = {styles.image}>
+							<img src = {props.friend.profile.profile_photo}/>
+						</div>
+						<div className = {styles.text}>
+							<p>{props.friend.profile.first_name+' '+props.friend.profile.last_name}</p>
+						</div>
+						
+					</div>
+				</div>
+			</>
+		);
+	}
+
 	if (props.like){
 
 		return(

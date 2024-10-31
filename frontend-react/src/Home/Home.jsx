@@ -26,6 +26,9 @@ function Home(){
 
 	const [posts, setPosts] = useState([]);
 	const [stories, setStories] = useState([]);
+	const [friends, setFriends] = useState(null);
+	const [sendPostId,setSendPostId] = useState(null);
+	const [typeOfSend,setTypeOfSend] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [commentPostId, setCommentPostId] = useState('1');
@@ -34,12 +37,14 @@ function Home(){
 	const [show, setShow] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [likeOpen, setLikeOpen] = useState(false);
+	const [sendOpen, setSendOpen] = useState(true);
 	const [storyOpen, setStoryOpen] = useState(false);
 	const [type, setType] = useState("create");
 	const [id, setId] = useState('nothing');
 	const [suggestions, setSuggestions] = useState([]);
 	const [post, setPost] = useState(null);
 	const { uuid } = useParams();
+	console.log(typeOfSend);
 
 	console.log(uuid);
 	useEffect(() => {
@@ -56,6 +61,20 @@ function Home(){
     fetchPost();
         
     }, []);
+
+    useEffect(() => {
+    	async function fetchFriends(){
+			await client.get(`/chat/get`)
+			.then(({ data }) => {
+			 setFriends(data.mutual_followers);
+			 console.log('data: ',data.mutual_followers);
+			})
+			.catch(error => {
+			 console.error(error);
+			});
+		}
+		fetchFriends();
+    },[]);
 
 	useEffect(() => {
     const fetchPosts = async () => {
@@ -112,6 +131,7 @@ return(
 <>
 <main className = {styles.mainArea}>
 	<NavBar setType = {setType} setOpen = {setOpen}/>
+		<LikeSide friends = {friends} idOfPost = {typeOfSend} set = {setSendOpen} open = {sendOpen}/>
 		<LikeSide uuidPost = {likePostId} set = {setLikeOpen} open = {likeOpen}/>
 		<CommentsSection type = {"homePost"} uuidPost = {commentPostId} set = {setShow} open = {show}/>
 		{open &&
@@ -182,6 +202,9 @@ return(
 															setLikePostId = {setLikePostId}
 															liked = {post.liked_by_user}
 															nrLikes = {post.like_count}
+															setSendOpen = {setSendOpen}
+															setSendPostId = {setSendPostId}
+															setTypeOfSend = {setTypeOfSend}
 															/>
 
 													}
@@ -205,6 +228,9 @@ return(
 															setLikePostId = {setLikePostId}
 															liked = {post.liked_by_user}
 															nrLikes = {post.like_count}
+															setSendOpen = {setSendOpen}
+															setSendPostId = {setSendPostId}
+															setTypeOfSend = {setTypeOfSend}
 															/>
 
 														))}
