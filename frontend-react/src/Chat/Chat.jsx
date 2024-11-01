@@ -231,8 +231,8 @@ export default function Chat(){
 					<div className = {styles.rightSection}>
 						{friend != null &&
 							<div className = {styles.friendInfo}>
-								<img src = {friend.profile.profile_photo}/>
-								<h3>{friend.profile.first_name+' '+friend.profile.last_name}</h3>
+								<img onClick = {() => context.profile(friend.idKey)} src = {friend.profile.profile_photo}/>
+								<h3 onClick = {() => context.profile(friend.idKey)}>{friend.profile.first_name+' '+friend.profile.last_name}</h3>
 							</div>
 						}
 						<div ref = {messagesContainerRef} className = {styles.messagesSection}>
@@ -242,6 +242,8 @@ export default function Chat(){
 							            return <Comment key={msg.id} toRight={msg.sender_id == context.user.id} message={msg} />;
 							        case 'post':
 							            return <PostShare key={msg.id} msg={msg} toRight={msg.sender_id == context.user.id} />;
+							        case 'short':
+							            return <ShortShare key={msg.id} msg={msg} toRight={msg.sender_id == context.user.id}/>;
 							        default:
 							            return null; // În caz că tipul de mesaj nu este recunoscut
 							    }
@@ -279,8 +281,10 @@ export default function Chat(){
 						</div>
 						<div className = {styles.writeSection}>
 							<div className = {styles.div}>
+								{/*
 								<input type = "file" className = {styles.none} id = "file-open" accept="image/png, image/jpg, image/gif, image/jpeg"/>
 								<FontAwesomeIcon onClick = {handleFile} className = {styles.paper} icon={faPaperclip}/>
+								*/}
 								<EmojiPicker style = {{position:"absolute",zIndex: '33',right:"10px", bottom: "50px"}} open = {open} width = {290} height = {400} onEmojiClick = {placeEmoji}/>
 								<div className = {styles.emojiBtn} onClick = {() => setOpen(!open)}>
 									☺

@@ -10,7 +10,7 @@ export default function Wrapper(){
 	const [message, setMessage] = useState('');
 	const [errors, setErrors] = useState();
 	const [err, setErr] = useState(false);
-	const [showAlert, setShowAlert] = useState(true);
+	const [showAlert, setShowAlert] = useState(false);
 	const axiosClient = axios.create({
 		baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`
 	});
@@ -45,6 +45,16 @@ export default function Wrapper(){
 		});
 	}, []);
 
+
+	async function deleteMessage(id){
+		await axiosClient.post(`chat/delete/message/${id}`).then((data) => {
+			showSuccess(data.data);
+			console.log(data);
+		}).catch((e) => {
+			console.log(e);
+		});
+	}
+
 	function showError(msg){
 		setShowAlert(o => true);
 		setMessage(e => msg);
@@ -65,6 +75,10 @@ export default function Wrapper(){
 
 	function goToPost(idx){
 		navigate(`/${idx}`);
+	}
+
+	function goToShort(idx){
+		navigate(`/videos/${idx}`);
 	}
 
 	function goToChat(){
@@ -118,7 +132,9 @@ export default function Wrapper(){
 					showSuccess, showSuccess,
 					errors: errors,
 					setErrors: setErrors,
-					goToPost: goToPost
+					goToPost: goToPost,
+					goToShort: goToShort,
+					deleteMessage: deleteMessage
 				}
 			}/>
 		</>

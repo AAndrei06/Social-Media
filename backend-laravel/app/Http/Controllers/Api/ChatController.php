@@ -55,7 +55,18 @@ class ChatController extends Controller
             'messages' => $messages,
             'otherUser' => $otherUser
         ]);
+    }
 
+    public function deleteMessageById($id)
+    {
+        $message = Message::find($id);
+
+        if (!$message) {
+            return response()->json(['error' => 'Mesajul nu a fost găsit.'], 404);
+        }
+        $message->delete();
+
+        return response()->json('Mesajul a fost șters cu succes!');
     }
 
     public function sendMessage(Request $request)
@@ -64,7 +75,8 @@ class ChatController extends Controller
             'receiver_id' => 'required|exists:users,id',
             'message' => 'string',
             'type' => 'required|string',
-            'postId' => 'string'
+            'postId' => 'string',
+            'shortId' => 'string'
         ]);
 
         $message = new Message();
@@ -74,6 +86,8 @@ class ChatController extends Controller
             $message->message = $request->message;
         }else if ($request->input('type') == 'post'){
             $message->link = $request->input('postId');
+        }else if ($request->input('type') == 'short'){
+            $message->link = $request->input('shortId');
         }
         
         $message->type = $request->input('type');

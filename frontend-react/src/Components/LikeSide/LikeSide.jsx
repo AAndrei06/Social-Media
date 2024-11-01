@@ -57,7 +57,7 @@ export default function LikeSide(props){
 		);
 	}else if (props.friends && props.idOfPost){
 		console.log(props.friends);
-		function writeMsg(currentId){
+		function writeMsg(currentId,first,last){
 			const payload = {
 				'receiver_id':currentId,
 				'postId': props.idOfPost,
@@ -69,6 +69,7 @@ export default function LikeSide(props){
 	            },
 	        }).then(({data}) => {
 				console.log(data);
+				context.showSuccess(`Mesaj trimis lui ${first} ${last}`);
 			})
 		}
 		return(
@@ -79,7 +80,7 @@ export default function LikeSide(props){
 					<FontAwesomeIcon onClick = {() => props.set(o => !o)} className = {styles.mark} icon={faXmark}/>
 					<br/>
 					{props.friends != [] && props.friends.map((friend) => (
-						<div onClick = {() => writeMsg(friend.id)} key = {friend.idKey}>
+						<div onClick = {() => writeMsg(friend.id,friend.profile.first_name, friend.profile.last_name)} key = {friend.idKey}>
 							<FriendItem friend = {friend} lf/>
 						</div>
 					))}
@@ -92,7 +93,7 @@ export default function LikeSide(props){
 	else if (props.friends && props.idOfShort){
 		console.log(props.friends);
 		console.log('Like SIde f');
-		function writeMsg(currentId){
+		function writeMsg(currentId,first,last){
 			const payload = {
 				'receiver_id':currentId,
 				'shortId': props.idOfShort,
@@ -104,6 +105,7 @@ export default function LikeSide(props){
 	            },
 	        }).then(({data}) => {
 				console.log(data);
+				context.showSuccess(`Mesaj trimis lui ${first} ${last}`);
 			})
 		}
 		return(
@@ -114,7 +116,7 @@ export default function LikeSide(props){
 					<FontAwesomeIcon onClick = {() => props.set(o => !o)} className = {styles.mark} icon={faXmark}/>
 					<br/>
 					{props.friends != [] && props.friends.map((friend) => (
-						<div onClick = {() => writeMsg(friend.id)} key = {friend.idKey}>
+						<div onClick = {() => writeMsg(friend.id,friend.profile.first_name, friend.profile.last_name)} key = {friend.idKey}>
 							<FriendItem friend = {friend} lf/>
 						</div>
 					))}

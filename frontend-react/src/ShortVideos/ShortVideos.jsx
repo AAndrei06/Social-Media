@@ -95,7 +95,15 @@ export default function ShortVideos(){
 					>
 					{video != null && 
 						<SwiperSlide key = {video.id}>
-							{({isActive}) => (<Short video = {video} setId = {setId} set = {setOpen} open = {open} play = {isActive}/>)}
+							{({isActive}) => (<Short 
+												video = {video} 
+												setId = {setId} 
+												set = {setOpen} 
+												open = {open} 
+												play = {isActive} 
+												setSendOpen = {setSendOpen}
+												setIdOfSend = {setIdOfSend}
+												/>)}
 						</SwiperSlide>
 					}
 

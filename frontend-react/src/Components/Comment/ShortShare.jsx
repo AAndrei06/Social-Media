@@ -1,23 +1,31 @@
 import styles from './comment.module.css';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
-export default function Comment(props){
-const name = props.toRight ? styles.right : styles.left;
-return(
+import { useOutletContext } from 'react-router-dom';
 
-<div id = "msg" className = {styles.commentDiv}>
-	<a href = "#">
-		<div className = {styles.outterDiv + ' ' + name}>
-			{props.toRight && <FontAwesomeIcon className = {styles.trash} icon={faTrashCan}/>}
-			<div className = {styles.actualComment}>
-				<h3>Videoclip scurt</h3>
-				<h5>creat de</h5>
-				<h5>Mihai Arseni Mitittel</h5>
-				<p>11:45</p>
+export default function Comment(props){
+	const name = props.toRight ? styles.right : styles.left;
+	const context = useOutletContext();
+	const ref = useRef();
+	function deleteMessageComment(event){
+		event.stopPropagation()
+		context.deleteMessage(props.msg.id);
+		ref.current.style.display = "none";
+	}
+	console.log("msg: ",props.msg);
+	return(
+
+		<div ref = {ref} onClick = {() => context.goToShort(props.msg.link)} id = "msg" className = {styles.commentDiv}>
+			<div className = {styles.outterDiv + ' ' + name}>
+				{props.toRight && <div onClick = {(event) => deleteMessageComment(event)}><FontAwesomeIcon className = {styles.trash} icon={faTrashCan}/></div>}
+				<div className = {styles.actualComment}>
+					<h3>Videoclip scurt</h3>
+					<h5>creat de</h5>
+					<h5>Mihai Arseni Mitittel</h5>
+					<p>11:45</p>
+				</div>
 			</div>
 		</div>
-	</a>
-</div>
-);
+	);
 }

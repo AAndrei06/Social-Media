@@ -121,6 +121,7 @@ class HomeController extends Controller
         return response()->json($post);
     }
 
+
     public function deletePost($id, Request $request)
     {
         // Dispatch the delete post job asynchronously
@@ -129,8 +130,8 @@ class HomeController extends Controller
         return response('Deletion of post with ID ' . $id . ' has been queued.');
     }
 
-    public function showContent(){
-        $currentUserId = Auth::id();
+    public function showContent($idKey){
+        $currentUserId = User::where('idKey', $idKey)->first()->id;
 
         $posts = Post::with(['user.profile:id,user_id,profile_photo,first_name,last_name'])->get();
 

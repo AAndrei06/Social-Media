@@ -43,10 +43,10 @@ function Home(){
 	const [id, setId] = useState('nothing');
 	const [suggestions, setSuggestions] = useState([]);
 	const [post, setPost] = useState(null);
-	const { uuid } = useParams();
+	const { uuid, idKey } = useParams();
 	console.log(typeOfSend);
-
-	console.log(uuid);
+	console.log('idKey: ',idKey);
+	console.log('uuid: ',uuid);
 	useEffect(() => {
     const fetchPost = async () => {
         try {

@@ -25,7 +25,7 @@ export default function NavBar(props){
 	useEffect(() => {
 		if (context.showAlert == true){
 			setTimeout(() => {
-				context.setShowAlert(o => !o);
+				context.setShowAlert(o => false);
 				context.setErr(o => false);
 				context.setMessage(e => '');
 			},3000);

@@ -3,7 +3,7 @@ import NavBar from '../Components/NavBar/NavBar.jsx';
 import back from '../assets/backImg.png';
 import profile from '../assets/default.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPen, faBriefcase, faLocationDot, faCalendarDays, faHeart, faGraduationCap, faUserPlus, faImage, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsis, faPen, faBriefcase, faLocationDot, faCalendarDays, faHeart, faGraduationCap, faUserPlus, faImage, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 import Post from '../Components/Post/Post.jsx';
 import FriendItem from '../Components/Item/FriendItem.jsx';
 import Short from '../Components/Short/Short.jsx';
@@ -41,6 +41,7 @@ export default function Profile(){
 	const personRef2 = useRef();
 	const registeredRef2 = useRef();
 	const resumeRef = useRef();
+	const [profileMenu, setProfileMenu] = useState(false);
 
 	const [editingInfoRefs, setEditingInfoRefs] = useState(false);
 	const [editingInfoRefs2, setEditingInfoRefs2] = useState(false);
@@ -315,16 +316,28 @@ return(
 							<p><span ref = {followedRef}></span> de urmăritori</p>
 							<p><span ref = {followsRef}></span> urmărește</p>
 						</div>
-						{notMyProfile &&
-							<div onClick = {() => handleFollow()} className = {styles.follow}>
-								<button onClick = {() => setFollowsM(d => !d)} ref = {isFollowIt}>
-							    </button>
+						<div onClick = {() => setProfileMenu(o => !o)} className = {styles.dots}>
+							<FontAwesomeIcon className = {styles.iconChange} icon={faEllipsis} />
+						</div>
+						{profileMenu &&
+							<div className = {styles.btnLayout}>
+								
+									<>
+										{notMyProfile &&
+											<div onClick = {() => handleFollow()} className = {styles.follow}>
+												<button onClick = {() => setFollowsM(d => !d)} ref = {isFollowIt}></button>
+											</div>
+										}
+										<div className = {styles.follow}>
+											<button>Videoclipuri Scurte</button>
+										</div>
+										<div className = {styles.follow}>
+											<button>Postări</button>
+										</div>
+									</>
+								
 							</div>
 						}
-						<div className = {styles.infoBtns}>
-							<button>Videoclipuri scurte</button>
-							<button>Videoclipuri scurte</button>
-						</div>
 						
 					</div>
 					<div className = {styles.friendsPhone}>

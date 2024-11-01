@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/follow/{id}', [ProfileController::class, 'follow']);
     Route::get('/search', [HomeController::class, 'searchContent']);
 
+    Route::get('/posts/{id}', [HomeController::class, 'showContent']);
+
     // Home (Posts) routes
     Route::prefix('post')->group(function () {
         Route::post('/edit/{id}', [HomeController::class, 'editPost']);
@@ -51,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/get/messages/{id}', [ChatController::class, 'getMessages']);
         Route::get('/get/friends/{query}', [ChatController::class, 'searchFriends']);
         Route::post('/send/message', [ChatController::class, 'sendMessage']);
+        Route::post('/delete/message/{id}', [ChatController::class, 'deleteMessageById']);
     });
 
     Route::prefix('friends')->group(function () {
