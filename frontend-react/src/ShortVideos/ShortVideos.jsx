@@ -1,6 +1,7 @@
 import styles from './shortvideos.module.css';
 import NavBar from '../Components/NavBar/NavBar.jsx';
 import Short from '../Components/Short/Short.jsx';
+import LikeSide from '../Components/LikeSide/LikeSide.jsx';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Mousewheel } from 'swiper/modules';
 import CommentsSection from '../Components/CommentsSection/CommentsSection.jsx';
@@ -18,6 +19,11 @@ export default function ShortVideos(){
 	const [video, setVideo] = useState(null);
 	const [open, setOpen] = useState(false);
 	const [id, setId] = useState('1');
+
+	const [sendOpen, setSendOpen] = useState(true);
+	const [friends, setFriends] = useState(null);
+	const [idOfSend,setIdOfSend] = useState(null);
+	console.log(idOfSend);
 
 	const { uuid } = useParams();
 	console.log(uuid);
@@ -39,6 +45,7 @@ export default function ShortVideos(){
 
 	function handleSlideChange(){
 		setOpen(false);
+		setSendOpen(false);
 	}
 
 	useEffect(() => {
@@ -57,10 +64,27 @@ export default function ShortVideos(){
         fetchVideos();
     }, []);
 
+    useEffect(() => {
+    	async function fetchFriends(){
+			await client.get(`/chat/get`)
+			.then(({ data }) => {
+			 setFriends(data.mutual_followers);
+			 console.log('data: ',data.mutual_followers);
+			})
+			.catch(error => {
+			 console.error(error);
+			});
+		}
+		fetchFriends();
+    },[]);
+
 	return(
 		<>
+			<LikeSide friends = {friends} idOfShort = {idOfSend} set = {setSendOpen} open = {sendOpen}/>
 			<main className = {styles.main}>
+
 				<NavBar/>
+				
 				<CommentsSection type = {"shortVideos"} id = {id} set = {setOpen} open = {open}/>
 				<div className = {styles.mainDiv}>
 					<Swiper onSlideChange={handleSlideChange} direction={'vertical'} slidesPerView={1} mousewheel={true} modules={[Mousewheel]}
@@ -77,7 +101,15 @@ export default function ShortVideos(){
 
 					{video == null && videos.map(video => (
 						<SwiperSlide key = {video.id}>
-							{({isActive}) => (<Short video = {video} setId = {setId} set = {setOpen} open = {open} play = {isActive}/>)}
+							{({isActive}) => (<Short 
+												video = {video} 
+												setId = {setId} 
+												set = {setOpen} 
+												open = {open} 
+												play = {isActive} 
+												setSendOpen = {setSendOpen}
+												setIdOfSend = {setIdOfSend}
+												/>)}
 						</SwiperSlide>
 					))}
 					

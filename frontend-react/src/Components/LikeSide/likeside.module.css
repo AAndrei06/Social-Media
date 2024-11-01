@@ -3,7 +3,7 @@
 	height: 100%;
 	background-color: white;
 	position: fixed;
-	z-index: 1;
+	z-index: 99;
 	box-shadow: 5px 0px 6px lightgray;
 	scrollbar-gutter: stable;
 	overflow-y: scroll;

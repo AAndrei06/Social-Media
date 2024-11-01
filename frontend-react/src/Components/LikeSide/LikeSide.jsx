@@ -55,13 +55,48 @@ export default function LikeSide(props){
 				}	
 			</>
 		);
-	}else if (props.friends){
+	}else if (props.friends && props.idOfPost){
 		console.log(props.friends);
 		function writeMsg(currentId){
 			const payload = {
 				'receiver_id':currentId,
 				'postId': props.idOfPost,
 				'type': 'post'
+			};
+			client.post('/chat/send/message', payload, {
+	            headers: {
+	                'Action-Of-Chat': 'sendMsg'
+	            },
+	        }).then(({data}) => {
+				console.log(data);
+			})
+		}
+		return(
+			<>
+				{props.open &&
+				<div className = {styles.likesSide}>
+					<h2 className = {styles.likes}>Trimite</h2>
+					<FontAwesomeIcon onClick = {() => props.set(o => !o)} className = {styles.mark} icon={faXmark}/>
+					<br/>
+					{props.friends != [] && props.friends.map((friend) => (
+						<div onClick = {() => writeMsg(friend.id)} key = {friend.idKey}>
+							<FriendItem friend = {friend} lf/>
+						</div>
+					))}
+					
+				</div>
+				}	
+			</>
+		);
+	}
+	else if (props.friends && props.idOfShort){
+		console.log(props.friends);
+		console.log('Like SIde f');
+		function writeMsg(currentId){
+			const payload = {
+				'receiver_id':currentId,
+				'shortId': props.idOfShort,
+				'type': 'short'
 			};
 			client.post('/chat/send/message', payload, {
 	            headers: {

@@ -77,6 +77,11 @@ export default function Short(props){
 		}
 	},[props]);
 
+	function prepareForSend(){
+		props.setSendOpen(true);
+		props.setIdOfSend(props.video.uuid);
+	}
+
 	return(
 		<>
 			<div className = {styles.video}>
@@ -130,7 +135,7 @@ export default function Short(props){
 						<img src = {comment}/>
 						<p>{props.video.nr_of_comments}</p>
 					</div>
-					<div className = {styles.option}>
+					<div onClick = {() => prepareForSend()} className = {styles.option}>
 						<img src = {share}/>
 						<p>53</p>
 					</div>
