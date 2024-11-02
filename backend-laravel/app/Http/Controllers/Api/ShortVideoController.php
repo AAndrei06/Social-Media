@@ -28,6 +28,33 @@ class ShortVideoController extends Controller
         return response()->json($videos);
     }
 
+    public function showVideosOfUser($idKey)
+    {
+        $user = User::where('idKey', $idKey)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Utilizatorul nu a fost găsit.'
+            ], 404);
+        }
+
+        $currentUserId = Auth::id();
+
+        $videos = Video::where('user_id', $user->id)
+                       ->with(['user.profile:id,user_id,profile_photo,first_name,last_name'])
+                       ->get();
+
+        $videos->transform(function ($video) use ($currentUserId) {
+            $video->liked_by_user = $video->likes()->where('user_id', $currentUserId)->exists();
+            $video->like_count = $video->likes()->count();
+            $video->nr_of_comments = $video->comments()->count();
+            return $video;
+        });
+
+        return response()->json($videos);
+    }
+
     public function likeVideo($id, Request $request){
         $video = Video::where('uuid',$id)->first();
         $user = Auth::user();

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Notification;
+use App\Events\NotificationSend;
 
 class ProfileController extends Controller
 {
@@ -112,7 +114,24 @@ class ProfileController extends Controller
         $currentUser = Auth::user();
         $toFollow = User::where('idKey',$id)->first();
 
-        $toFollow->followers()->toggle($currentUser->id);
+        $isFollowing = $toFollow->followers()->toggle($currentUser->id);
+        if ($isFollowing['attached']) {
+            // Create a notification for the followed user
+            $notification = Notification::create([
+                'user_id' => $toFollow->id,
+                'type' => 'follow',
+                'link' => 'profile/' . $currentUser->idKey,
+                'idOfUser' => $currentUser->id,
+                'title' => $currentUser->profile->first_name . ' ' . $currentUser->profile->last_name,
+                'desc' => 'A început să te urmărească',
+                'photo' => $currentUser->profile->profile_photo,
+                'read' => false
+            ]);
+
+            event(new NotificationSend($notification));
+        }
+
+        
 
         return response([
             'id' => $id,

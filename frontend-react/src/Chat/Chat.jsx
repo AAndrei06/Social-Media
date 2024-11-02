@@ -12,12 +12,16 @@ import ChatFriend from '../Components/ChatFriend/ChatFriend.jsx';
 import man from '../assets/man.png';
 import ts from '../assets/test.png';
 import { useRef, useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useLocation } from 'react-router-dom';
 import Pusher from 'pusher-js';
 
 export default function Chat(){
 
 	const context = useOutletContext();
+	const location = useLocation();
+    const stateData = location.state;
+
+
 	if (!context.user){
 		return (<>...Loading</>)
 	}
@@ -34,6 +38,10 @@ export default function Chat(){
 	const [cImg, setcImg] = useState();
 	const chatSearchRef = useRef();
 	const chatSearchRef1 = useRef();
+
+	if (stateData && stateData.id){
+    	setCurrentId(stateData.id);
+    }
 
 	console.log('c: ', currentId);
 	function toggleSide(){
@@ -160,18 +168,6 @@ export default function Chat(){
 	    }
 	}, [messages]);
 
-	/*
-	useEffect(() => {   
-		client.get(`/chat/get/messages/${currentId}`).then(({data}) => {
-		 	setMessages(data.messages);
-		 	setFriend(data.otherUser);
-		 	console.log('m2: ',data);
-		 }).then(() => {
-		 	console.log('m: ',messages);
-		 });
-	}, [currentId]);
-*/
-
 	function writeMsg(){
 		const payload = {
 			'receiver_id':currentId,
@@ -187,11 +183,7 @@ export default function Chat(){
 			inputRef.current.value = '';
 		})
 	}
-/*
-	function changeId(){
 
-	}
-*/
 	return(
 		<>
 			<main className = {styles.mainArea}>

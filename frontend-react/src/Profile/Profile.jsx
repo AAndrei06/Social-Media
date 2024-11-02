@@ -41,7 +41,7 @@ export default function Profile(){
 	const personRef2 = useRef();
 	const registeredRef2 = useRef();
 	const resumeRef = useRef();
-	const [profileMenu, setProfileMenu] = useState(false);
+	const [profileMenu, setProfileMenu] = useState(true);
 
 	const [editingInfoRefs, setEditingInfoRefs] = useState(false);
 	const [editingInfoRefs2, setEditingInfoRefs2] = useState(false);
@@ -272,6 +272,7 @@ export default function Profile(){
                 },
             });
             console.log(response.data);
+            setFollowsM(d => !d);
         } catch (error) {
             console.error('Error uploading file:', error);
         }
@@ -316,43 +317,33 @@ return(
 							<p><span ref = {followedRef}></span> de urmăritori</p>
 							<p><span ref = {followsRef}></span> urmărește</p>
 						</div>
-						<div onClick = {() => setProfileMenu(o => !o)} className = {styles.dots}>
-							<FontAwesomeIcon className = {styles.iconChange} icon={faEllipsis} />
-						</div>
-						{profileMenu &&
-							<div className = {styles.btnLayout}>
-								
-									<>
-										{notMyProfile &&
-											<div onClick = {() => handleFollow()} className = {styles.follow}>
-												<button onClick = {() => setFollowsM(d => !d)} ref = {isFollowIt}></button>
-											</div>
-										}
-										<div className = {styles.follow}>
-											<button>Videoclipuri Scurte</button>
-										</div>
-										<div className = {styles.follow}>
-											<button>Postări</button>
-										</div>
-									</>
-								
+						<div className = {styles.menuProfileOptions}>
+							<div onClick = {() => setProfileMenu(o => !o)} className = {styles.dots}>
+								<FontAwesomeIcon className = {styles.iconChange} icon={faEllipsis} />
 							</div>
-						}
+							{profileMenu &&
+								<div className = {styles.btnLayout}>
+									
+										<>
+											{notMyProfile &&
+												<div onClick = {() => handleFollow()} className = {styles.follow}>
+													<div ref = {isFollowIt}></div>
+												</div>
+											}
+											<div onClick = {() => context.goToVideosUser(id)} className = {styles.follow}>
+												<div>Videoclipuri Scurte</div>
+											</div>
+											<div onClick = {() => context.goToPostsUser(id)} className = {styles.follow}>
+												<div>Postări</div>
+											</div>
+										</>
+									
+								</div>
+							}
+						</div>
 						
 					</div>
-					<div className = {styles.friendsPhone}>
-						<h3>Prieteni Comuni</h3>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "../assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "./src/assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-						<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					</div>
+
 				</div>
 
 				<div className = {styles.aboutMePhone}>
@@ -383,7 +374,7 @@ return(
 							</div>
 							<div className = {styles.textInfo}>
 								<h4>Locuiește</h4>
-								<h5 onInput = {(e) => checkInputLenght(e)} ref = {locationRef2}>Leova Moldova</h5>
+								<h5 onInput = {(e) => checkInputLenght(e)} ref = {locationRef2}></h5>
 							</div>
 						</div>
 						<div className = {styles.infoItem}>
@@ -392,7 +383,7 @@ return(
 							</div>
 							<div className = {styles.textInfo}>
 								<h4>Educație</h4>
-								<h5 onInput = {(e) => checkInputLenght(e)} ref = {educationRef2}>La Universitatea Harvard</h5>
+								<h5 onInput = {(e) => checkInputLenght(e)} ref = {educationRef2}></h5>
 							</div>
 						</div>
 						<div className = {styles.infoItem}>
@@ -401,7 +392,7 @@ return(
 							</div>
 							<div className = {styles.textInfo}>
 								<h4>Împreună Cu</h4>
-								<h5 onInput = {(e) => checkInputLenght(e)} ref = {personRef2}>Nimeni</h5>
+								<h5 onInput = {(e) => checkInputLenght(e)} ref = {personRef2}></h5>
 							</div>
 						</div>
 						<div className = {styles.infoItem}>
@@ -410,7 +401,7 @@ return(
 							</div>
 							<div className = {styles.textInfo}>
 								<h4>Înregistrat la</h4>
-								<h5 onInput = {(e) => checkInputLenght(e)} ref = {registeredRef2}>14.09.2024</h5>
+								<h5 onInput = {(e) => checkInputLenght(e)} ref = {registeredRef2}></h5>
 							</div>
 						</div>
 					</div>
@@ -475,7 +466,7 @@ return(
 							</div>
 							<div className = {styles.textInfo}>
 								<h4>Locuiește</h4>
-								<h5 onInput = {(e) => checkInputLenght(e)} ref = {locationRef}>Leova Moldova</h5>
+								<h5 onInput = {(e) => checkInputLenght(e)} ref = {locationRef}></h5>
 							</div>
 						</div>
 						<div className = {styles.infoItem}>
@@ -484,7 +475,7 @@ return(
 							</div>
 							<div className = {styles.textInfo}>
 								<h4>Educație</h4>
-								<h5 onInput = {(e) => checkInputLenght(e)} ref = {educationRef}>La Universitatea Harvard</h5>
+								<h5 onInput = {(e) => checkInputLenght(e)} ref = {educationRef}></h5>
 							</div>
 						</div>
 						<div className = {styles.infoItem}>
@@ -493,7 +484,7 @@ return(
 							</div>
 							<div className = {styles.textInfo}>
 								<h4>Împreună Cu</h4>
-								<h5 onInput = {(e) => checkInputLenght(e)} ref = {personRef}>Nimeni</h5>
+								<h5 onInput = {(e) => checkInputLenght(e)} ref = {personRef}></h5>
 							</div>
 						</div>
 						<div className = {styles.infoItem}>
@@ -502,24 +493,12 @@ return(
 							</div>
 							<div className = {styles.textInfo}>
 								<h4>Înregistrat la</h4>
-								<h5 onInput = {(e) => checkInputLenght(e)} ref = {registeredRef}>14.09.2024</h5>
+								<h5 onInput = {(e) => checkInputLenght(e)} ref = {registeredRef}></h5>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className = {styles.friends}>
-					<h3>Prieteni Comuni</h3>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-					<FriendItem suggestion = {false} name = "Andrei Arseni" img = "src/assets/test.png"/>
-				</div>
+
 			</div>
 		</div>
 	</main>

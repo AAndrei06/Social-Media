@@ -19,8 +19,30 @@ export default function NavBar(props){
 	const [show, setShow] = useState(false);
 	const [slide, setSlide] = useState(false);
 	const [showNotification,setShowNotification] = useState(false);
+	const [notifications, setNotifications] = useState([]);
 	const err = context.err ? styles.err : '';
-	console.log(context.err);
+
+	useEffect(() => {
+		if (context.user){
+			console.log("ENTER!!!!!!!!!!!!!");
+	        const pusher = new Pusher('8e2186322ddf08632270', {
+	            cluster: 'eu',
+	            encrypted: true,
+	        });
+
+	        const channel = pusher.subscribe(`notification-${context.user.id}`);
+
+	        channel.bind('notification', (data) => {
+	            console.log('New notification:', data);
+	            setNotifications((prevNotifications) => [data.notification,...prevNotifications]);
+	        });
+
+	        return () => {
+	            channel.unbind_all(); // Unbind all events
+	            pusher.unsubscribe(`notification-${context.user.id}`); // Unsubscribe from the channel
+	        };
+	    }
+    }, [context]);
 
 	useEffect(() => {
 		if (context.showAlert == true){
@@ -31,6 +53,17 @@ export default function NavBar(props){
 			},3000);
 		}
 	},[context.message]);
+
+	useEffect(() => {
+		const fetchNotifications = async () => {
+			await client.get(`/notifications`).then(({data}) => {
+			console.log(data);
+		 	setNotifications(n => data);
+		 	
+		 });
+		}
+		fetchNotifications();
+	},[])
 
 	async function search() {
 	    try {
@@ -57,7 +90,7 @@ export default function NavBar(props){
 	    }
 	}
 
-
+	
 
 	function handleOpen(typeF){
 		props.setType(type => typeF);
@@ -141,21 +174,10 @@ export default function NavBar(props){
 			</div>
 			{showNotification &&
 				<div id = "notifications" className = {styles.notifications}>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
-					<Notification/>
+					{notifications != [] && notifications.map(notification => (
+						<Notification key = {notification.id} notification = {notification}/>
+					))}
+					
 				</div>
 			}
 

@@ -121,7 +121,6 @@ class HomeController extends Controller
         return response()->json($post);
     }
 
-
     public function deletePost($id, Request $request)
     {
         // Dispatch the delete post job asynchronously
@@ -130,9 +129,42 @@ class HomeController extends Controller
         return response('Deletion of post with ID ' . $id . ' has been queued.');
     }
 
-    public function showContent($idKey){
-        $currentUserId = User::where('idKey', $idKey)->first()->id;
 
+    public function getAllPostsUser($idKey)
+    {
+        // Căutăm utilizatorul pe baza idKey
+        $user = User::where('idKey', $idKey)->first();
+
+        // Verificăm dacă utilizatorul există
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Utilizatorul nu a fost găsit.'
+            ], 404);
+        }
+
+        $currentUserId = Auth::id();
+
+        // Obținem postările utilizatorului și încărcăm relațiile necesare
+        $posts = Post::where('user_id', $user->id)
+                     ->with(['user.profile:id,user_id,profile_photo,first_name,last_name']) // Profilul utilizatorului
+                     ->get();
+
+        // Transformăm fiecare postare pentru a adăuga informațiile despre like-uri și comentarii
+        $posts->transform(function ($post) use ($currentUserId) {
+            $post->liked_by_user = $post->likes()->where('user_id', $currentUserId)->exists();
+            $post->like_count = $post->likes()->count();
+            $post->nr_of_comments = $post->comments()->count();
+            return $post;
+        });
+
+        return response()->json($posts);
+    }
+    
+
+    public function showContent(){
+        $currentUserId = Auth::id();
+        error_log('ENTER');
         $posts = Post::with(['user.profile:id,user_id,profile_photo,first_name,last_name'])->get();
 
         $posts->transform(function ($post) use ($currentUserId) {
@@ -141,7 +173,7 @@ class HomeController extends Controller
             $post->nr_of_comments = $post->comments()->count();
             return $post;
         });
-
+        error_log($posts);
         return response()->json($posts);
     }
 

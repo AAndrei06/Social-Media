@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Models\Notification;
 
 class AuthController extends Controller
 {
@@ -66,5 +67,30 @@ class AuthController extends Controller
         $user = $request->user;
         return response()->json($user);
     }
+
+    public function getNotifications(){
+        $user = Auth::user();
+        $notifications = $user->notifications()->orderBy('created_at', 'desc')->get();
+        return response()->json($notifications);
+    }
+
+    public function deleteNotification($id)
+    {
+
+        $notification = Notification::find($id);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found.'], 404);
+        }
+
+        if ($notification->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
+        $notification->delete();
+
+        return response()->json(['message' => 'Notification deleted successfully.']);
+    }
+
 
 }

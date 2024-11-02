@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Profile;
 use App\Models\Post;
 use App\Models\Story;
+use App\Models\Notification;
 
 class User extends Authenticatable
 {
@@ -70,5 +71,10 @@ class User extends Authenticatable
     public function followers()
     {
         return $this->belongsToMany(User::class, 'followers', 'followed_id', 'follower_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }

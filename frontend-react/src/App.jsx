@@ -20,6 +20,7 @@ export default function App() {
       <Route path="friends" element={<Friends />} />
       <Route path="videos" element={<Shorts />} />
       <Route path="videos/:uuid" element={<Shorts />} />
+      <Route path="videos/user/:idKey" element={<Shorts />} />
       <Route path="chat" element={<Chat />} />
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<SignUp />} />

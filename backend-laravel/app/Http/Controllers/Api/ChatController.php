@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Message;
 use App\Events\MessageSend;
 use App\Models\Profile;
+use App\Models\Notification;
+use App\Events\NotificationSend;
 
 class ChatController extends Controller
 {
@@ -94,25 +96,26 @@ class ChatController extends Controller
 
         $message->save();
 
-        event(new MessageSend($message)); // Dispatchează evenimentul
+        $notification = Notification::create([
+            'user_id' => $request->receiver_id,
+            'type' => 'message',
+            'idOfUser' => Auth::id(),
+            'title' => 'Mesaj Nou ',
+            'desc' => 'De la ' . Auth::user()->profile->first_name . ' ' . Auth::user()->profile->last_name,
+            'photo' => Auth::user()->profile->profile_photo,
+            'read' => false,
+        ]);
+
+        error_log($notification);
+
+        event(new MessageSend($message));
+        event(new NotificationSend($notification));
 
         return response()->json($message);
     }
 
     public function searchFriends($query){
-        /*
-        $profiles = Profile::where('first_name', 'LIKE', '%' . $query . '%')
-        ->orWhere('last_name', 'LIKE', '%' . $query . '%')
-        ->with('user') // Eager load the associated user
-        ->get()
-        ->map(function ($profile) {
-            return [
-                'user' => $profile->user, // Return user object
-                'profile' => $profile, // Include profile information
-            ];
-        });
 
-        return response()->json($profiles);*/
         $user = Auth::user();
         $mutualFollowers = User::whereHas('followers', function ($q) use ($user) {
             $q->where('follower_id', $user->id);
@@ -124,44 +127,10 @@ class ChatController extends Controller
             $q->where('first_name', 'LIKE', '%' . $query . '%')
               ->orWhere('last_name', 'LIKE', '%' . $query . '%');
         })
-        ->with('profile') // Încarcă profilul asociat pentru fiecare utilizator
+        ->with('profile')
         ->get();
 
         return response()->json($mutualFollowers);
     }
 
-
-
-
-/*
-    public function sendMessage(Request $request)
-    {
-        
-        $request->validate([
-            'receiver_id' => 'required|exists:users,id',
-            'message' => 'required|string',
-            'file' => 'nullable|file', // In case you want to handle file attachments
-        ]);
-        
-        $message = new Message();
-        $message->sender_id = Auth::id();
-        $message->receiver_id = $request->receiver_id;
-        $message->message = $request->message;
-        $message->type = "text";
-
-
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $path = $file->store('messages_files');
-            $message->file = $path;
-        }
-
-
-        $message->save();
-
-        event(new MessageSend($message));
-
-        return response()->json($message);
-    }
-    */
 }

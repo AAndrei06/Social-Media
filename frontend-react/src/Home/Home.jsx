@@ -47,19 +47,22 @@ function Home(){
 	console.log(typeOfSend);
 	console.log('idKey: ',idKey);
 	console.log('uuid: ',uuid);
-	useEffect(() => {
-    const fetchPost = async () => {
-        try {
-            const response = await client.get(`post/get/${uuid}`);
-            console.log(response.data);
-            setPost(response.data);
-        }catch(err){
-        	console.log(err);
-        }
-    };
 
-    fetchPost();
-        
+	useEffect(() => {
+		if (uuid){
+		    const fetchPost = async () => {
+		        try {
+		            const response = await client.get(`post/get/${uuid}`);
+		            console.log(response.data);
+		            setPost(response.data);
+		        }catch(err){
+		        	console.log(err);
+		        }
+		    };
+
+		    fetchPost();
+		}
+	        
     }, []);
 
     useEffect(() => {
@@ -77,43 +80,52 @@ function Home(){
     },[]);
 
 	useEffect(() => {
-    const fetchPosts = async () => {
-        try {
-            const response = await client.get('/');
-            setPosts(response.data);
-            console.log(response.data);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+	    const fetchPosts = async () => {
+	        try {
+	        	if (idKey){
+	        		console.log("Enter");
+				    const response = await client.get(`/posts/${idKey}`);
+			        console.log('REQUESTED!!!!!!!!!!!!!!!!!!!!');
+		            setPosts(response.data);
+		            console.log('response:  ',response.data);
+		        }else{
+		        	console.log("Enter");
+				    const response = await client.get(`/`);
+			        console.log('REQUESTED!!!!!!!!!!!!!!!!!!!!');
+		            setPosts(response.data);
+		            console.log('response:  ',response.data);
+		        }
+	        	
+	        } catch (err) {
+	            setError(err);
+	        } finally {
+	            setLoading(false);
+	        }
+	    };
 
-    const fetchStories = async () => {
-        try {
-            const response = await client.get('/story/get');
-            setStories(response.data);
-            console.log("stories");
-            console.log(response.data);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+	    const fetchStories = async () => {
+	        try {
+	            const response = await client.get('/story/get');
+	            setStories(response.data);
+	        } catch (err) {
+	            setError(err);
+	        } finally {
+	            setLoading(false);
+	        }
+	    };
 
-    async function getAll(){
-		client.get('/friends/get').then(({data}) => {
-			console.log(data);
-			setSuggestions(data.suggestions);
-		});
-	}
-
-	getAll();
-    fetchStories();
-    fetchPosts();
+	    async function getAll(){
+			client.get('/friends/get').then(({data}) => {
+				setSuggestions(data.suggestions);
+			});
+		}
+		fetchPosts();
+		getAll();
+	    fetchStories();
+	    
         
     }, []);
+
 	if (loading) return <p>Loading...</p>;
 	
 

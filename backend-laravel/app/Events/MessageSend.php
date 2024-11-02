@@ -26,12 +26,12 @@ class MessageSend implements ShouldBroadcast
         $user2Id = max($this->message->sender_id, $this->message->receiver_id);
         
         return [
-            new Channel('chat.' . $user1Id . '.' . $user2Id), // Canal unic
+            new Channel('chat.' . $user1Id . '.' . $user2Id),
         ];
     }
 
     public function broadcastAs()
     {
-        return 'message'; // Numele evenimentului
+        return 'message';
     }
 }

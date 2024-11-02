@@ -29,8 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/{id}', [ProfileController::class, 'profilePost']);
     Route::post('/profile/follow/{id}', [ProfileController::class, 'follow']);
     Route::get('/search', [HomeController::class, 'searchContent']);
+    Route::get('/notifications',[AuthController::class,'getNotifications']);
+    Route::post('/notification/delete/{id}',[AuthController::class,'deleteNotification']);
 
-    Route::get('/posts/{id}', [HomeController::class, 'showContent']);
+    Route::get('/posts/{idKey}',[HomeController::class, 'getAllPostsUser']);
 
     // Home (Posts) routes
     Route::prefix('post')->group(function () {
@@ -77,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Video listing
     Route::get('/videos', [ShortVideoController::class, 'showVideos']);
+    Route::get('/videos/{id}', [ShortVideoController::class, 'showVideosOfUser']);
 });
 
 // NU UITA DE MIDDLEWARE SANCTUM CA SA MEARGA REQUEST

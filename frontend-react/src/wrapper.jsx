@@ -23,18 +23,6 @@ export default function Wrapper(){
 		return response;
 	});
 
-/*
-	if (localStorage.getItem("ACCESS_TOKEN") && token == null && user == null){
-		setToken(localStorage.getItem("ACCESS_TOKEN"));
-		axiosClient.get('/user').then((data) => {
-			console.log(data.data);
-			setUser(data.data);
-			console.log(user);
-		}).catch((e) => {
-			setUser({'h':'1'});
-		});
-	}
-*/
 	
 	useEffect(() => {
 		setToken(localStorage.getItem("ACCESS_TOKEN"));
@@ -67,7 +55,14 @@ export default function Wrapper(){
 		setErr(e => false);
 	}
 
-	
+	function goToPostsUser(idx){
+		navigate(`posts/${idx}`);
+	}
+
+
+	function goToVideosUser(idx){
+		navigate(`videos/user/${idx}`);
+	}
 
 	function goToProfile(idx){
 		navigate(`profile/${idx}`);
@@ -134,7 +129,9 @@ export default function Wrapper(){
 					setErrors: setErrors,
 					goToPost: goToPost,
 					goToShort: goToShort,
-					deleteMessage: deleteMessage
+					deleteMessage: deleteMessage,
+					goToPostsUser: goToPostsUser,
+					goToVideosUser: goToVideosUser
 				}
 			}/>
 		</>

@@ -25,9 +25,9 @@ export default function ShortVideos(){
 	const [idOfSend,setIdOfSend] = useState(null);
 	console.log(idOfSend);
 
-	const { uuid } = useParams();
-	console.log(uuid);
-
+	const { uuid, idKey } = useParams();
+	console.log('uuid: ',uuid);
+	console.log('idKey: ',idKey);
 	useEffect(() => {
     const fetchVideo = async () => {
         try {
@@ -51,9 +51,15 @@ export default function ShortVideos(){
 	useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const response = await client.get('/videos');
-                setVideos(response.data);
-                console.log(response.data);
+            	if (idKey){
+	                const response = await client.get(`/videos/${idKey}`);
+	                setVideos(response.data);
+	                console.log(response.data);
+	            }else{
+	            	const response = await client.get('/videos');
+	                setVideos(response.data);
+	                console.log(response.data);
+	            }
             } catch (err) {
                 setError(err);
             } finally {
