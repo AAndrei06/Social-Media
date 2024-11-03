@@ -2,8 +2,10 @@ import styles from './navbar.module.css';
 import photo from '../../assets/default.png';
 import logo from '../../assets/logo.png';
 import blank from '../../assets/blank_post.png';
+import video from '../../assets/shortVideo.png';
 import LeftItem from '../../Components/Item/LeftItem.jsx';
 import Notification from '../../Components/Notifications/Notification.jsx';
+import PostForm from '../PostForm/PostForm.jsx';
 import profil from '../../assets/default.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faMessage, faBell, faBars, faFileVideo, faXmark} from '@fortawesome/free-solid-svg-icons'
@@ -13,6 +15,7 @@ import { Link, Navigate, useOutletContext } from 'react-router-dom';
 
 export default function NavBar(props){
 	const context = useOutletContext();
+	const currentUser = context.user;
 	const client = context.client;
 	const searchRef = useRef();
 	const [results, setResults] = useState([]);
@@ -20,6 +23,10 @@ export default function NavBar(props){
 	const [slide, setSlide] = useState(false);
 	const [showNotification,setShowNotification] = useState(false);
 	const [notifications, setNotifications] = useState([]);
+	const [open, setOpen] = useState(false);
+	const [id, setId] = useState();
+	const [type, setType] = useState('create');
+
 	const err = context.err ? styles.err : '';
 
 	useEffect(() => {
@@ -55,14 +62,16 @@ export default function NavBar(props){
 	},[context.message]);
 
 	useEffect(() => {
-		const fetchNotifications = async () => {
-			await client.get(`/notifications`).then(({data}) => {
-			console.log(data);
-		 	setNotifications(n => data);
-		 	
-		 });
+		if (currentUser){
+			const fetchNotifications = async () => {
+				await client.get(`/notifications`).then(({data}) => {
+				console.log(data);
+			 	setNotifications(n => data);
+			 	
+			 });
+			}
+			fetchNotifications();
 		}
-		fetchNotifications();
 	},[])
 
 	async function search() {
@@ -93,8 +102,8 @@ export default function NavBar(props){
 	
 
 	function handleOpen(typeF){
-		props.setType(type => typeF);
-		props.setOpen(open => !open);
+		setType(type => typeF);
+		setOpen(open => !open);
 	}
 	
 
@@ -134,13 +143,17 @@ export default function NavBar(props){
 	}
 
 	function extractText(html) {
-	    const tempElement = document.createElement('div'); // Create a temporary element
-	    tempElement.innerHTML = html; // Set the innerHTML to the HTML string
-	    return tempElement.innerText || tempElement.textContent; // Return the text content
+	    const tempElement = document.createElement('div');
+	    tempElement.innerHTML = html;
+	    return tempElement.innerText || tempElement.textContent;
 	}
 
 	return(
 		<div className = {styles.navBar}>
+			{open &&
+				<PostForm setOpen = {setOpen} type = {type} idKey = {id}/>
+			}
+			
 			{context.showAlert &&
 				<div className = {styles.alert+' '+err}>
 					<p>{context.message || "Bine ai venit!!!"}</p>
@@ -149,27 +162,35 @@ export default function NavBar(props){
 			<div id = "slider" className = {styles.menuSlide}>
 				<h3>Meniu</h3>
 				<div>
-					<div onClick = {() => context.profile(context.user.idKey)}>
-						<LeftItem name = "Profil" img = {profil}/>
-					</div>
+					{currentUser &&
+						<div onClick = {() => context.profile(context.user.idKey)}>
+							<LeftItem name = "Profil" img = {currentUser.profile.profile_photo}/>
+						</div>
+					}
 					<div onClick = {() => context.home()}>
 						<LeftItem name = "Acasă"/>
 					</div>
-					<div onClick = {() => context.friends()}>
-						<LeftItem name = "Prieteni"/>
-					</div>
+					{currentUser &&
+						<div onClick = {() => {sendToSignup();context.friends()}}>
+							<LeftItem name = "Prieteni"/>
+						</div>
+					}
 					<div onClick = {() => context.videos()}>
 						<LeftItem name = "Videoclipuri Scurte"/>
 					</div>
-					<div onClick = {() => context.chat()}>
-						<LeftItem name = "Mesaje"/>
-					</div>
-					<div onClick = {() => handleOpen("create")}>
-						<LeftItem name = "Creează Postare"/>
-					</div>
-					<div onClick = {() => handleOpen("video")}>
-						<LeftItem name = "Creează Videoclip"/>
-					</div>
+					{currentUser &&
+						<>
+							<div onClick = {() => {sendToSignup();context.chat()}}>
+								<LeftItem name = "Mesaje"/>
+							</div>
+							<div onClick = {() => {sendToSignup();handleOpen("create")}}>
+								<LeftItem name = "Creează Postare"/>
+							</div>
+							<div onClick = {() => {sendToSignup();handleOpen("video")}}>
+								<LeftItem name = "Creează Videoclip"/>
+							</div>
+						</>
+					}
 				</div>
 			</div>
 			{showNotification &&
@@ -191,9 +212,9 @@ export default function NavBar(props){
 				</div>
 				<div className = {styles.resultsSearch}>
 					{results.length > 0 && results.map(result => (
-					    <div key={result.data.id} className={styles.result}>
-					        {result.type === 'profile' && (
-					            <div className={styles.infoLayout}>
+					    <div key={Math.floor(Math.random() * 100000000) + 1} className={styles.result}>
+					        {result.type == 'profile' && (
+					            <div onClick = {() => context.profile(result.data.user.idKey)} className={styles.infoLayout}>
 					                <img src={result.data.profile_photo}/>
 					                <div className={styles.textInfo}>
 					                    <p>{result.data.first_name + ' ' + result.data.last_name}</p>
@@ -201,18 +222,18 @@ export default function NavBar(props){
 					                </div>
 					            </div>
 					        )}
-					        {result.type === 'post' && (
-					            <div className={styles.infoLayout}>
-					                <img src={result.data.file ? result.data.file : blank}/>
+					        {result.type == 'post' && (
+					            <div onClick = {() => context.goToPost(result.data.uuid)} className={styles.infoLayout}>
+					                <img src={result.data.file ? (!result.data.file.endsWith('.mp4') ? result.data.file : blank) : blank}/>
 					                <div className={styles.textInfo}>
 					                    <p>{extractText(result.data.body).substring(0,20) + ((result.data.body.length > 20) ? '...' : '')}</p>
 					                    <p>Postare</p>
 					                </div>
 					            </div>
 					        )}
-					        {result.type === 'video' && (
-					            <div className={styles.infoLayout}>
-					                <img src={result.data.profile_photo}/>
+					        {result.type == 'video' && (
+					            <div onClick = {() => context.goToShort(result.data.uuid)} className={styles.infoLayout}>
+					                <img src={video}/>
 					                <div className={styles.textInfo}>
 					                    <p>{extractText(result.data.body).substring(0,20) + ((result.data.body.length > 20) ? '...' : '')}</p>
 					                    <p>Video</p>
@@ -240,16 +261,22 @@ export default function NavBar(props){
 					<div onClick = {showHideSlide} className = {styles.optionIcon}>
 						<FontAwesomeIcon className = {styles.iconInside} icon={faBars} />
 					</div>
-					<div onClick = {() => context.chat()} className = {styles.optionIcon}>
-						<FontAwesomeIcon className = {styles.iconInside} icon={faMessage} />
-					</div>
-					<div onClick = {showHideNotifications} className = {styles.optionIcon}>
-						<FontAwesomeIcon className = {styles.iconInside} icon={faBell} />
-					</div>
+
+					{currentUser &&
+						<>
+							<div onClick = {() => context.chat()} className = {styles.optionIcon}>
+								<FontAwesomeIcon className = {styles.iconInside} icon={faMessage} />
+							</div>
+							<div onClick = {showHideNotifications} className = {styles.optionIcon}>
+								<FontAwesomeIcon className = {styles.iconInside} icon={faBell} />
+							</div>
+						
+							<div onClick = {() => context.profile(context.user.idKey)} className = {styles.optionIcon}>
+								<img src = {currentUser.profile.profile_photo}/>
+							</div>
+						</>
+					}
 					
-					<div onClick = {() => context.profile(context.user.idKey)} className = {styles.optionIcon}>
-						<img src = {photo}/>
-					</div>
 					
 				</div>
 			</div>

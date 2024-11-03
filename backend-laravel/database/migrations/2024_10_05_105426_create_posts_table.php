@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id('id');
             $table->unsignedBigInteger('user_id');
+            $table->bigInteger('shares')->default(0);
             $table->string('uuid');
             $table->text('body');
             $table->string('file')->nullable(true);

@@ -71,17 +71,19 @@ export default function ShortVideos(){
     }, []);
 
     useEffect(() => {
-    	async function fetchFriends(){
-			await client.get(`/chat/get`)
-			.then(({ data }) => {
-			 setFriends(data.mutual_followers);
-			 console.log('data: ',data.mutual_followers);
-			})
-			.catch(error => {
-			 console.error(error);
-			});
+    	if (context.user){
+	    	async function fetchFriends(){
+				await client.get(`/chat/get`)
+				.then(({ data }) => {
+				 setFriends(data.mutual_followers);
+				 console.log('data: ',data.mutual_followers);
+				})
+				.catch(error => {
+				 console.error(error);
+				});
+			}
+			fetchFriends();
 		}
-		fetchFriends();
     },[]);
 
 	return(
@@ -92,6 +94,7 @@ export default function ShortVideos(){
 				<NavBar/>
 				
 				<CommentsSection type = {"shortVideos"} id = {id} set = {setOpen} open = {open}/>
+
 				<div className = {styles.mainDiv}>
 					<Swiper onSlideChange={handleSlideChange} direction={'vertical'} slidesPerView={1} mousewheel={true} modules={[Mousewheel]}
 					pagination={{
@@ -101,6 +104,7 @@ export default function ShortVideos(){
 					>
 					{video != null && 
 						<SwiperSlide key = {video.id}>
+
 							{({isActive}) => (<Short 
 												video = {video} 
 												setId = {setId} 
@@ -115,6 +119,7 @@ export default function ShortVideos(){
 
 					{video == null && videos.map(video => (
 						<SwiperSlide key = {video.id}>
+						
 							{({isActive}) => (<Short 
 												video = {video} 
 												setId = {setId} 

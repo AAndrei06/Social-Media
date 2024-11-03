@@ -23,7 +23,7 @@ function Home(){
 
 	const context = useOutletContext();
 	const client = context.client;
-
+	const currentUser = context.user;
 	const [posts, setPosts] = useState([]);
 	const [stories, setStories] = useState([]);
 	const [friends, setFriends] = useState(null);
@@ -138,11 +138,17 @@ function Home(){
 		setShow(show => !show);
 	}
 
+	function sendToSignup(){
+		if (!currentUser){
+			context.signup();
+		}
+	}
+
 
 return(
 <>
 <main className = {styles.mainArea}>
-	<NavBar setType = {setType} setOpen = {setOpen}/>
+		<NavBar/>
 		<LikeSide friends = {friends} idOfPost = {typeOfSend} set = {setSendOpen} open = {sendOpen}/>
 		<LikeSide uuidPost = {likePostId} set = {setLikeOpen} open = {likeOpen}/>
 		<CommentsSection type = {"homePost"} uuidPost = {commentPostId} set = {setShow} open = {show}/>
@@ -155,44 +161,58 @@ return(
 		<div className = {styles.bodyPart}>
 			<div className = {styles.leftSide}>
 				<div className = {styles.menuList}>
-					<div onClick = {() => context.profile(context.user.idKey)}>
-						<LeftItem name = "Profil" img = {profil}/>
-					</div>
+					{currentUser &&
+						<div onClick = {() => context.profile(context.user.idKey)}>
+							<LeftItem name = "Profil" img = {currentUser.profile.profile_photo}/>
+						</div>
+					}
+					
 					<div onClick = {() => context.home()}>
 						<LeftItem name = "Acasă"/>
 					</div>
-					<div onClick = {() => context.friends()}>
-						<LeftItem name = "Prieteni"/>
-					</div>
+					{currentUser &&
+						<div onClick = {() => {sendToSignup();context.friends()}}>
+							<LeftItem name = "Prieteni"/>
+						</div>
+					}
 					<div onClick = {() => context.videos()}>
 						<LeftItem name = "Videoclipuri Scurte"/>
 					</div>
-					<div onClick = {() => context.chat()}>
-						<LeftItem name = "Mesaje"/>
-					</div>
-					<div onClick = {() => handleOpen("create")}>
-						<LeftItem name = "Creează Postare"/>
-					</div>
-					<div onClick = {() => handleOpen("video")}>
-						<LeftItem name = "Creează Videoclip"/>
-					</div>
+					{currentUser &&
+						<>
+							<div onClick = {() => {sendToSignup();context.chat()}}>
+								<LeftItem name = "Mesaje"/>
+							</div>
+							<div onClick = {() => {sendToSignup();handleOpen("create")}}>
+								<LeftItem name = "Creează Postare"/>
+							</div>
+							<div onClick = {() => {sendToSignup();handleOpen("video")}}>
+								<LeftItem name = "Creează Videoclip"/>
+							</div>
+						</>
+					}
 				</div>
 				<div className = {styles.menuList}>
 					
 											</div>
 										</div>
 										<div className = {styles.centerSide}>
-											<h3 className = {styles.H3}>Povești</h3>
-											<div className = {styles.storyDiv}>
+											{currentUser &&
+												<>
+													<h3 className = {styles.H3}>Povești</h3>
+												
+													<div className = {styles.storyDiv}>
 
-												<Story func = {handleOpen} create/>
-												{stories != [] && stories.map(story => (
-													<Story setStory = {setStory} key = {story.uuid} set = {setStoryOpen} story = {story} open = {storyOpen}/>
-												))}
-												
-												
-											</div>
-											<div className = {styles.postSection}>
+														<Story func = {handleOpen} create/>
+														{stories != [] && stories.map(story => (
+															<Story setStory = {setStory} key = {story.uuid} set = {setStoryOpen} story = {story} open = {storyOpen}/>
+														))}
+														
+														
+													</div>
+												</>
+											}
+											<div className = {styles.postSection+' '+(currentUser ? '':styles.deleteMargin)}>
 												<div>
 													{post != null &&
 														<Post 
@@ -201,7 +221,8 @@ return(
 															nrComments = {post.nr_of_comments}
 															created = {post.created_at}
 															user_photo = {post.user.profile.profile_photo}
-															file = {post.file} 
+															file = {post.file}
+															user = {post.user} 
 															key = {post.uuid} 
 															func = {handleOpen} 
 															set = {handleShow}
@@ -228,7 +249,8 @@ return(
 															created = {post.created_at}
 															user_photo = {post.user.profile.profile_photo}
 															file = {post.file} 
-															key = {post.uuid} 
+															key = {post.uuid}
+															user = {post.user} 
 															func = {handleOpen} 
 															set = {handleShow}
 															setId = {setId} 
@@ -261,6 +283,7 @@ return(
 												</div>
 												<div className = {styles.rightSide}>
 													<div className = {styles.menuList}>
+														{/*
 														<h3 className = {styles.friendsH3}>Prieteni activi</h3>
 														<div id = "active-friends">
 															<div onClick = {() => context.profile(3)}>
@@ -294,6 +317,7 @@ return(
 																<FriendItem suggestion = {false} name = "Parinti" img = "src/assets/test.png"/>
 															</div>
 														</div>
+														*/}
 														<h3 className = {styles.friendsH3}>Sugestii de prietenie</h3>
 														<div id = "suggestion-friends">
 														{suggestions != [] && suggestions.map(suggestion => (

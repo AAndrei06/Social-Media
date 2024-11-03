@@ -17,10 +17,10 @@ export default function Profile(){
 	console.log(id);
 	const client = context.client;
 	const user = context.user;
-
+/*
 	if (user == null){
 		return (<>Hello</>);		
-	}
+	}*/
 
 	const isFollowIt = useRef();
 	const [followsM,setFollowsM] = useState();
@@ -34,7 +34,7 @@ export default function Profile(){
 	const educationRef = useRef();
 	const personRef = useRef();
 	const registeredRef = useRef();
-	const notMyProfile = (id != user.idKey);
+	const notMyProfile = user ? (id != user.idKey) : true;
 	const occupationRef2 = useRef();
 	const locationRef2 = useRef();
 	const educationRef2 = useRef();
@@ -55,12 +55,7 @@ export default function Profile(){
 		    ref.current.addEventListener('change', () => {
 		    	console.log('hello'+ref.current.innerHTML);
 		    });
-		    /*
-		    return () => {
-		      ref.current.removeEventListener('change',() => {
-		    	console.log('hello'+ref.current.innerHTML);
-		    });
-		    };*/
+
 		  }, []);
 	}
 
@@ -325,7 +320,7 @@ return(
 								<div className = {styles.btnLayout}>
 									
 										<>
-											{notMyProfile &&
+											{(notMyProfile && user) &&
 												<div onClick = {() => handleFollow()} className = {styles.follow}>
 													<div ref = {isFollowIt}></div>
 												</div>

@@ -113,7 +113,9 @@ class ShortVideoController extends Controller
 
     public function getCommentsVideo($id, Request $request){
 
-        $video = Video::where('uuid',$id)->first();
+        $video = Video::where('id',$id)->first();
+        error_log($video);
+        error_log($id);
         $comments = $video->comments()->with(['user', 'user.profile'])->get();
         return response()->json($comments);
     }

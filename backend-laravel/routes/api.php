@@ -22,17 +22,26 @@ Route::get('/user', function (Request $request) {
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/search', [HomeController::class, 'searchContent']);
+Route::get('/profile/{id}', [ProfileController::class, 'profileGet']);
+Route::get('/', [HomeController::class, 'showContent']);
+Route::get('/videos', [ShortVideoController::class, 'showVideos']);
+Route::get('/video/get/comments/{id}', [ShortVideoController::class, 'getCommentsVideo']);
+Route::get('/videos/{id}', [ShortVideoController::class, 'showVideosOfUser']);
+Route::get('/post/get/{id}', [HomeController::class, 'getPost']);
+Route::get('/video/get/{id}', [ShortVideoController::class, 'getVideo']);
+Route::get('/posts/{idKey}',[HomeController::class, 'getAllPostsUser']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // Profile routes
-    Route::get('/profile/{id}', [ProfileController::class, 'profileGet']);
+    
     Route::post('/profile/{id}', [ProfileController::class, 'profilePost']);
     Route::post('/profile/follow/{id}', [ProfileController::class, 'follow']);
-    Route::get('/search', [HomeController::class, 'searchContent']);
+    
     Route::get('/notifications',[AuthController::class,'getNotifications']);
     Route::post('/notification/delete/{id}',[AuthController::class,'deleteNotification']);
 
-    Route::get('/posts/{idKey}',[HomeController::class, 'getAllPostsUser']);
+    
 
     // Home (Posts) routes
     Route::prefix('post')->group(function () {
@@ -43,7 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/delete/comment/{id}', [HomeController::class, 'deleteComment']);
         Route::post('/like/{id}', [HomeController::class, 'likePost']);
         Route::get('/get/likes/{id}', [HomeController::class, 'getLikes']);
-        Route::get('/get/{id}', [HomeController::class, 'getPost']);
+        
     });
 
     Route::post('/story/create', [HomeController::class, 'createStory']);
@@ -64,7 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Home (Main) content routes
     Route::post('/', [HomeController::class, 'createPost']);
-    Route::get('/', [HomeController::class, 'showContent']);
+    
 
     // Short Video routes
     Route::prefix('video')->group(function () {
@@ -72,14 +81,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/like/{id}', [ShortVideoController::class, 'likeVideo']);
         Route::post('/delete/{id}', [ShortVideoController::class, 'deleteVideo']);
         Route::post('/comment/{id}', [ShortVideoController::class, 'commentVideo']);
-        Route::get('/get/comments/{id}', [ShortVideoController::class, 'getCommentsVideo']);
         Route::post('/delete/comment/{id}', [ShortVideoController::class, 'deleteCommentVideo']);
-        Route::get('/get/{id}', [ShortVideoController::class, 'getVideo']);
+        
     });
 
     // Video listing
-    Route::get('/videos', [ShortVideoController::class, 'showVideos']);
-    Route::get('/videos/{id}', [ShortVideoController::class, 'showVideosOfUser']);
+    
+    
 });
 
 // NU UITA DE MIDDLEWARE SANCTUM CA SA MEARGA REQUEST

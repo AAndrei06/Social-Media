@@ -12,11 +12,11 @@ import { useState, useRef, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 export default function Short(props){
-
+	console.log(props.video);
 	const context = useOutletContext();
 	const client = context.client;
 	const user = context.user;
-	if (user){
+
 	const imgRef = useRef();
 	const nrOfLikes = useRef();
 
@@ -82,26 +82,36 @@ export default function Short(props){
 		props.setIdOfSend(props.video.uuid);
 	}
 
+	function goToSignup(){
+		if (!user){
+			context.signup();
+		}
+	}
+
 	return(
-		<>
+		<>	
+
 			<div className = {styles.video}>
+
 				<div className = {styles.display}>
 					<div className = {styles.info} onClick = {() => context.profile(props.video.user.idKey)}>
 						<img src = {props.video.user.profile.profile_photo}/>
 						<h5>{props.video.user.profile.first_name + ' ' + props.video.user.profile.last_name}</h5>
 					</div>
-					<div className = {styles.controls}>
-						{props.video.user.idKey == user.idKey &&
-							<div onClick = {() => handleDeleteShort()} className = {styles.control}>
-								<FontAwesomeIcon icon={faTrashCan} />
-							</div>
-						}
-						{!props.video.user.idKey == user.idKey &&
-							<div onClick = {handleReport} className = {styles.control}>
-								<FontAwesomeIcon icon={faCircleExclamation} />
-							</div>
-						}
-					</div>
+					{user &&
+						<div className = {styles.controls}>
+							{props.video.user.idKey == user.idKey &&
+								<div onClick = {() => handleDeleteShort()} className = {styles.control}>
+									<FontAwesomeIcon icon={faTrashCan} />
+								</div>
+							}
+							{!props.video.user.idKey == user.idKey &&
+								<div onClick = {handleReport} className = {styles.control}>
+									<FontAwesomeIcon icon={faCircleExclamation} />
+								</div>
+							}
+						</div>
+					}
 					<video ref = {ref} onClick = {handlePause}>
 						<source src={props.video.file} type="video/mp4"/>
 					</video>
@@ -127,15 +137,15 @@ export default function Short(props){
 				</div>
 				<div className = {styles.optionSection}>
 					<div className = {styles.option}>
-						<img onClick = {() => handleLikeVideo()} ref = {imgRef} src = {props.video.liked_by_user ? heartA : heartB}/>
+						<img onClick = {() => {goToSignup();handleLikeVideo()}} ref = {imgRef} src = {props.video.liked_by_user ? heartA : heartB}/>
 						<p ref = {nrOfLikes}>{props.video.like_count}</p>
 					</div>
 
-					<div onClick = {() => {props.set(o => !o);props.setId(id => props.video.uuid)}} className = {styles.option}>
+					<div onClick = {() => {goToSignup();props.set(o => !o);props.setId(id => props.video.uuid)}} className = {styles.option}>
 						<img src = {comment}/>
 						<p>{props.video.nr_of_comments}</p>
 					</div>
-					<div onClick = {() => prepareForSend()} className = {styles.option}>
+					<div onClick = {() => {goToSignup();prepareForSend()}} className = {styles.option}>
 						<img src = {share}/>
 						<p>53</p>
 					</div>
@@ -143,5 +153,4 @@ export default function Short(props){
 			</div>
 		</>
 	);
-}
 }

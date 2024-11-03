@@ -14,17 +14,22 @@ class ProfileController extends Controller
 {
     public function profileGet($id, Request $request){
         $current = Auth::user();
+
         $user = User::where('idKey', $id)->first();
         $profile = $user->profile;
 
         $followersCount = $user->followers()->count();
         $followingCount = $user->following()->count();
 
-        $isFollowing = $user->followers()->where('follower_id', $current->id)->exists();
+        if ($current != null){
+            $isFollowing = $user->followers()->where('follower_id', $current->id)->exists();
+            $profile->is_following = $isFollowing;
+        }
+        
 
         $profile->followers_count = $followersCount;
         $profile->following_count = $followingCount;
-        $profile->is_following = $isFollowing;
+        
 
         return response()->json(array(
             'profile' => $profile,

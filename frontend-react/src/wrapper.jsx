@@ -68,12 +68,14 @@ export default function Wrapper(){
 		navigate(`profile/${idx}`);
 	}
 
-	function goToPost(idx){
-		navigate(`/${idx}`);
+	function goToPost(idx) {
+	    navigate(`/${idx}`);
+	    window.location.reload();
 	}
 
 	function goToShort(idx){
 		navigate(`/videos/${idx}`);
+		window.location.reload();
 	}
 
 	function goToChat(){

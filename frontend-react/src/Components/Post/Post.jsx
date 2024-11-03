@@ -32,6 +32,7 @@ export default function Post(props){
 	});
 
 	async function likePost(){
+
 		try {
             const response = await client.post(`/post/like/${props.idKey}`, {
                 headers: {
@@ -60,10 +61,12 @@ export default function Post(props){
 	}
 
 	function hideShowPostMenu(){
+		sendToSignup();
 		setOpenPostMenu(open => !open);
 	}
 
 	async function deletePost(){
+
         try {
             const response = await client.post(`/post/delete/${props.idKey}`, {
                 headers: {
@@ -80,6 +83,7 @@ export default function Post(props){
 
 
 	async function handleCommentSubmit(e){
+		sendToSignup();
 		e.preventDefault();
 
 		const payload = {
@@ -115,14 +119,20 @@ export default function Post(props){
 		props.setTypeOfSend(props.idKey);
 	}
 
+	function sendToSignup(){
+		if (!context.user){
+			context.signup();
+		}
+	}
+
 	return (
 		<>
 		<div ref = {postRef} className = {styles.post + ' ' + bd}>
 			<div className = {styles.header}>
 				<div className = {styles.headerInfo}>
-					<img className = {styles.postProfileImg} src = {props.user_photo}/>
+					<img onClick = {() => context.profile(props.user.idKey)} className = {styles.postProfileImg} src = {props.user_photo}/>
 					<div className = {styles.postTextInfo}>
-						<p>{props.fullname}</p>
+						<p onClick = {() => context.profile(props.user.idKey)}>{props.fullname}</p>
 						<p>{formattedTime}</p>
 					</div>
 				</div>
@@ -169,17 +179,17 @@ export default function Post(props){
 			</div>
 			<div className = {styles.footer}>
 				<div className = {styles.options}>
-					<div className = {styles.option}>
+					<div onClick = {() => sendToSignup()} className = {styles.option}>
 						<img onClick = {() => likePost()} ref = {imgRef} src = {props.liked ? heartA : heartB}/>
 						<p ref = {nrOfLikes} styles = {{cursor: 'pointer'}} onClick = {() => handleLikesDisplay()}>{props.nrLikes}</p>
 					</div>
-					<div onClick = {() => handleCommentsDisplay()} className = {styles.option}>
+					<div onClick = {() => {sendToSignup();handleCommentsDisplay()}} className = {styles.option}>
 						<img src = {comment}/>
 						<p>{props.nrComments}</p>
 					</div>
-					<div onClick = {() => prepareForSend()} className = {styles.option}>
+					<div onClick = {() => {sendToSignup();prepareForSend()}} className = {styles.option}>
 						<img src = {share}/>
-						<p>1</p>
+						<p>0</p>
 					</div>
 				</div>
 				<div className = {styles.comment}>
