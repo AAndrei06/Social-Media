@@ -189,7 +189,7 @@ export default function Post(props){
 					</div>
 					<div onClick = {() => {sendToSignup();prepareForSend()}} className = {styles.option}>
 						<img src = {share}/>
-						<p>0</p>
+						<p>{props.shares}</p>
 					</div>
 				</div>
 				<div className = {styles.comment}>

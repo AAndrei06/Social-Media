@@ -92,7 +92,6 @@ export default function LikeSide(props){
 	}
 	else if (props.friends && props.idOfShort){
 		console.log(props.friends);
-		console.log('Like SIde f');
 		function writeMsg(currentId,first,last){
 			const payload = {
 				'receiver_id':currentId,

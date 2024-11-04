@@ -43,6 +43,18 @@ export default function Wrapper(){
 		});
 	}
 
+	async function logout(){
+		await axiosClient.post(`/logout`).then((data) => {
+			showSuccess(data.data);
+			console.log(data);
+			localStorage.removeItem('ACCESS_TOKEN');
+			goToLogin();
+			setToken(null);
+		}).catch((e) => {
+			console.log(e);
+		});
+	}
+
 	function showError(msg){
 		setShowAlert(o => true);
 		setMessage(e => msg);
@@ -57,15 +69,18 @@ export default function Wrapper(){
 
 	function goToPostsUser(idx){
 		navigate(`posts/${idx}`);
+		window.location.reload();
 	}
 
 
 	function goToVideosUser(idx){
 		navigate(`videos/user/${idx}`);
+		window.location.reload();
 	}
 
 	function goToProfile(idx){
-		navigate(`profile/${idx}`);
+		navigate(`profile/${idx}`, { replace: true });
+		window.location.reload();
 	}
 
 	function goToPost(idx) {
@@ -84,14 +99,17 @@ export default function Wrapper(){
 
 	function goToFriends(){
 		navigate("friends");
+		window.location.reload();
 	}
 
 	function goToVideos(){
 		navigate("videos");
+		window.location.reload();
 	}
 
 	function goToHome(){
 		navigate("");
+		window.location.reload();
 	}
 
 	function goToLogin(){
@@ -133,7 +151,8 @@ export default function Wrapper(){
 					goToShort: goToShort,
 					deleteMessage: deleteMessage,
 					goToPostsUser: goToPostsUser,
-					goToVideosUser: goToVideosUser
+					goToVideosUser: goToVideosUser,
+					logout: logout
 				}
 			}/>
 		</>

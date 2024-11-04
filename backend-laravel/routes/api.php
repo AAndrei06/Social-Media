@@ -21,10 +21,10 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+
 Route::get('/search', [HomeController::class, 'searchContent']);
 Route::get('/profile/{id}', [ProfileController::class, 'profileGet']);
-Route::get('/', [HomeController::class, 'showContent']);
+
 Route::get('/videos', [ShortVideoController::class, 'showVideos']);
 Route::get('/video/get/comments/{id}', [ShortVideoController::class, 'getCommentsVideo']);
 Route::get('/videos/{id}', [ShortVideoController::class, 'showVideosOfUser']);
@@ -34,6 +34,7 @@ Route::get('/posts/{idKey}',[HomeController::class, 'getAllPostsUser']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // Profile routes
+    Route::post('/logout', [AuthController::class, 'logout']);
     
     Route::post('/profile/{id}', [ProfileController::class, 'profilePost']);
     Route::post('/profile/follow/{id}', [ProfileController::class, 'follow']);
@@ -41,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications',[AuthController::class,'getNotifications']);
     Route::post('/notification/delete/{id}',[AuthController::class,'deleteNotification']);
 
-    
+    Route::get('/', [HomeController::class, 'showContent']);
 
     // Home (Posts) routes
     Route::prefix('post')->group(function () {

@@ -12,7 +12,8 @@ export default function Notification(props){
 		const context = useOutletContext();
 		const client = context.client;
 
-		async function deleteNotification(){
+		async function deleteNotification(e){
+			e.preventPropagation();
 			await client.post(`/notification/delete/${props.notification.id}`).then((data) => {
 				console.log(data);
 				ref.current.style.display = "none";
@@ -20,6 +21,15 @@ export default function Notification(props){
 				console.log(e);
 			});
 		}
+
+		const handleNavigation = () => {
+		    const link = props.notification.link.startsWith('/')
+		        ? props.notification.link
+		        : `/${props.notification.link}`;
+
+		    console.log(`Navigating to: ${link}`);
+		    navigate(link, { replace: true });
+		};
 
 	
 		return(
@@ -39,7 +49,7 @@ export default function Notification(props){
 					</div>
 				}
 				{props.notification.type == 'follow' && 
-					<div ref = {ref} onClick = {() => navigate(props.notification.link)} className = {styles.notification}>
+					<div ref = {ref} onClick = {() => handleNavigation()} className = {styles.notification}>
 						<div className = {styles.notificationPhoto}>
 							<img src = {props.notification.photo}/>
 						</div>
@@ -47,7 +57,7 @@ export default function Notification(props){
 							<p>{props.notification.title}</p>
 							<p>{props.notification.desc}</p>
 						</div>
-						<div onClick = {() => deleteNotification()}>
+						<div onClick = {(e) => deleteNotification(e)}>
 							<FontAwesomeIcon className = {styles.open} icon={faEnvelopeOpen} />
 						</div>
 					</div>

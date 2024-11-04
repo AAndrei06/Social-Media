@@ -17,6 +17,7 @@ import CommentsSection from '../Components/CommentsSection/CommentsSection.jsx';
 import LikeSide from '../Components/LikeSide/LikeSide.jsx';
 import StoryView from '../Components/StoryView/StoryView.jsx';
 
+
 import { useOutletContext, useParams } from 'react-router-dom';
 
 function Home(){
@@ -44,6 +45,7 @@ function Home(){
 	const [suggestions, setSuggestions] = useState([]);
 	const [post, setPost] = useState(null);
 	const { uuid, idKey } = useParams();
+	
 	console.log(typeOfSend);
 	console.log('idKey: ',idKey);
 	console.log('uuid: ',uuid);
@@ -189,6 +191,9 @@ return(
 							<div onClick = {() => {sendToSignup();handleOpen("video")}}>
 								<LeftItem name = "Creează Videoclip"/>
 							</div>
+							<div onClick = {() => {sendToSignup();context.logout()}}>
+								<LeftItem name = "Deconectează-te"/>
+							</div>
 						</>
 					}
 				</div>
@@ -238,6 +243,7 @@ return(
 															setSendOpen = {setSendOpen}
 															setSendPostId = {setSendPostId}
 															setTypeOfSend = {setTypeOfSend}
+															shares = {post.shares}
 															/>
 
 													}
@@ -265,6 +271,7 @@ return(
 															setSendOpen = {setSendOpen}
 															setSendPostId = {setSendPostId}
 															setTypeOfSend = {setTypeOfSend}
+															shares = {post.shares}
 															/>
 
 														))}

@@ -11,6 +11,8 @@ use App\Events\MessageSend;
 use App\Models\Profile;
 use App\Models\Notification;
 use App\Events\NotificationSend;
+use App\Models\Post;
+use App\Models\Video;
 
 class ChatController extends Controller
 {
@@ -88,8 +90,12 @@ class ChatController extends Controller
             $message->message = $request->message;
         }else if ($request->input('type') == 'post'){
             $message->link = $request->input('postId');
+            $post = Post::where('uuid', $request->input('postId'))->first();
+            $post->increment('shares');
         }else if ($request->input('type') == 'short'){
             $message->link = $request->input('shortId');
+            $video = Video::where('uuid', $request->input('shortId'))->first();
+            $video->increment('shares');
         }
         
         $message->type = $request->input('type');

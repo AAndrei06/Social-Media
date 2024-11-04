@@ -57,11 +57,27 @@ class AuthController extends Controller
 
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
+        // Obține utilizatorul autentificat
         $user = $request->user();
-        $user->currentAccessToken->delete();
-        return response('',204);
+        error_log($user);
+        // Verifică dacă utilizatorul este autentificat
+        if ($user) {
+            // Obține toate token-urile curente ale utilizatorului
+            $tokens = $user->tokens();
+
+            // Șterge toate token-urile curente
+            foreach ($tokens as $token) {
+                $token->delete();
+            }
+
+            return response()->json(['message' => 'Ai fost deconectat!'], 200);
+        }
+
+        return response()->json(['message' => 'Nu ești autentificat.'], 401);
     }
+
 
     public function getUser(Request $request){
         $user = $request->user;

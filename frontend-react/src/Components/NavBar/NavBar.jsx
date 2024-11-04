@@ -99,6 +99,12 @@ export default function NavBar(props){
 	    }
 	}
 
+	function sendToSignup(){
+		if (!currentUser){
+			context.signup();
+		}
+	}
+
 	
 
 	function handleOpen(typeF){
@@ -188,6 +194,9 @@ export default function NavBar(props){
 							</div>
 							<div onClick = {() => {sendToSignup();handleOpen("video")}}>
 								<LeftItem name = "Creează Videoclip"/>
+							</div>
+							<div onClick = {() => {sendToSignup();context.logout()}}>
+								<LeftItem name = "Deconectează-te"/>
 							</div>
 						</>
 					}

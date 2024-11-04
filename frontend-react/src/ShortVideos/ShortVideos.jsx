@@ -84,7 +84,11 @@ export default function ShortVideos(){
 			}
 			fetchFriends();
 		}
-    },[]);
+    },[context.user]);
+
+    console.log('Friend Short');
+    console.log(friends);
+    console.log(idOfSend);
 
 	return(
 		<>

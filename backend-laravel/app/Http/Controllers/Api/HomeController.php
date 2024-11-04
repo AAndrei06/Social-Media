@@ -163,11 +163,13 @@ class HomeController extends Controller
     
 
     public function showContent(){
-        $currentUserId = Auth::id();
-        error_log('ENTER');
+        $currentUserId = Auth::check() ? Auth::id() : null;
+        error_log('Current User ID: ' . $currentUserId);
+
         $posts = Post::with(['user.profile:id,user_id,profile_photo,first_name,last_name'])->get();
 
         $posts->transform(function ($post) use ($currentUserId) {
+
             $post->liked_by_user = $post->likes()->where('user_id', $currentUserId)->exists();
             $post->like_count = $post->likes()->count();
             $post->nr_of_comments = $post->comments()->count();

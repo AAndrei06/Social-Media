@@ -19,10 +19,10 @@ export default function ChatFriend(props){
 						</div>
 						<div className = {styles.text}>
 							<h4>{props.friend.profile.first_name +' '+props.friend.profile.last_name}</h4>
-							<p>Acolo sus pe raft este făină</p>
+							<p></p>
 						</div>
-						<div className = {styles.hour}>11:45</div>
-						<div className = {styles.notification}><p>56</p></div>
+						{/*<div className = {styles.hour}>11:45</div>
+						<div className = {styles.notification}><p>56</p></div>*/}
 					</div>
 				
 			</>

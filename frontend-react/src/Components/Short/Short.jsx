@@ -147,7 +147,7 @@ export default function Short(props){
 					</div>
 					<div onClick = {() => {goToSignup();prepareForSend()}} className = {styles.option}>
 						<img src = {share}/>
-						<p>53</p>
+						<p>{props.video.shares}</p>
 					</div>
 				</div>
 			</div>

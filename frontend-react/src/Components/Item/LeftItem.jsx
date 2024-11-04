@@ -6,6 +6,7 @@ import video from '../../assets/video.png';
 import message from '../../assets/message.png';
 import favorite from '../../assets/star.png';
 import pen from '../../assets/pen.png';
+import logout from '../../assets/logout.png';
 
 export default function LeftItem(props){
 
@@ -17,7 +18,8 @@ export default function LeftItem(props){
 		'Mesaje': message,
 		'Favorite': favorite,
 		'Creează Postare': pen,
-		'Creează Videoclip': pen
+		'Creează Videoclip': pen,
+		'Deconectează-te': logout
 	};
 
 	const image = props.img ? props.img : object[props.name];

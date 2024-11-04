@@ -125,7 +125,7 @@ class ProfileController extends Controller
             $notification = Notification::create([
                 'user_id' => $toFollow->id,
                 'type' => 'follow',
-                'link' => 'profile/' . $currentUser->idKey,
+                'link' => '/profile/' . $currentUser->idKey,
                 'idOfUser' => $currentUser->id,
                 'title' => $currentUser->profile->first_name . ' ' . $currentUser->profile->last_name,
                 'desc' => 'A început să te urmărească',

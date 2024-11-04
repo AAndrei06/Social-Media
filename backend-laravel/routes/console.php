@@ -13,6 +13,40 @@ Artisan::command('inspire', function () {
 
 
 Schedule::call(function () {
+
+    $timeThreshold = Carbon::now()->subHours(24);
+
+    $oldStories = DB::table('stories')->where('created_at', '<', $timeThreshold)->get();
+
+    foreach ($oldStories as $story) {
+
+        if ($story->file) {
+            $filename = basename($story->file);
+            $storagePath = 'storyFiles/' . $filename;
+
+            if (Storage::disk('public')->exists($storagePath)) {
+                Storage::disk('public')->delete($storagePath);
+            }
+        }
+
+        if ($story->image) {
+            $filename = basename($story->image);
+            $storagePath = 'storyFiles/' . $filename;
+
+            if (Storage::disk('public')->exists($storagePath)) {
+                Storage::disk('public')->delete($storagePath);
+            }
+        }
+
+        // Delete the story from the database
+        DB::table('stories')->where('id', $story->id)->delete();
+    }
+
+})->hourly();
+
+
+/*
+Schedule::call(function () {
     $timeThreshold = Carbon::now()->subMinute();
 
     $oldStories = DB::table('stories')->where('created_at', '<', $timeThreshold)->get();
@@ -43,3 +77,4 @@ Schedule::call(function () {
 
     info('Old stories cleanup completed.');
 })->everyMinute();
+*/
