@@ -16,6 +16,9 @@ export default function Wrapper(){
 	});
 	axiosClient.interceptors.request.use((config) => {
 		const tokenStored = localStorage.getItem("ACCESS_TOKEN");
+		if (!tokenStored){
+			goToLogin();
+		}
 		config.headers.Authorization = `Bearer ${tokenStored}`;
 		return config;
 	});
@@ -27,6 +30,7 @@ export default function Wrapper(){
 	useEffect(() => {
 		setToken(localStorage.getItem("ACCESS_TOKEN"));
 		axiosClient.get('/user').then((data) => {
+
 			setUser(data.data);
 		}).catch((e) => {
 			setUser(null);

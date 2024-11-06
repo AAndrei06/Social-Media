@@ -3,7 +3,7 @@ import man from '../../assets/man.png';
 import { faEllipsis, faUserMinus, faEnvelope, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 
 export default function FriendListItem(props){
 
@@ -12,6 +12,8 @@ export default function FriendListItem(props){
 	const context = useOutletContext();
 	const user = context.user;
 	const client = context.client;
+
+	const navigate = useNavigate();
 
 	async function handleFollow(id){
 
@@ -60,7 +62,7 @@ export default function FriendListItem(props){
 					}
 					</div>
 					
-					<div className = {styles.option}>
+					<div onClick = {() => navigate('/chat',{state:{'idOfFriend': props.friend.id}})} className = {styles.option}>
 						<FontAwesomeIcon icon={faEnvelope}/>
 						<h5>Scrie mesaj</h5>
 					</div>

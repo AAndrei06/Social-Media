@@ -7,19 +7,21 @@
 }
 
 .notifications{
-	width: 300px;
+	width: 290px;
 	background-color: white;
 	position: fixed;
 	right: 0px;
 	margin-top: 60px;
 	max-height: 80vh;
 	overflow-y: hidden;
+	margin-right: 10px;
 	box-shadow: 0px 0px 5px gray;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
 	scrollbar-gutter: stable;
+	min-height: 300px;
 }
 
 .alert{

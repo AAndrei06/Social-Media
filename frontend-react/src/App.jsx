@@ -6,6 +6,7 @@ import Friends from './Friends/Friends.jsx';
 import Shorts from './ShortVideos/ShortVideos.jsx';
 import Profile from './Profile/Profile.jsx';
 import Wrapper from './wrapper.jsx';
+import NotFound from './404/404.jsx';
 
 import { Routes, Route } from 'react-router-dom';
 
@@ -25,7 +26,7 @@ export default function App() {
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<SignUp />} />
       <Route path="profile/:id" element={<Profile />} />
-      <Route path="*" element={<h1>Not found</h1>} />
+      <Route path="*" element={<NotFound/>} />
     </Route>
   </Routes>
   )

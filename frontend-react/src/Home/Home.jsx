@@ -164,9 +164,13 @@ return(
 			<div className = {styles.leftSide}>
 				<div className = {styles.menuList}>
 					{currentUser &&
-						<div onClick = {() => context.profile(context.user.idKey)}>
-							<LeftItem name = "Profil" img = {currentUser.profile.profile_photo}/>
-						</div>
+						<>
+							{currentUser.profile &&
+								<div onClick = {() => context.profile(context.user.idKey)}>
+									<LeftItem name = "Profil" img = {currentUser.profile.profile_photo}/>
+								</div>
+							}
+						</>
 					}
 					
 					<div onClick = {() => context.home()}>

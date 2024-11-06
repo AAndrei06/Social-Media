@@ -15,7 +15,13 @@ import { Link, Navigate, useOutletContext } from 'react-router-dom';
 
 export default function NavBar(props){
 	const context = useOutletContext();
+
 	const currentUser = context.user;
+	if (currentUser != null){
+		if (!currentUser.profile){
+			return (<></>);
+		}
+	}
 	const client = context.client;
 	const searchRef = useRef();
 	const [results, setResults] = useState([]);
@@ -26,6 +32,8 @@ export default function NavBar(props){
 	const [open, setOpen] = useState(false);
 	const [id, setId] = useState();
 	const [type, setType] = useState('create');
+
+
 
 	const err = context.err ? styles.err : '';
 
@@ -105,6 +113,7 @@ export default function NavBar(props){
 		}
 	}
 
+
 	
 
 	function handleOpen(typeF){
@@ -169,9 +178,13 @@ export default function NavBar(props){
 				<h3>Meniu</h3>
 				<div>
 					{currentUser &&
-						<div onClick = {() => context.profile(context.user.idKey)}>
-							<LeftItem name = "Profil" img = {currentUser.profile.profile_photo}/>
-						</div>
+						<>
+							{currentUser.profile &&
+								<div onClick = {() => context.profile(context.user.idKey)}>
+									<LeftItem name = "Profil" img = {currentUser.profile.profile_photo}/>
+								</div>
+							}
+						</>
 					}
 					<div onClick = {() => context.home()}>
 						<LeftItem name = "Acasă"/>
@@ -279,10 +292,11 @@ export default function NavBar(props){
 							<div onClick = {showHideNotifications} className = {styles.optionIcon}>
 								<FontAwesomeIcon className = {styles.iconInside} icon={faBell} />
 							</div>
-						
-							<div onClick = {() => context.profile(context.user.idKey)} className = {styles.optionIcon}>
-								<img src = {currentUser.profile.profile_photo}/>
-							</div>
+							{currentUser.profile &&
+								<div onClick = {() => context.profile(context.user.idKey)} className = {styles.optionIcon}>
+									<img src = {currentUser.profile.profile_photo}/>
+								</div>
+							}
 						</>
 					}
 					

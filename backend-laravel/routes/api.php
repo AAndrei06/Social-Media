@@ -8,6 +8,10 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\ShortVideoController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\FriendController;
+use App\Http\Middleware\CheckPostOwnership;
+use App\Http\Middleware\CheckVideoOwnership;
+use App\Http\Middleware\CheckProfileOwnership;
+
 /*
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE');
@@ -22,21 +26,23 @@ Route::get('/user', function (Request $request) {
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/search', [HomeController::class, 'searchContent']);
-Route::get('/profile/{id}', [ProfileController::class, 'profileGet']);
 
-Route::get('/videos', [ShortVideoController::class, 'showVideos']);
-Route::get('/video/get/comments/{id}', [ShortVideoController::class, 'getCommentsVideo']);
-Route::get('/videos/{id}', [ShortVideoController::class, 'showVideosOfUser']);
-Route::get('/post/get/{id}', [HomeController::class, 'getPost']);
-Route::get('/video/get/{id}', [ShortVideoController::class, 'getVideo']);
-Route::get('/posts/{idKey}',[HomeController::class, 'getAllPostsUser']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // Profile routes
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/search', [HomeController::class, 'searchContent']);
+    Route::get('/profile/{id}', [ProfileController::class, 'profileGet']);
+
+    Route::get('/videos', [ShortVideoController::class, 'showVideos']);
+    Route::get('/video/get/comments/{id}', [ShortVideoController::class, 'getCommentsVideo']);
+    Route::get('/videos/{id}', [ShortVideoController::class, 'showVideosOfUser']);
+    Route::get('/post/get/{id}', [HomeController::class, 'getPost']);
+    Route::get('/video/get/{id}', [ShortVideoController::class, 'getVideo']);
+    Route::get('/posts/{idKey}',[HomeController::class, 'getAllPostsUser']);
     
-    Route::post('/profile/{id}', [ProfileController::class, 'profilePost']);
+    Route::post('/profile/{id}', [ProfileController::class, 'profilePost'])->middleware(CheckProfileOwnership::class);
     Route::post('/profile/follow/{id}', [ProfileController::class, 'follow']);
     
     Route::get('/notifications',[AuthController::class,'getNotifications']);
@@ -46,8 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Home (Posts) routes
     Route::prefix('post')->group(function () {
-        Route::post('/edit/{id}', [HomeController::class, 'editPost']);
-        Route::post('/delete/{id}', [HomeController::class, 'deletePost']);
+        Route::post('/edit/{id}', [HomeController::class, 'editPost'])->middleware(CheckPostOwnership::class);
+        Route::post('/delete/{id}', [HomeController::class, 'deletePost'])->middleware(CheckPostOwnership::class);
         Route::post('/comment/{id}', [HomeController::class, 'writeComment']);
         Route::get('/get/comments/{id}', [HomeController::class, 'getComments']);
         Route::post('/delete/comment/{id}', [HomeController::class, 'deleteComment']);
@@ -80,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('video')->group(function () {
         Route::post('/create', [HomeController::class, 'createShort']);
         Route::post('/like/{id}', [ShortVideoController::class, 'likeVideo']);
-        Route::post('/delete/{id}', [ShortVideoController::class, 'deleteVideo']);
+        Route::post('/delete/{id}', [ShortVideoController::class, 'deleteVideo'])->middleware(CheckVideoOwnership::class);
         Route::post('/comment/{id}', [ShortVideoController::class, 'commentVideo']);
         Route::post('/delete/comment/{id}', [ShortVideoController::class, 'deleteCommentVideo']);
         

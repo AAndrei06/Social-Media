@@ -5,11 +5,20 @@ import man from '../../assets/man.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function Story(props){
 	
 	const context = useOutletContext();
-	if (!props.story){
+
+	useEffect(() => {
+		if (!context.user.profile){
+			window.location.reload();
+		}
+		
+	},[context.user]);
+
+	if (!props.story && context.user.profile){
 		if (context.user){
 			return(
 				<>
@@ -25,7 +34,7 @@ export default function Story(props){
 				</>
 			);
 		}
-	}else{
+	}else if (context.user.profile){
 		return(
 			<>
 			{!props.create &&

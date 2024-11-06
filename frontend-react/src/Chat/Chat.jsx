@@ -39,6 +39,12 @@ export default function Chat(){
 	const chatSearchRef = useRef();
 	const chatSearchRef1 = useRef();
 
+	if (stateData != null){
+    	if (stateData.idOfFriend && currentId == null){
+    		setCurrentId(stateData.idOfFriend);
+    	}
+    }
+
 	if (stateData && stateData.id){
     	setCurrentId(stateData.id);
     }
@@ -130,7 +136,9 @@ export default function Chat(){
 		await client.get(`/chat/get`)
 		.then(({ data }) => {
 		 setFriends(data.mutual_followers);
-		 setCurrentId(data.mutual_followers[0].id);
+		 if (currentId == null){
+		 	setCurrentId(data.mutual_followers[0].id);
+		 }
 		 
 		})
 		.catch(error => {
@@ -150,8 +158,9 @@ export default function Chat(){
 		client.get(`/chat/get`)
 		.then(({ data }) => {
 		 setFriends(data.mutual_followers);
-		 setCurrentId(data.mutual_followers[0].id);
-		 
+		 if (currentId == null){
+		 	setCurrentId(data.mutual_followers[0].id);
+		 }
 		})
 		.catch(error => {
 		 console.error(error);

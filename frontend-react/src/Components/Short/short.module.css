@@ -93,13 +93,14 @@
 	position: absolute;
 	bottom: 0px;
 	color: white;
-	background: linear-gradient(45deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
 	border-top-right-radius: 10px;
+	word-break: break-all;
 }
 
 .description > p{
 	margin-bottom: 30px;
 	float: left;
+	word-break: break-all;
 }
 
 .more{
