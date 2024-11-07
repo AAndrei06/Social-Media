@@ -14,131 +14,117 @@ export default function ShortVideos(){
 	const context = useOutletContext();
 	const client = context.client;
 	const [videos, setVideos] = useState([]);
-	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [video, setVideo] = useState(null);
 	const [open, setOpen] = useState(false);
 	const [id, setId] = useState('1');
-
+	const [loading, setLoading] = useState(true);
 	const [sendOpen, setSendOpen] = useState(true);
 	const [friends, setFriends] = useState(null);
 	const [idOfSend,setIdOfSend] = useState(null);
-	console.log(idOfSend);
 
 	const { uuid, idKey } = useParams();
-	console.log('uuid: ',uuid);
-	console.log('idKey: ',idKey);
+	
 	useEffect(() => {
-    const fetchVideo = async () => {
-        try {
-            const response = await client.get(`video/get/${uuid}`);
-            console.log(response.data);
-            setVideo(response.data);
-        }catch(err){
-        	console.log(err);
-        }
-    };
-
-    fetchVideo();
-        
-    }, []);
-
-	function handleSlideChange(){
-		setOpen(false);
-		setSendOpen(false);
-	}
+		const fetchVideo = async () => {
+			try {
+				const response = await client.get(`video/get/${uuid}`);
+				setVideo(response.data);
+			} catch (err) {
+				setError(err);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchVideo();
+	}, [uuid]);
 
 	useEffect(() => {
-        const fetchVideos = async () => {
-            try {
-            	if (idKey){
-	                const response = await client.get(`/videos/${idKey}`);
-	                setVideos(response.data);
-	                console.log(response.data);
-	            }else{
-	            	const response = await client.get('/videos');
-	                setVideos(response.data);
-	                console.log(response.data);
-	            }
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+		const fetchVideos = async () => {
+			try {
+				const response = idKey
+					? await client.get(`/videos/${idKey}`)
+					: await client.get('/videos');
+				setVideos(response.data);
+			} catch (err) {
+				setError(err);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchVideos();
+	}, [idKey]);
 
-        fetchVideos();
-    }, []);
-
-    useEffect(() => {
-    	if (context.user){
-	    	async function fetchFriends(){
+	useEffect(() => {
+		if (context.user) {
+			async function fetchFriends() {
 				await client.get(`/chat/get`)
 				.then(({ data }) => {
-				 setFriends(data.mutual_followers);
-				 console.log('data: ',data.mutual_followers);
+					setFriends(data.mutual_followers);
 				})
 				.catch(error => {
-				 console.error(error);
+					console.error(error);
 				});
 			}
 			fetchFriends();
 		}
-    },[context.user]);
+	}, [context.user]);
 
-    console.log('Friend Short');
-    console.log(friends);
-    console.log(idOfSend);
+	const handleSlideChange = () => {
+		setOpen(false);
+		setSendOpen(false);
+	};
 
-	return(
+	if (loading) return (
+		<main className={styles.mainArea12}>
+			<div className={styles.centerDiv12}>
+				<h1 className={styles.info12}>Se încarcă...</h1>
+			</div>
+		</main>
+	);
+
+	return (
 		<>
-			<LikeSide friends = {friends} idOfShort = {idOfSend} set = {setSendOpen} open = {sendOpen}/>
-			<main className = {styles.main}>
-
-				<NavBar/>
-				
-				<CommentsSection type = {"shortVideos"} id = {id} set = {setOpen} open = {open}/>
-
-				<div className = {styles.mainDiv}>
+			<LikeSide friends={friends} idOfShort={idOfSend} set={setSendOpen} open={sendOpen} />
+			<main className={styles.main}>
+				<NavBar />
+				<CommentsSection type="shortVideos" id={id} set={setOpen} open={open} />
+				<div className={styles.mainDiv}>
 					<Swiper onSlideChange={handleSlideChange} direction={'vertical'} slidesPerView={1} mousewheel={true} modules={[Mousewheel]}
-					pagination={{
-					clickable: true,
-
-					}}
-					>
-					{video != null && 
-						<SwiperSlide key = {video.id}>
-
-							{({isActive}) => (<Short 
-												video = {video} 
-												setId = {setId} 
-												set = {setOpen} 
-												open = {open} 
-												play = {isActive} 
-												setSendOpen = {setSendOpen}
-												setIdOfSend = {setIdOfSend}
-												/>)}
-						</SwiperSlide>
-					}
-
-					{video == null && videos.map(video => (
-						<SwiperSlide key = {video.id}>
-						
-							{({isActive}) => (<Short 
-												video = {video} 
-												setId = {setId} 
-												set = {setOpen} 
-												open = {open} 
-												play = {isActive} 
-												setSendOpen = {setSendOpen}
-												setIdOfSend = {setIdOfSend}
-												/>)}
-						</SwiperSlide>
-					))}
-					
+						pagination={{ clickable: true }}>
+						{video && (
+							<SwiperSlide key={video.id}>
+								{({ isActive }) => (
+									<Short
+										video={video}
+										setId={setId}
+										set={setOpen}
+										open={open}
+										play={isActive}
+										setSendOpen={setSendOpen}
+										setIdOfSend={setIdOfSend}
+									/>
+								)}
+							</SwiperSlide>
+						)}
+						{!video && videos.map(video => (
+							<SwiperSlide key={video.id}>
+								{({ isActive }) => (
+									<Short
+										video={video}
+										setId={setId}
+										set={setOpen}
+										open={open}
+										play={isActive}
+										setSendOpen={setSendOpen}
+										setIdOfSend={setIdOfSend}
+									/>
+								)}
+							</SwiperSlide>
+						))}
 					</Swiper>
 				</div>
 			</main>
 		</>
 	);
-}	
+}

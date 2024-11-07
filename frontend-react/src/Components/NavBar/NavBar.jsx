@@ -217,9 +217,13 @@ export default function NavBar(props){
 			</div>
 			{showNotification &&
 				<div id = "notifications" className = {styles.notifications}>
-					{notifications != [] && notifications.map(notification => (
-						<Notification key = {notification.id} notification = {notification}/>
-					))}
+					{notifications.length > 0 ? (
+					  notifications.map(notification => (
+					    <Notification key={notification.id} notification={notification} />
+					  ))
+					) : (
+					  <Notification nofound = {true} notification={{'title':'Nu sunt notificări','desc':'Verifică mai târziu notificările'}}/>
+					)}
 					
 				</div>
 			}

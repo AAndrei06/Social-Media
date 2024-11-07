@@ -128,7 +128,13 @@ function Home(){
         
     }, []);
 
-	if (loading) return <p>Loading...</p>;
+	if (loading) return (<>
+			<main className = {styles.mainArea12}>
+				<div className = {styles.centerDiv12}>
+					<h1 className = {styles.info12}>Se încarcă...</h1>
+				</div>
+			</main>
+		</>);
 	
 
 	function handleOpen(typeF){

@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\FriendController;
 use App\Http\Middleware\CheckPostOwnership;
 use App\Http\Middleware\CheckVideoOwnership;
 use App\Http\Middleware\CheckProfileOwnership;
+use App\Http\Middleware\CheckMessageSender;
 
 /*
 header('Access-Control-Allow-Origin: *');
@@ -71,7 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/get/messages/{id}', [ChatController::class, 'getMessages']);
         Route::get('/get/friends/{query}', [ChatController::class, 'searchFriends']);
         Route::post('/send/message', [ChatController::class, 'sendMessage']);
-        Route::post('/delete/message/{id}', [ChatController::class, 'deleteMessageById']);
+        Route::post('/delete/message/{id}', [ChatController::class, 'deleteMessageById'])->middleware(CheckMessageSender::class);
     });
 
     Route::prefix('friends')->group(function () {

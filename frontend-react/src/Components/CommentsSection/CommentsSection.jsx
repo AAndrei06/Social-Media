@@ -21,13 +21,13 @@ export default function CommentsSection(props){
 
 	const url = props.type == "homePost" ? `/post/get/comments/${props.uuidPost}/` : `/video/get/comments/${props.id}/`;
 	const funcId = props.type == "homePost" ? props.uuidPost : props.id;
-
+	console.log(url);
 	useEffect(() => {
         const fetchComments = async () => {
             try {
                 const response = await client.get(url);
                 setComments(response.data);
-                console.log(response.data);
+                console.log('r: ',response.data);
             } catch (err) {
             	setComments([]);
                 console.log(err);
@@ -62,8 +62,9 @@ export default function CommentsSection(props){
             console.log(response.data);
             setComments(prevComments => [response.data,...prevComments]);
             ref.current.value = "";
+            context.showSuccess("Comentariul a fost postat cu succes!");
         } catch (error) {
-            console.log(error);
+            context.showError(error.response.data.errors.content[0]);
         }
     }
 

@@ -158,13 +158,10 @@ const getFrame = async (videoFile) => {
 	    }else if (props.type == 'video'){
 
 	    	const file = fileRef.current.files[0];
-
-	    	try {
-		        
-		        // Use the generated image file as needed
-		    } catch (error) {
-		        console.error('Error getting first frame:', error);
-		    }
+	    	if (!file){
+	    		context.showError('Nu ai ales un fișier!');
+	    		return;
+	    	}
 			console.log(file);
 			const payload = {
 				'content': tRef.current,

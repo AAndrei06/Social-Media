@@ -21,8 +21,10 @@ export default function PostComment(props){
                 },
             });
             console.log(response.data);
+
             if (response.data == 'success'+commentId){
             	thisRef.current.style.display = "none";
+            	context.showSuccess('Comentariu șters cu succes!');
             }
         } catch (error) {
             console.log(error);

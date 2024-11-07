@@ -1,5 +1,6 @@
 import styles from './notification.module.css';
 import test from '../../assets/nature.png';
+import sad from '../../assets/sad.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faEnvelopeOpen } from '@fortawesome/free-solid-svg-icons'
 import { useRef } from 'react';
@@ -60,6 +61,18 @@ export default function Notification(props){
 						<div onClick = {(e) => deleteNotification(e)}>
 							<FontAwesomeIcon className = {styles.open} icon={faEnvelopeOpen} />
 						</div>
+					</div>
+				}
+				{props.nofound == true && 
+					<div ref = {ref} className = {styles.notification}>
+						<div className = {styles.notificationPhoto}>
+							<img src = {sad}/>
+						</div>
+						<div className = {styles.notificationText}>
+							<p>{props.notification.title}</p>
+							<p>{props.notification.desc}</p>
+						</div>
+						
 					</div>
 				}
 

@@ -100,7 +100,7 @@ export default function Post(props){
             ref.current.value = "";
             context.showSuccess("Comentariul a fost postat cu succes!");
         } catch (error) {
-            console.log(error);
+            context.showError(error.response.data.errors.content[0]);
         }
 	}
 
@@ -141,22 +141,29 @@ export default function Post(props){
 				</div>
 				{openPostMenu &&
 					<div className = {styles.postMenu}>
-						<div className = {styles.postMenuItem}>
+						<div onClick = {() => {sendToSignup();prepareForSend()}} className = {styles.postMenuItem}>
 							<FontAwesomeIcon icon={faShare} />
 							<p>Trimite</p>
 						</div>
-						<div onClick = {() => {props.func('edit');props.setId(id => props.idKey)}} className = {styles.postMenuItem}>
-							<FontAwesomeIcon icon={faPen} />
-							<p>Editează</p>
-						</div>
-						<div onClick = {() => deletePost()} className = {styles.postMenuItem+" "+styles.redColor}>
-							<FontAwesomeIcon icon={faTrashCan} />
-							<p>Șterge</p>
-						</div>
+
+						{props.user.idKey == context.user.idKey &&
+							<>
+								<div onClick = {() => {props.func('edit');props.setId(id => props.idKey)}} className = {styles.postMenuItem}>
+									<FontAwesomeIcon icon={faPen} />
+									<p>Editează</p>
+								</div>
+								<div onClick = {() => deletePost()} className = {styles.postMenuItem+" "+styles.redColor}>
+									<FontAwesomeIcon icon={faTrashCan} />
+									<p>Șterge</p>
+								</div>
+							</>
+						}
+						{/*
 						<div className = {styles.postMenuItem+" "+styles.redColor}>
 							<FontAwesomeIcon icon={faCircleExclamation} />
 							<p>Raportează</p>
 						</div>
+						*/}
 					</div>
 				}
 			</div>

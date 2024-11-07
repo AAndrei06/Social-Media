@@ -1,3 +1,32 @@
+.mainArea12{
+	width: 100vw;
+	height: 100vh;
+	background-color: #f2f4f7;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-content: center;
+}
+
+.centerDiv12{
+	width: 400px;
+	height: 400px;
+	display: flex;
+	flex-direction: column;
+	font-size: 28px;
+}
+
+.centerDiv12 > h1{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.info12{
+	color: #596170;
+}
+
+
+
 .mainArea{
 	background-color: #f2f4f7;
 	height: 100vh;
