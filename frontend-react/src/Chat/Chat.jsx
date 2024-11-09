@@ -280,13 +280,13 @@ export default function Chat(){
 							<ImageComment set = {setShow} setImg = {setcImg} img = {ts}/>
 							*/}
 						</div>
-						{/*
+						
 						<div className = {styles.writeSection}>
 							<div className = {styles.div}>
-								
+								{/*
 								<input type = "file" className = {styles.none} id = "file-open" accept="image/png, image/jpg, image/gif, image/jpeg"/>
 								<FontAwesomeIcon onClick = {handleFile} className = {styles.paper} icon={faPaperclip}/>
-								
+								*/}
 								<EmojiPicker style = {{position:"absolute",zIndex: '33',right:"10px", bottom: "50px"}} open = {open} width = {290} height = {400} onEmojiClick = {placeEmoji}/>
 								<div className = {styles.emojiBtn} onClick = {() => setOpen(!open)}>
 									☺
@@ -297,7 +297,7 @@ export default function Chat(){
 								</button>
 							</div>
 						</div>
-						*/}
+						
 					</div>
 				</div>
 			</main>
